@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+        <div class="AddService">
+            <h2 class="main"> Category Management
+            </h2>
+            <a href="addCategory.html" class="btns">Add Category</a>
+        </div>
+        <div class="tableList boxs bgWhite">
+            <div class="scrollAll">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Category Name</th>
+                        <th>Sub Category</th>
+                        <th>image</th>
+                        <th>Cost/hour</th>
+                        <th>Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>01</td>
+                        <td>category1</td>
+                        <td>category2</td>
+                        <td><img src="img/profile.jpg" alt="img" class="img-fluid"></td>
+                        <td>200$</td>
+
+                        <th><a href="categoryDetails.html"><i class="fa fa-eye colorBlue"></i></a></th>
+
+
+                    </tr>
+
+
+                    </tfoot>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

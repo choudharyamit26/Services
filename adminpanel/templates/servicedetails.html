@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+        <h2 class="main">Services Details</h2>
+        <div class="staticAbout padding-25 bgWhite boxs">
+            <ul class="nav nav-tabs alltabs">
+                <li class="active"><a data-toggle="tab" href="#home">Profile Details</a></li>
+                <li><a data-toggle="tab" href="#menu1">Order History</a></li>
+                <li><a data-toggle="tab" href="#menu2">Booking History</a></li>
+                <li><a data-toggle="tab" href="#menu3">Transaction List</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active show">
+                    <div class="tableList boxs bgWhite">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>User Id</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email Id</th>
+                                <th>Phone No.</th>
+                                <th>Cover Picture</th>
+                                <th>Registration Date</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>USER42</td>
+                                <td>Deepanshu</td>
+                                <td>Tyagi</td>
+                                <td>deepanshu@gmail.com</td>
+                                <td>8126362520</td>
+                                <td><img src="{% static 'img/profile.jpg' %}" alt="profile" class="img-fluid"></td>
+                                <td>15-02-2021</td>
+
+                            </tr>
+
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                    <div class="tableList boxs bgWhite">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Order Id</th>
+                                <th>Date Of Order</th>
+                                <th>Type of Order</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>USER42</td>
+                                <td>15-02-2021</td>
+
+                                <td>order1</td>
+
+                            </tr>
+
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <div class="tableList boxs bgWhite">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Booking Timing</th>
+                                <th>Booking Date</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>2 p.m</td>
+                                <td>20-2-2021</td>
+
+
+                            </tr>
+
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div id="menu3" class="tab-pane fade">
+                    <div class="tableList boxs bgWhite">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Payment Id</th>
+                                <th>Order Date</th>
+                                <th>Order Time</th>
+                                <th>Total Amount</th>
+                                <th>Mode Of Payment</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>USER42</td>
+                                <td>20-02-2021</td>
+                                <td>2 p.m</td>
+                                <td>$ 200</td>
+                                <td>C.O.D</td>
+
+
+                            </tr>
+
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

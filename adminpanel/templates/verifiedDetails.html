@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ondemand | Verification Details</title>
+    <!-- Bootstrap -->
+    <link href="img/fav.png" rel="icon" type="icon/image">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <!-- <link href="css/reset.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <header class="headerAll boxs">
+        <div class="headerLogo"><a href="#0"><img src="img/logo.png" alt="logo" class="img-fluid"></a>
+            <!-- <span class="humburger"><i class="fa fa-bars"></i></span> -->
+        </div>
+        <div class="headerRight">
+            <ul>
+                <li><a href="#0" class="bell"><i class="fa fa-bell"></i></a></li>
+                <li class="postrel">
+                    <a href="#0" class="profile"><img src="img/profile.jpg" alt="profle" class="img-fluid"><span>Hey,
+                            Admin</span></a>
+                            <div class="profileIn">
+                                <ul>
+                                    <li>
+                                        <a href="myprofile.html">
+                                            <span><i class="fas fa-user"></i></span>
+                                            Admin Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="changeAddress.html">
+                                            <span><i class="fa fa-cog"></i></span>
+                                            Change Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#0" data-toggle="modal" data-target="#logout">
+                                            <span><i class="fas fa-sign-out-alt"></i></span>
+                                            Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="sideNav boxs scrollbar" id="style-3">
+        <ul class="force-overflow">
+            <li><a href="dashboard.html" ><span class="icon"><i class="fa fa-tachometer-alt"></i></span><span
+                        class="iconContent">Statistics</span></a></li>
+            <li><a href="user-management.html"><span class="icon"><i class="fa fa-user"></i></span><span class="iconContent">User
+                        Management</span></a></li>
+            <li><a href="service-provide-management.html"><span class="icon"><i class="fa fa-paper-plane"></i></span><span
+                        class="iconContent">Service
+                        Provider Management</span></a></li>
+            <li><a href="sub-admin-management.html"><span class="icon"><i class="fa fa-user-cog"></i></span><span class="iconContent">
+                        Sub-admin Management
+                    </span></a></li>
+            <li><a href="Category.html"><span class="icon"><i class="fa fa-cogs"></i></span><span
+                        class="iconContent">Category Management</span></a></li>
+                        <li><a href="order-management.html"><span class="icon"><i class="fa fa-dollar-sign"></i></span><span
+                            class="iconContent">Order Management</span></a></li>
+                            <li><a href="verification.html" class="active"><span class="icon"><i class="fa fa-user-check"></i></span><span
+                                class="iconContent">Verification Management
+                            </span></a></li>
+                            <li><a href="worker.html"><span class="icon"><i class="fa fa-users"></i></span><span
+                                class="iconContent">Worker Management</span></a></li>
+                            <li><a href="offer.html"><span class="icon"><i class="fa fa-percent"></i></span><span
+                                class="iconContent">Offers & Discounts Management
+                            </span></a></li>
+                            <li><a href="finance.html"><span class="icon"><i class="fa fa-percent"></i></span><span
+                                class="iconContent">Finance Management
+                            </span></a></li>
+                            <li><a href="static.html"><span class="icon"><i class="fa fa-pen-square"></i></span><span
+                                class="iconContent">Static Content Management
+                            </span></a></li>
+                            <li><a href="notification.html"><span class="icon"><i class="fa fa-bell"></i></span><span
+                                class="iconContent">Notification Management
+                            </span></a></li>
+                            <li><a href="login.html"><span class="icon"><i class="fa fa-sign-out-alt"></i></span><span
+                                class="iconContent">Logout
+                            </span></a></li>
+        </ul>
+    </section>
+    <section class="demandRight boxs">
+        <div class="demandInner boxs">
+            <h2 class="main">Verification Details</h2>
+       <div class="userDetails bgWhite padding-25">
+     
+           <ul class="detailsUser padding-left-25">
+               <li><span class="first">Name</span></li>
+               <li><span class="first">Email</span></li>
+               <li><span class="first">Location</span></li>
+               <li><span class="first">Date</span></li>
+               <li><span class="first">Service Category</span></li>
+
+            </ul>
+          <ul class="Allbtns">
+              <ul>
+                  <li><a href="#0" class="btns">Approve</a></li>
+                  <li><a href="#0" class="btns">Reject</a></li>
+                </ul>
+          </ul>
+       </div>
+        </div>
+    </section>
+    <div class="modal fade" id="logout" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+        
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                
+                <p class="head">Are you sure you want to Logout ?</p>
+                <ul class="allBtns">
+                    <li><a href="#0" class="btns">Yes</a></li>
+                    <li><a href="#0" class="btns">No</a></li>
+                </ul>
+                </div>
+           
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
+    <script src="js/custom.js"></script>
+
+</body>
+
+</html>

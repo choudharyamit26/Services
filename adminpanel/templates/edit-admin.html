@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+
+        <h2 class="main">Edit Sub-Admin
+        </h2>
+
+        <div class="formDett padding-25 bgWhite">
+            <form action="">
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" class="form-control formControl" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" class="form-control formControl" placeholder="UserId">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="email" class="form-control formControl" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="number" class="form-control formControl" placeholder="phone Number">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" class="form-control formControl" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" class="form-control formControl" placeholder="Confirm Password">
+                        </div>
+                    </div>
+
+
+                    <div class="CommonBtn CommonBtn2 boxs">
+                        <button class="btns">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="main">Block/UnBlock User</h2>
+                <p class="head">Are you sure you want to Approve this Member ?</p>
+                <ul class="allBtns">
+                    <li><a href="#0" class="btns">Block</a></li>
+                    <li><a href="#0" class="btns">Unblock</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock body %}

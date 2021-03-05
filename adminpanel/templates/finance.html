@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block body %}
+    <section class="demandRight boxs">
+        <div class="demandInner boxs">
+            <div class="AddService">
+                <h2 class="main"> Finance Management
+                    </h2>
+                </div>
+            <div class="tableList boxs bgWhite">
+<div class="filterCode">
+   <div class="row">
+       <div class="col-sm-3">
+        <div class="form-group formGroup">
+            <span  class="labelel2">From</span>
+            <input type="date" class="form-control " placeholder="From">
+        </div>
+       </div>
+       <div class="col-sm-3">
+        <div class="form-group formGroup">
+            <span for="" class="labelel2">To</span>
+            <input type="date" class="form-control " placeholder="To">
+        </div>
+    </div>
+    <div class="col-sm-3" style="padding-top: 20px;">
+        <button class="btns">Search</button>
+    </div>
+   </div>
+</div>
+            <div class="scrollAll">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Transaction id</th>
+                            <th>Transaction Date</th>
+                            <th>Transaction Time</th>
+                            <th>Transaction amount</th>
+                            <th>Username</th>
+                            <th>User ID</th>
+           <th>User Email Id</th>
+           <th>User Contact number</th>
+           <th>Service Provider ID</th>
+           <th>Service Provider name</th>
+
+           <th>Contact number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                <th>01</th>
+                <th>DEEP8126</th>
+                <th>16-07-2020</th>
+                <th>8:40 pm</th>
+                <th>300$</th>
+                <th>Deepanshu</th>
+                <th>deep090</th>
+            <th>deepak@gmail.com</th>
+            <th>8126362520</th>
+            <th>SER2121</th>
+            <th>Deepak</th>
+            <th>9027407425</th>
+            <th></th>
+                        </tr>
+
+
+                        </tfoot>
+
+                    </table>
+
+            </div>
+                </div>
+        </div>
+    </section>
+{% endblock body %}
+

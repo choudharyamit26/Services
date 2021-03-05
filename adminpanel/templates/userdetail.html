@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+        <h2 class="main">User Details</h2>
+        <div class="userDetails bgWhite padding-25">
+            <ul class="detailsUser">
+                <li class="liHead"> Profile Details</li>
+            </ul>
+            <ul class="detailsUser padding-left-25">
+                <li><span class="first">User Id</span></li>
+                <li><span class="first">Date Of Registration</span></li>
+                <li><span class="first">First Name</span></li>
+                <li><span class="first">Last Name</span></li>
+                <li><span class="first">Profile Picture</span></li>
+                <li><span class="first">Cover Picture</span></li>
+                <li><span class="first">Email Address</span></li>
+                <li><span class="first">Phone Number</span></li>
+                <li><span class="first">About User</span></li>
+            </ul>
+            <ul class="detailsUser">
+                <li class="liHead">Order History</li>
+            </ul>
+            <ul class="detailsUser orderDet padding-left-25">
+                <li><span class="first">Order Id</span></li>
+                <li><span class="first">Date Of Order</span></li>
+                <li><span class="first">Type of Order</span></li>
+            </ul>
+            <ul class="detailsUser">
+                <li class="liHead">Booking History</li>
+            </ul>
+
+            <ul class="detailsUser orderDet padding-left-25">
+                <li><span class="first">Booking Timing</span></li>
+                <li><span class="first">Booking Date</span></li>
+
+            </ul>
+            <ul class="detailsUser">
+                <li class="liHead">Transaction List</li>
+            </ul>
+
+            <ul class="detailsUser orderDet padding-left-25">
+                <li><span class="first">Payment Id</span></li>
+                <li><span class="first">Order Date</span></li>
+                <li><span class="first">Order Time</span></li>
+                <li><span class="first">Total Amount</span></li>
+                <li><span class="first">Mode Of Payment</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock body %}

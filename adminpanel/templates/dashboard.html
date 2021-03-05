@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="demandInner">
+        <h2 class="main">system performance & statistics</h2>
+        <div class="graphAll marginZero">
+            <div class="graphLeft bgWhite">
+                <div class="barGraph">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+            <div class="graphRight bgWhite">
+                <div class="pieGraph">
+                    <canvas id="oilChart" width="100%" height="100%"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
+<script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ["M", "T", "W", "T", "F", "S", "S"],
+    datasets: [{
+      label: 'Anuj',
+      data: [12, 19, 3, 17, 28, 24, 7],
+      backgroundColor: "#0091da"
+    }, {
+      label: 'Deepanshu',
+      data: [30, 29, 5, 5, 20, 3, 10],
+      backgroundColor: "#0091da6b"
+    }]
+  }
+});
+
+
+</script>
+<script>
+    var oilCanvas = document.getElementById("oilChart");
+
+Chart.defaults.global.defaultFontFamily = "CerebriSansProMedium";
+Chart.defaults.global.defaultFontSize = 13;
+
+var oilData = {
+    labels: [
+        "Anuj",
+        "Deepanshu"
+    ],
+    datasets: [
+        {
+            data: [133.3, 86.2],
+            backgroundColor: [
+                "#0091da",
+                "#0091da6b"
+            ]
+        }]
+};
+
+var pieChart = new Chart(oilCanvas, {
+  type: 'pie',
+  data: oilData
+});
+
+
+</script>
+{% endblock body %}
