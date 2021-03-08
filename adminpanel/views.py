@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordContextMixin
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -14,10 +15,12 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import View, DetailView, UpdateView, FormView, TemplateView, ListView
+from django.views.generic import View, DetailView, UpdateView, FormView, TemplateView, ListView, CreateView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from .models import User
+
+from .forms import AddServiceProviderForm, AddCategoryForm
+from .models import User, Category, ServiceProvider
 
 
 # Create your views here.
@@ -61,14 +64,16 @@ class UserManagementView(View):
     template_name = 'user-management.html'
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'user-management.html')
+        users = User.objects.filter(is_provider=False)
+        print(users)
+        return render(self.request, 'user-management.html', {'object_list': users})
 
 
 class ServiceProviderManagementView(View):
     template_name = 'service-provider-management.html'
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'service-provider-management.html')
+        return render(self.request, 'service-provider-management.html', {'object_list': ServiceProvider.objects.all()})
 
 
 class SubAdminManagementView(View):
@@ -78,11 +83,37 @@ class SubAdminManagementView(View):
         return render(self.request, 'sub-admin-management.html')
 
 
-class CategoryView(View):
+class CategoryView(ListView):
     template_name = 'Category.html'
+    model = Category
 
-    def get(self, request, *args, **kwargs):
-        return render(self.request, 'Category.html')
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'Category.html')
+
+
+class AddCategoryView(CreateView):
+    template_name = 'addCategory.html'
+    model = Category
+    form_class = AddCategoryForm
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        # image = self.request.POST.get('category_image' or None)
+        image = self.request.FILES.get('category_image' or None)
+        print(image)
+        print(type(image))
+        category_name = self.request.POST['category_name']
+        Category.objects.create(
+            category_image=image,
+            category_name=category_name
+        )
+        messages.success(self.request, 'Category added successfully')
+        return redirect("adminpanel:category-management")
+
+
+class CategoryDetail(DetailView):
+    template_name = 'categoryDetails.html'
+    model = Category
 
 
 class OrderManagementView(View):
@@ -148,18 +179,20 @@ class ChangePasswordView(View):
         return render(self.request, 'changePassword.html')
 
 
-class UserDetailView(View):
+class UserDetailView(DetailView):
     template_name = 'userdetail.html'
+    model = User
 
-    def get(self, request, *args, **kwargs):
-        return render(self.request, 'userdetail.html')
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'userdetail.html')
 
 
-class ServiceDetailView(View):
+class ServiceProviderDetailView(DetailView):
     template_name = 'servicedetails.html'
+    model = ServiceProvider
 
-    def get(self, request, *args, **kwargs):
-        return render(self.request, 'servicedetails.html')
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'servicedetails.html')
 
 
 class SubAdminDetail(View):
@@ -334,3 +367,76 @@ class PasswordChangeDoneView(PasswordContextMixin, TemplateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+
+class AddServiceProvider(CreateView):
+    template_name = 'Addservice.html'
+    model = User
+    form_class = AddServiceProviderForm
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'Addservice.html', {'category': Category.objects.all(), 'form': self.form_class})
+
+    def post(self, request, *args, **kwargs):
+        # print(self.request.POST)
+        full_name = self.request.POST['full_name']
+        country_code = self.request.POST['country_code']
+        phone_number = self.request.POST['phone_number']
+        category = self.request.POST['category']
+        email = self.request.POST['email']
+        password = self.request.POST['password']
+        confirm_password = self.request.POST['confirm_password']
+        # profile_pic = self.request.POST.get('profile_pic' or None)
+        profile_pic = self.request.FILES.get('profile_pic' or None)
+        # print(self.request.FILES['profile_pic'])
+        # print(type(self.request.FILES['profile_pic']))
+        # print(profile_pic)
+        # print(type(profile_pic))
+        # print('Form', AddServiceProviderForm(self.request.POST))
+        # form = AddServiceProviderForm(self.request.POST)
+        # print('>>>>>>>>>>>>>>', form.fields['full_name'])
+        # print('>>>>>>>>>>>>>>',form.full_name)
+        # print('>>>>>>>>>>>>>>',form.cleaned_data['full_name'])
+        try:
+            user_obj = User.objects.get(Q(email=email) | Q(phone_number=phone_number))
+            print(user_obj)
+            messages.error(self.request, 'User with this email/phone number already exists')
+            return render(self.request, self.template_name,
+                          {'category': Category.objects.all(), 'form': self.form_class})
+        except Exception as e:
+            print(e)
+            if password != confirm_password:
+                messages.error(self.request, 'Password and Confirm Password did not match')
+                return render(self.request, self.template_name,
+                              {'category': Category.objects.all(), 'form': self.form_class})
+            elif len(password) < 8:
+                messages.error(self.request, 'Password must contain minimum of 8 characters')
+                return render(self.request, self.template_name,
+                              {'category': Category.objects.all(), 'form': self.form_class})
+            elif password.isdigit() or password.isalpha():
+                messages.error(self.request, 'Password must be a mix of character, numbers and special characters')
+                return render(self.request, self.template_name,
+                              {'category': Category.objects.all(), 'form': self.form_class})
+            else:
+                ServiceProvider.objects.create(
+                    full_name=full_name,
+                    country_code=country_code,
+                    phone_number=phone_number,
+                    category=Category.objects.get(id=category),
+                    email=email,
+                    password=password,
+                    confirm_password=confirm_password,
+                    profile_pic=profile_pic
+                )
+                user = User.objects.create(
+                    full_name=full_name,
+                    email=email,
+                    country_code=country_code,
+                    phone_number=phone_number,
+                    is_provider=True,
+                    profile_pic=profile_pic
+                )
+                user.set_password(password)
+                user.save()
+                messages.success(self.request, 'Service provider added successfully')
+                return redirect("adminpanel:service-provider-management")

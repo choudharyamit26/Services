@@ -2,7 +2,15 @@
 //   $('.alltabs li a').removeClass('active');
 //   $(this).addClass('active');
 // });
+$(document).ready(function () {
+            $('#example').DataTable({
+                 "fnDrawCallback": function (oSettings) {
 
+                },
+                 "iDisplayLength": 10,
+
+            });
+        });
 $(document).on('focus' ,'input , textarea','.formControl' ,function(){
     $('.formGroup.form-group').each(function(){
     var labelVal = $(this).children('label').text();

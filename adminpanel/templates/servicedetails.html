@@ -17,27 +17,23 @@
                         <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
-                                <th>S.No</th>
                                 <th>User Id</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Full Name</th>
                                 <th>Email Id</th>
                                 <th>Phone No.</th>
-                                <th>Cover Picture</th>
+                                <th>Profile Picture</th>
                                 <th>Registration Date</th>
 
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>01</td>
-                                <td>USER42</td>
-                                <td>Deepanshu</td>
-                                <td>Tyagi</td>
-                                <td>deepanshu@gmail.com</td>
-                                <td>8126362520</td>
-                                <td><img src="{% static 'img/profile.jpg' %}" alt="profile" class="img-fluid"></td>
-                                <td>15-02-2021</td>
+                                <td>{{object.id}}</td>
+                                <td>{{object.full_name}}</td>
+                                <td>{{object.email}}</td>
+                                <td>{{object.phone_number}}</td>
+                                <td><img src="{{object.profile_pic.url}}" alt="profile" class="img-fluid"></td>
+                                <td>{{object.created_at}}</td>
 
                             </tr>
 

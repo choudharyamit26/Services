@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
 {% block body %}
 <section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     <div class="demandInner boxs">
         <div class="AddService">
             <h2 class="main"> Category Management
             </h2>
-            <a href="addCategory.html" class="btns">Add Category</a>
+            <a href="{% url 'adminpanel:add-category' %}" class="btns">Add Category</a>
         </div>
         <div class="tableList boxs bgWhite">
             <div class="scrollAll">
@@ -14,25 +26,25 @@
                     <tr>
                         <th>S.No</th>
                         <th>Category Name</th>
-                        <th>Sub Category</th>
-                        <th>image</th>
-                        <th>Cost/hour</th>
+                        <th>Image</th>
                         <th>Action</th>
 
                     </tr>
                     </thead>
                     <tbody>
+                    {% for obj in object_list %}
                     <tr>
-                        <td>01</td>
-                        <td>category1</td>
-                        <td>category2</td>
-                        <td><img src="img/profile.jpg" alt="img" class="img-fluid"></td>
-                        <td>200$</td>
-
-                        <th><a href="categoryDetails.html"><i class="fa fa-eye colorBlue"></i></a></th>
-
-
+                        <td>{{forloop.counter}}</td>
+                        <td>{{obj.category_name}}</td>
+                        {% if obj.category_image %}
+                        <td><img src="{{obj.category_image.url}}" alt="img" class="img-fluid"></td>
+                        {% else %}
+                        <td><img src="" alt="img" class="img-fluid"></td>
+                        {% endif %}
+                        <th><a href="{% url 'adminpanel:category-detail' obj.id %}"><i class="fa fa-eye colorBlue"></i></a>
+                        </th>
                     </tr>
+                    {% endfor %}
 
 
                     </tfoot>

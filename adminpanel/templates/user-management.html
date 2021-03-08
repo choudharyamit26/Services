@@ -10,8 +10,7 @@
                     <tr>
                         <th>S.No</th>
                         <th>User Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Name</th>
                         <th>Email Id</th>
                         <th>Phone No.</th>
                         <th>Registration Date</th>
@@ -19,39 +18,23 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% for user in object_list %}
                     <tr>
-                        <td>01</td>
-                        <td>USER42</td>
-                        <td>Deepanshu</td>
-                        <td>Tyagi</td>
-                        <td>deepanshu@gmail.com</td>
-                        <td>8126362520</td>
-                        <td>15-02-2021</td>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{user.id}}</td>
+                        <td>{{user.full_name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.phone_number}}</td>
+                        <td>{{user.created_at}}</td>
                         <th class="textCenter flexProp">
-                            <a href="{% url 'adminpanel:user-detail' %}"><i class="fa fa-eye colorBlue"></i></a>
+                            <a href="{% url 'adminpanel:user-detail' user.id %}"><i class="fa fa-eye colorBlue"></i></a>
                             <label class="switch blockUnblock_btn" data-toggle="modal" data-target="#myModal">
                                 <input type="checkbox">
                                 <span class="slider"></span>
                             </label>
                         </th>
                     </tr>
-                    <tr>
-                        <td>02</td>
-                        <td>USER43</td>
-                        <td>Deepu</td>
-                        <td>Tyagi</td>
-                        <td>deepu@gmail.com</td>
-                        <td>9027407425</td>
-                        <td>13-02-2021</td>
-                        <th class="textCenter flexProp">
-                            <a href="{% url 'adminpanel:user-detail' %}"><i class="fa fa-eye colorBlue"></i></a>
-                            <label class="switch blockUnblock_btn" data-toggle="modal" data-target="#myModal">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </th>
-                    </tr>
-
+                    {% endfor %}
                     </tfoot>
                 </table>
             </div>

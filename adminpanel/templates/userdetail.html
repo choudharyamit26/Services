@@ -8,15 +8,17 @@
                 <li class="liHead"> Profile Details</li>
             </ul>
             <ul class="detailsUser padding-left-25">
-                <li><span class="first">User Id</span></li>
-                <li><span class="first">Date Of Registration</span></li>
-                <li><span class="first">First Name</span></li>
-                <li><span class="first">Last Name</span></li>
+                <li><span class="first">User Id</span>{{object.id}}</li>
+                <li><span class="first">Date Of Registration</span>{{object.created_at}}</li>
+                <li><span class="first">Full Name</span>{{object.full_name}}</li>
+                {% if object.profile_pic %}
+                <li><span class="first">Profile Picture</span><img src="{{object.profile_pic.url}}"></li>
+                {% else %}
                 <li><span class="first">Profile Picture</span></li>
-                <li><span class="first">Cover Picture</span></li>
-                <li><span class="first">Email Address</span></li>
-                <li><span class="first">Phone Number</span></li>
-                <li><span class="first">About User</span></li>
+                {% endif %}
+                <li><span class="first">Email Address</span>{{object.email}}</li>
+                <li><span class="first">Country Code</span>{{object.country_code}}</li>
+                <li><span class="first">Phone Number</span>{{object.phone_number}}</li>
             </ul>
             <ul class="detailsUser">
                 <li class="liHead">Order History</li>

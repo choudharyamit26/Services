@@ -25,3 +25,5 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User)
+admin.site.register(ServiceProvider)
+admin.site.register(Category)

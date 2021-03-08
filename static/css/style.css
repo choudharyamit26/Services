@@ -956,3 +956,29 @@ float: right;
   .providers{
 	  text-align: center;
   }
+.sideNav ul li.active a{
+background:var(--colorBlue);
+color:var(--colorWhite);
+}
+.alert.alert-dismissible.fade.show button.close{
+color:#fff;
+    top: 8px;
+    right: 8px;
+}
+.alert.alert-dismissible.fade.show button.close span{
+position:relative;
+top:-8px;
+}
+.sideNav.boxs.scrollbar ul li.nav-item.nav-link{
+padding:0;
+}
+.headerRight ul li a span.bellNoti{
+    padding: 2px 6px;
+    position: absolute;
+    border-radius: 100%;
+    top: -14px;
+    font-size: 12px;
+    left: 12px;
+    color: #fff;
+    background: #4e2a5b;
+}

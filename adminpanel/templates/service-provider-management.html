@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
 {% block body %}
 <section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     <div class="demandInner boxs">
         <div class="AddService">
             <h2 class="main">Service Provider Management
             </h2>
-            <a href="Addservice.html" class="btns">Add Provider</a>
+            <a href="{% url 'adminpanel:add-service-provider' %}" class="btns">Add Provider</a>
         </div>
         <div class="tableList boxs bgWhite">
             <div class="scrollAll">
@@ -14,8 +26,7 @@
                     <tr>
                         <th>S.No</th>
                         <th>User Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Full Name</th>
                         <th>Email Id</th>
                         <th>Phone No.</th>
                         <th>Registration Date</th>
@@ -23,39 +34,24 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% for obj in object_list %}
                     <tr>
-                        <td>01</td>
-                        <td>USER42</td>
-                        <td>Deepanshu</td>
-                        <td>Tyagi</td>
-                        <td>deepanshu@gmail.com</td>
-                        <td>8126362520</td>
-                        <td>15-02-2021</td>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{obj.id}}</td>
+                        <td>{{obj.full_name}}</td>
+                        <td>{{obj.email}}</td>
+                        <td>{{obj.phone_number}}</td>
+                        <td>{{obj.created_at}}</td>
                         <th class="textCenter flexProp">
-                            <a href="{% url 'adminpanel:service-detail' %}"><i class="fa fa-eye colorBlue"></i></a>
+                            <a href="{% url 'adminpanel:service-provider-detail' obj.id %}"><i
+                                    class="fa fa-eye colorBlue"></i></a>
                             <label class="switch blockUnblock_btn" data-toggle="modal" data-target="#myModal">
                                 <input type="checkbox">
                                 <span class="slider"></span>
                             </label>
                         </th>
                     </tr>
-                    <tr>
-                        <td>02</td>
-                        <td>USER43</td>
-                        <td>Deepu</td>
-                        <td>Tyagi</td>
-                        <td>deepu@gmail.com</td>
-                        <td>9027407425</td>
-                        <td>13-02-2021</td>
-                        <th class="textCenter flexProp">
-                            <a href="{% url 'adminpanel:service-detail' %}"><i class="fa fa-eye colorBlue"></i></a>
-                            <label class="switch blockUnblock_btn" data-toggle="modal" data-target="#myModal">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </th>
-                    </tr>
-
+                    {% endfor %}
                     </tfoot>
 
                 </table>
