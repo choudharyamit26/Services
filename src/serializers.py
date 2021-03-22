@@ -29,10 +29,12 @@ class LoginSerializer(serializers.ModelSerializer):
     device_token = serializers.CharField()
     device_type = serializers.CharField()
     language = serializers.CharField()
+    lat = serializers.CharField()
+    long = serializers.CharField()
 
     class Meta:
         model = User
-        fields = ('country_code', 'phone_number', 'device_token', 'device_type', 'language')
+        fields = ('country_code', 'phone_number', 'device_token', 'device_type', 'language','long','lat')
 
 
 class CheckUserSerializer(serializers.ModelSerializer):

@@ -69,6 +69,8 @@ class LoginView(ObtainAuthToken):
             device_token = serializer.validated_data['device_token']
             device_type = serializer.validated_data['device_type']
             language = serializer.validated_data['language']
+            lat = serializer.validated_data['lat']
+            long = serializer.validated_data['long']
             try:
                 user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
                 user_id = AppUser.objects.get(user=user_obj)
@@ -82,7 +84,9 @@ class LoginView(ObtainAuthToken):
                 print('previous token ', user_device_token)
                 user_id.device_token = device_token
                 user_id.device_type = device_type
-                user_id.save(update_fields=['device_token', 'device_type'])
+                user_id.long = long
+                user_id.lat = lat
+                user_id.save(update_fields=['device_token', 'device_type', 'long', 'lat'])
                 print('updated device token ', user_id.device_token)
                 token = token[0]
                 return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
@@ -100,7 +104,10 @@ class LoginView(ObtainAuthToken):
                     user_device_token = user_id.device_token
                     print('previous token ', user_device_token)
                     user_id.device_token = device_token
-                    user_id.save(update_fields=['device_token'])
+                    user_id.device_type = device_type
+                    user_id.lat = lat
+                    user_id.long = long
+                    user_id.save(update_fields=['device_token', 'device_type', 'lat', 'long'])
                     print('updated device token ', user_id.device_token)
                     token = token[0]
                     return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
