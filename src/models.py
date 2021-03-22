@@ -84,8 +84,8 @@ class GeneralInquiry(models.Model):
 
 class RatingReview(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-    order = models.ForeignKey(Booking,on_delete=models.CASCADE)
-    reviews = models.CharField(default='',max_length=256)
+    order = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    reviews = models.CharField(default='', max_length=256)
     rating = models.IntegerField()
 
 
