@@ -1,6 +1,6 @@
 from django import forms
 from .models import User, ServiceProvider, Category, SubCategory, Services
-from src.models import Booking
+from src.models import Booking, OffersAndDiscount
 
 
 class AddServiceProviderForm(forms.ModelForm):
@@ -39,3 +39,9 @@ class AssignServiceProviderForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ('id', 'service_provider')
+
+
+class UpdateOfferForm(forms.ModelForm):
+    class Meta:
+        model = OffersAndDiscount
+        fields = ('coupon_code', 'percent')

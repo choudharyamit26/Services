@@ -7,19 +7,20 @@ class UserCreateSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField()
     country_code = serializers.IntegerField()
     phone_number = serializers.IntegerField()
-    password = serializers.CharField(style={'input_type': 'password'})
-    confirm_password = serializers.CharField(style={'input_type': 'password'})
+    # password = serializers.CharField(style={'input_type': 'password'})
+    # confirm_password = serializers.CharField(style={'input_type': 'password'})
     referral_code = serializers.CharField(required=False)
     device_token = serializers.CharField()
     device_type = serializers.CharField()
     language = serializers.CharField()
+    lat = serializers.CharField()
+    long = serializers.CharField()
 
     class Meta:
         model = User
         fields = (
             'full_name', 'country_code', 'phone_number', 'referral_code', 'language', 'device_token', 'device_type',
-            'password',
-            'confirm_password')
+            'lat', 'long')
 
 
 class LoginSerializer(serializers.ModelSerializer):

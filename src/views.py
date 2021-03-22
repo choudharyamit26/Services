@@ -6,7 +6,7 @@ from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSeriali
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
     GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs, RatingReview
+    AboutUs, RatingReview, OffersAndDiscount
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -24,33 +24,36 @@ class CreateUser(APIView):
             phone_number = serializer.validated_data['phone_number']
             full_name = serializer.validated_data['full_name']
             country_code = serializer.validated_data['country_code']
-            password = serializer.validated_data['password']
-            confirm_password = serializer.validated_data['confirm_password']
+            # password = serializer.validated_data['password']
+            # confirm_password = serializer.validated_data['confirm_password']
             referral_code = serializer.validated_data.get('referral_code' or None)
             device_token = serializer.validated_data['device_token']
             device_type = serializer.validated_data['device_type']
             language = serializer.validated_data['language']
+            lat = serializer.validated_data['lat']
+            long = serializer.validated_data['long']
             try:
                 User.objects.get(phone_number=phone_number)
                 return Response({'message': 'User with this number already exists', 'status': HTTP_400_BAD_REQUEST})
             except Exception as e:
                 print(e)
-                if password == confirm_password:
-                    user = User.objects.create(full_name=full_name, email=str(phone_number) + '@email.com',
-                                               country_code=country_code, phone_number=phone_number)
-                    user.set_password(password)
-                    app_user = AppUser.objects.create(user=user, full_name=full_name, referral_code=referral_code,
-                                                      device_token=device_token, device_type=device_type)
-                    app_user_settings = Settings.objects.get(user=app_user)
-                    app_user_settings.language = language
-                    app_user_settings.save()
-                    token = Token.objects.get_or_create(user=user)
-                    return Response({'message': 'User created successfully', 'id': app_user.id, 'token': token[0].key,
-                                     'full_name': app_user.full_name, 'country_code': user.country_code,
-                                     'phone_number': user.phone_number, 'status': HTTP_200_OK})
-                else:
-                    return Response(
-                        {'message': 'Password and Confirm password do not match', 'status': HTTP_400_BAD_REQUEST})
+                # if password == confirm_password:
+                user = User.objects.create(full_name=full_name, email=str(phone_number) + '@email.com',
+                                           country_code=country_code, phone_number=phone_number)
+                user.set_password('Test@123')
+                app_user = AppUser.objects.create(user=user, full_name=full_name, referral_code=referral_code,
+                                                  device_token=device_token, device_type=device_type, lat=lat,
+                                                  long=long)
+                app_user_settings = Settings.objects.get(user=app_user)
+                app_user_settings.language = language
+                app_user_settings.save()
+                token = Token.objects.get_or_create(user=user)
+                return Response({'message': 'User created successfully', 'id': app_user.id, 'token': token[0].key,
+                                 'full_name': app_user.full_name, 'country_code': user.country_code,
+                                 'phone_number': user.phone_number, 'status': HTTP_200_OK})
+                # else:
+                #     return Response(
+                #         {'message': 'Password and Confirm password do not match', 'status': HTTP_400_BAD_REQUEST})
         else:
             return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
 
@@ -83,7 +86,8 @@ class LoginView(ObtainAuthToken):
                 print('updated device token ', user_id.device_token)
                 token = token[0]
                 return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
-                                 'phone_number': user_obj.phone_number, 'status': HTTP_200_OK})
+                                 'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
+                                 'long': user_id.long})
             except Exception as e:
                 print(e)
                 try:
@@ -100,7 +104,8 @@ class LoginView(ObtainAuthToken):
                     print('updated device token ', user_id.device_token)
                     token = token[0]
                     return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
-                                     'phone_number': user_obj.phone_number, 'status': HTTP_200_OK})
+                                     'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
+                                     'long': user_id.long})
                 except Exception as e:
                     return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
         else:
@@ -519,3 +524,25 @@ class GetServiceReviewRatings(APIView):
             return Response({'rating_count': len(rating_obj), 'data': ratings, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class GetDefaultOfferPercentView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = OffersAndDiscount
+
+    def get(self, request, *args, **kwargs):
+        return Response({'percent': OffersAndDiscount.objects.all()[0].percent, 'status': HTTP_200_OK})
+
+
+class GetAllOffersAndDiscount(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = OffersAndDiscount
+
+    def get(self, request, *args, **kwargs):
+        offers_obj = OffersAndDiscount.objects.all()
+        offers = []
+        for obj in offers_obj:
+            offers.append({'coupon_code': obj.coupon_code, 'percent': obj.percent})
+        return Response({'data': offers, 'status': HTTP_200_OK})

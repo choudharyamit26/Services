@@ -20,9 +20,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
-    AssignServiceProviderForm
+    AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices
-from src.models import Booking
+from src.models import Booking, OffersAndDiscount
 
 
 class LoginView(View):
@@ -182,9 +182,48 @@ class WorkerManagementView(View):
 
 class OfferManagementView(View):
     template_name = 'offer.html'
+    model = OffersAndDiscount
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'offer.html')
+        return render(self.request, 'offer.html', {'object_list': OffersAndDiscount.objects.all()})
+
+
+class OfferDetailView(DetailView):
+    template_name = 'viewoffer.html'
+    model = OffersAndDiscount
+
+
+class DeleteOfferView(DeleteView):
+    template_name = 'delete-offer.html'
+    model = OffersAndDiscount
+    success_url = reverse_lazy("adminpanel:offer-management")
+
+
+class UpdateOfferView(UpdateView):
+    template_name = 'update-coupon.html'
+    model = OffersAndDiscount
+    form_class = UpdateOfferForm
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        offer_obj = OffersAndDiscount.objects.get(id=kwargs['pk'])
+        offer_obj.coupon_code = (self.request.POST['coupon_code']).upper()
+        offer_obj.percent = self.request.POST['percent']
+        offer_obj.save()
+        messages.success(self.request, "Offer updated successfully")
+        return redirect("adminpanel:offer-management")
+
+
+class AddOffers(CreateView):
+    template_name = 'update-coupon.html'
+    model = OffersAndDiscount
+    form_class = UpdateOfferForm
+
+    def post(self, request, *args, **kwargs):
+        coupon_code = self.request.POST['coupon_code']
+        OffersAndDiscount.objects.create(coupon_code=coupon_code.upper(), percent=self.request.POST['percent'])
+        messages.success(self.request, 'Offer added successfully')
+        return redirect("adminpanel:offer-management")
 
 
 class FinanceManagementView(View):

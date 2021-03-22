@@ -14,6 +14,8 @@ class AppUser(models.Model):
     profile_pic = models.ImageField(null=True, blank=True)
     device_token = models.CharField(default='', max_length=3000)
     device_type = models.CharField(default='', max_length=3000)
+    lat = models.CharField(default='', max_length=3000)
+    long = models.CharField(default='', max_length=3000)
 
 
 class UserPromoCode(models.Model):
@@ -87,6 +89,11 @@ class RatingReview(models.Model):
     order = models.ForeignKey(Booking, on_delete=models.CASCADE)
     reviews = models.CharField(default='', max_length=256)
     rating = models.IntegerField()
+
+
+class OffersAndDiscount(models.Model):
+    coupon_code = models.CharField(default='', max_length=256)
+    percent = models.CharField(default='', max_length=20)
 
 
 @receiver(post_save, sender=AppUser)

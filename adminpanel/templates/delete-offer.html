@@ -23,12 +23,7 @@
                         {% csrf_token %}
                         <div class="form-group formGroup">
                             <label for="" class="labelel"></label>
-                            <!--                            <select name="category" id="services" required class="form-control formControl">-->
-                            <!--                                {% for category in category %}-->
-                            <!--                                <option value="{{category.pk}}">{{category.category_name}}</option>-->
-                            <!--                                {% endfor %}-->
-                            <!--                            </select>-->
-                            <h2>Are you sure you want to remove this from top servcies list ?</h2><br>
+                            <h2>Are you sure you want to remove this coupon ?</h2><br>
                             <button type="submit" class="fa fa-check fa-2x">Yes</button>&nbsp;&nbsp;&nbsp;&nbsp;
                             <a class="fa fa-close fa-2x" href="{% url 'adminpanel:top-services-list'  %}">Cancel</a>
                         </div>

@@ -1,7 +1,8 @@
 from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, GetUserProfilePic, UpdateUserLanguage, \
     HomeView, SearchingServices, SaveSearchesHistory, GetUserPastSearches, BookingView, GetBookingDetail, ContactUsView, \
     PrivacyPolicyView, TermsAndConditionView, AboutUsView, GeneralInquiryView, LogoutView, UpcomingBooking, PastBooking, \
-    OnGoingBooking, UpdateOrderStatus, RatingAndReviews, GetServiceReviewRatings
+    OnGoingBooking, UpdateOrderStatus, RatingAndReviews, GetServiceReviewRatings, GetDefaultOfferPercentView, \
+    GetAllOffersAndDiscount
 from django.urls import path
 
 app_name = 'src'
@@ -31,4 +32,6 @@ urlpatterns = [
     path('update-order/', UpdateOrderStatus.as_view(), name='update-order'),
     path('ratings-and-review/', RatingAndReviews.as_view(), name='ratings-and-review'),
     path('service-ratings-and-review/', GetServiceReviewRatings.as_view(), name='service-ratings-and-review'),
+    path('get-default-discount-percent/', GetDefaultOfferPercentView.as_view(), name='get-default-discount-percent'),
+    path('get-all-offers/', GetAllOffersAndDiscount.as_view(), name='get-all-offers'),
 ]
