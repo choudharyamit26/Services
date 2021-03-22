@@ -15,15 +15,15 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import View, DetailView, UpdateView, FormView, TemplateView, ListView, CreateView
+from django.views.generic import View, DetailView, UpdateView, FormView, TemplateView, ListView, CreateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
-from .forms import AddServiceProviderForm, AddCategoryForm
-from .models import User, Category, ServiceProvider
+from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
+    AssignServiceProviderForm
+from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices
+from src.models import Booking
 
-
-# Create your views here.
 
 class LoginView(View):
     template_name = 'login.html'
@@ -64,8 +64,11 @@ class UserManagementView(View):
     template_name = 'user-management.html'
 
     def get(self, request, *args, **kwargs):
-        users = User.objects.filter(is_provider=False)
-        print(users)
+        users = User.objects.filter(is_superuser=False, is_provider=False, is_sub_admin=False)
+        # users = User.objects.filter(is_provider=False)
+        # print(users)
+        # print(User.objects.all())
+        # print(User.objects.filter(is_provider=False))
         return render(self.request, 'user-management.html', {'object_list': users})
 
 
@@ -76,11 +79,11 @@ class ServiceProviderManagementView(View):
         return render(self.request, 'service-provider-management.html', {'object_list': ServiceProvider.objects.all()})
 
 
-class SubAdminManagementView(View):
-    template_name = 'sub-admin-management.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(self.request, 'sub-admin-management.html')
+# class SubAdminManagementView(View):
+#     template_name = 'sub-admin-management.html'
+#
+#     def get(self, request, *args, **kwargs):
+#         return render(self.request, 'sub-admin-management.html')
 
 
 class CategoryView(ListView):
@@ -116,11 +119,51 @@ class CategoryDetail(DetailView):
     model = Category
 
 
-class OrderManagementView(View):
+class OrderManagementView(ListView):
+    model = Booking
     template_name = 'order-management.html'
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'order-management.html')
+        return render(self.request, 'order-management.html',
+                      {'object_list': Booking.objects.all().exclude(status='Rejected'),
+                       'service_provider': ServiceProvider.objects.all()})
+
+
+class RejectedOrderView(ListView):
+    model = Booking
+    template_name = 'rejected-order-management.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'rejected-order-management.html',
+                      {'object_list': Booking.objects.filter(status='Rejected')})
+
+
+class AssignServiceProvider(CreateView):
+    model = Booking
+    template_name = 'order-management.html'
+    form_class = AssignServiceProviderForm
+
+    def post(self, request, *args, **kwargs):
+        print('From Assign Service Provider', self.request.POST)
+        order = self.request.POST['orderId']
+        service_provider_id = self.request.POST['serviceProviderId']
+        order_obj = Booking.objects.get(id=order)
+        order_obj.service_provider = ServiceProvider.objects.get(id=service_provider_id)
+        order_obj.save()
+        messages.success(self.request, 'Service provider assigned successfully')
+        return redirect("adminpanel:order-management")
+
+
+class SendQuoteView(CreateView):
+    model = Booking
+    template_name = 'order-management.html'
+
+    def post(self, request, *args, **kwargs):
+        print('>>>>>>>>>>>>>>>>>>>>>', self.request.POST)
+        order_obj = Booking.objects.get(id=self.request.POST['orderId'])
+        order_obj.quote = self.request.POST['quote']
+        order_obj.save()
+        return redirect("adminpanel:order-management")
 
 
 class VerificationManagementView(View):
@@ -370,12 +413,16 @@ class PasswordChangeDoneView(PasswordContextMixin, TemplateView):
 
 
 class AddServiceProvider(CreateView):
-    template_name = 'Addservice.html'
+    template_name = 'Addserviceprovider.html'
     model = User
     form_class = AddServiceProviderForm
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'Addservice.html', {'category': Category.objects.all(), 'form': self.form_class})
+        print(SubCategory.objects.all())
+        print(Services.objects.all())
+        return render(self.request, 'Addserviceprovider.html',
+                      {'category': Category.objects.all(), 'sub_category': SubCategory.objects.all(),
+                       'services': Services.objects.all(), 'form': self.form_class})
 
     def post(self, request, *args, **kwargs):
         # print(self.request.POST)
@@ -383,7 +430,10 @@ class AddServiceProvider(CreateView):
         country_code = self.request.POST['country_code']
         phone_number = self.request.POST['phone_number']
         category = self.request.POST['category']
+        sub_category = self.request.POST['sub_category']
+        services = self.request.POST['services']
         email = self.request.POST['email']
+        address = self.request.POST['address']
         password = self.request.POST['password']
         confirm_password = self.request.POST['confirm_password']
         # profile_pic = self.request.POST.get('profile_pic' or None)
@@ -423,7 +473,10 @@ class AddServiceProvider(CreateView):
                     country_code=country_code,
                     phone_number=phone_number,
                     category=Category.objects.get(id=category),
+                    sub_category=SubCategory.objects.get(id=sub_category),
+                    services=Services.objects.get(id=services),
                     email=email,
+                    address=address,
                     password=password,
                     confirm_password=confirm_password,
                     profile_pic=profile_pic
@@ -440,3 +493,206 @@ class AddServiceProvider(CreateView):
                 user.save()
                 messages.success(self.request, 'Service provider added successfully')
                 return redirect("adminpanel:service-provider-management")
+
+
+class AddSubCategory(CreateView):
+    template_name = 'Add-SubCategory.html'
+    form_class = SubCategoryForm
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'Add-SubCategory.html', {"category": Category.objects.all()})
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        SubCategory.objects.create(
+            category=Category.objects.get(id=self.request.POST['category']),
+            sub_category_name=self.request.POST['sub_category_name'],
+            sub_category_image=self.request.FILES.get('sub_category_image' or None),
+        )
+        messages.success(self.request, 'Sub Category added successfully')
+        return redirect("adminpanel:sub-category-management")
+
+
+class SubCategoryView(ListView):
+    template_name = 'Sub-Category.html'
+    model = SubCategory
+
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'Sub-Category.html')
+
+
+class SubCategoryDetail(DetailView):
+    template_name = 'SubCategoryDetail.html'
+    model = SubCategory
+
+
+class SubAdminManagement(ListView):
+    template_name = 'sub-admin-management.html'
+    model = User
+
+    # def get_queryset(self):
+    #     return User.objects.filter(is_sub_admin=True)
+
+    def get(self, request, *args, **kwargs):
+        print(User.objects.filter(is_sub_admin=True))
+        return render(self.request, 'sub-admin-management.html',
+                      {'object_list': User.objects.filter(is_sub_admin=True)})
+
+
+class AddSubAdmin(CreateView):
+    model = User
+    template_name = 'add-admin.html'
+    form_class = SubAdminForm
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        name = self.request.POST['full_name']
+        email = self.request.POST['email']
+        phone_number = self.request.POST['phone_number']
+        password = self.request.POST['password']
+        confirm_password = self.request.POST['confirm_password']
+        access_rights = self.request.POST.getlist('access_rights')
+        print(access_rights)
+        try:
+            user_obj = User.objects.get(Q(email=email) | Q(phone_number=phone_number))
+            messages.error(self.request, 'User with this email/phone already exists')
+            return render(self.request, 'add-admin.html')
+        except Exception as e:
+            print('Exception----->>>', e)
+            if password == confirm_password:
+                user = User.objects.create(
+                    full_name=name,
+                    email=email,
+                    is_sub_admin=True
+                )
+                user.set_password(password)
+                for right in access_rights:
+                    if '_'.join(right.lower().split()) == 'can_manage_user':
+                        user.can_manage_user = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_order':
+                        user.can_manage_order = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_provider':
+                        user.can_manage_provider = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_category':
+                        user.can_manage_category = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_sub_category':
+                        user.can_manage_sub_category = True
+                        user.save()
+                messages.success(self.request, 'Sub Admin added successfully')
+                return redirect("adminpanel:sub-admin-management")
+            else:
+                messages.success(self.request, 'Password and Confirm Password does not match')
+                return render(self.request, 'add-admin.html')
+
+
+class ServicesList(ListView):
+    model = Services
+    template_name = 'services-list.html'
+
+
+class AddServices(CreateView):
+    model = Services
+    template_name = 'add-services.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'add-services.html',
+                      {'category': Category.objects.all(), 'sub_category': SubCategory.objects.all()})
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        category = self.request.POST['category']
+        sub_category = self.request.POST['sub_category']
+        service_name = self.request.POST['service_name']
+        image_1 = self.request.FILES['image_1']
+        image_2 = self.request.FILES['image_2']
+        Services.objects.create(category=Category.objects.get(id=category),
+                                sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name,
+                                image_1=image_1, image_2=image_2)
+        messages.success(self.request, 'Service added successfully')
+        return redirect("adminpanel:services-list")
+
+
+class UpdateService(UpdateView):
+    model = Services
+    template_name = 'update-services.html'
+    form_class = UpdateServiceForm
+
+    def get(self, request, *args, **kwargs):
+        service_obj = Services.objects.get(id=kwargs['pk'])
+        return render(self.request, 'update-services.html',
+                      {'category': Category.objects.all(), 'sub_category': SubCategory.objects.all(),
+                       'service_name': service_obj.service_name})
+
+    def post(self, request, *args, **kwargs):
+        # print(self.form_class.is_valid())
+        print(self.request.POST)
+        print(self.request.FILES['image_1'])
+        print(self.request.FILES['image_2'])
+        service_obj = Services.objects.get(id=kwargs['pk'])
+        service_obj.category = Category.objects.get(id=self.request.POST['category'])
+        service_obj.sub_category = SubCategory.objects.get(id=self.request.POST['sub_category'])
+        service_obj.service_name = self.request.POST['service_name']
+        service_obj.image_1 = self.request.FILES['image_1']
+        service_obj.image_2 = self.request.FILES['image_2']
+        service_obj.save()
+        messages.success(self.request, 'Service updated successfully')
+        return redirect("adminpanel:services-list")
+
+
+class TopServicesList(ListView):
+    model = TopServices
+    template_name = 'top-services-list.html'
+
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, "top-services-list.html")
+
+
+class TopServicesView(CreateView):
+    model = TopServices
+    template_name = 'top-services.html'
+
+    def get(self, request, *args, **kwargs):
+        print(Services.objects.all())
+        print(TopServices.objects.all())
+        checked = []
+        unchecked = []
+        for service in Services.objects.all():
+            if service in [x.service for x in TopServices.objects.all()]:
+                checked.append(service)
+            else:
+                unchecked.append(service)
+        return render(self.request, 'top-services.html',
+                      {'checked': checked, 'unchecked': unchecked})
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        print(self.request.POST.getlist('service_name'))
+        for obj in self.request.POST.getlist('service_name'):
+            print(obj)
+            try:
+                TopServices.objects.get(service=Services.objects.get(id=obj))
+                print('TRY BLOCK ', TopServices.objects.get(service=Services.objects.get(id=obj)))
+            except Exception as e:
+                print('Exception---->>', e)
+                TopServices.objects.create(service=Services.objects.get(id=obj))
+        messages.success(self.request, "Top services added successfully")
+        return redirect("adminpanel:top-services-list")
+
+
+class DeleteTopService(DeleteView):
+    model = TopServices
+    template_name = 'delete-top-services.html'
+    success_url = reverse_lazy("adminpanel:top-services-list")
+
+
+class BlockUser(View):
+    model = User
+
+    def get(self, request, *args, **kwargs):
+        print(kwargs['pk'])
+        messages.info(self.request, "User blocked successfully")
+        return redirect("adminpanel:user-management")

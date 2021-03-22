@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 {% block body %}
 <section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-message alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     <div class="demandInner boxs">
         <div class="AddService">
             <h2 class="main">Order Management
@@ -34,46 +46,39 @@
                         <th>Order Id</th>
                         <th>Order Date</th>
                         <th>Order Time</th>
-                        <th>Order amount</th>
                         <th>Username</th>
                         <th>User ID</th>
-                        <th>Servicer Provider Name</th>
-                        <th>Service Provider ID</th>
                         <th>User address</th>
-                        <th>List of Services</th>
-                        <th>Services Workers</th>
-                        <th>Applied offer</th>
-                        <th>Service work at with date & time</th>
-                        <th>Rating</th>
+                        <th>Service</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
+                    {% for obj in object_list %}
                     <tr>
-                        <th>01</th>
-                        <th>DEEP8126</th>
-                        <th>16-07-2020</th>
-                        <th>8:40 pm</th>
-                        <th>300$</th>
-                        <th>Deepanshu</th>
-                        <th>deep090</th>
-                        <th>deepak</th>
-                        <th>deep0909</th>
-                        <th>Meerut</th>
-                        <th>service</th>
-                        <th>Worker</th>
-                        <th>20%</th>
-                        <th>3.0 pm</th>
-                        <th>5 <span><i class="fa fa-star colorBlue"></i></span></th>
-                        <th><a href="javascript:void(0)" class="btns" data-toggle="modal" data-target="#assign">Assign
-                            Workers</a></th>
+                        <th>{{forloop.counter}}</th>
+                        <th>{{obj.id}}</th>
+                        <th>{{obj.date}}</th>
+                        <th>{{obj.time}}</th>
+                        <th>{{obj.user.full_name}}</th>
+                        <th>{{obj.user.id}}</th>
+                        <th>{{obj.address}}</th>
+                        <th>{{obj.service.service_name}}</th>
+                        <th>
+                            {% if obj.status == 'Accepted' %}
+                            <button value="{{obj.id}}" class="btns orderModalButton" data-toggle="modal"
+                                    data-target="#assign">Assign Workers
+                            </button>
+                            {% else %}
+                            <button value="{{obj.id}}" class="btns orderQuoteButton" data-toggle="modal"
+                                    data-target="#quote">Send Quote
+                            </button>
+                            {% endif %}
+                        </th>
                     </tr>
-
-
+                    {% endfor %}
                     </tfoot>
-
                 </table>
-
             </div>
         </div>
     </div>
@@ -88,41 +93,145 @@
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <div class="form-group">
-                    <label for="">Category</label>
-                    <select name="cars" id="services" class="form-control formControl"
+                    <div id="object_id_placeholder_div">
+                        <input hidden="true" id="object_id_placeholder_input" value="">
+                    </div>
+                    <label for="">Service Providers</label>
+                    <select name="cars" id="services" required class="form-control formControl"
                             placeholder="Select Service Provider">
-                        <option value="services1">Select Provider</option>
-                        <option value="services2">Provider</option>
-                        <option value="services3">Provider</option>
-                        <option value="services4">Provider</option>
+                        {% for obj in service_provider %}
+                        <option value="{{obj.pk}}" id="serviceProviderId">{{obj.email}}</option>
+                        {% endfor %}
                     </select>
+                    <ul class="allBtns">
+                        <li>
+                            <button type="button" id="serviceProviderButton" class="btns">Select providers</button>
+                        </li>
+                    </ul>
                 </div>
-                <div class="form-group">
-                    <label for="">Name</label>
-                    <input type="text" name="" id="" class="form-control formControl" placeholder="Name">
-                </div>
-                <div class="form-group">
-                    <label for="">Email</label>
-                    <input type="email" name="" id="" class="form-control formControl" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="">Phone</label>
-                    <input type="number" name="" id="" class="form-control formControl" placeholder="Phone">
-                </div>
-                <div class="form-group">
-                    <label for="">Name</label>
-                    <input type="text" name="" id="" class="form-control formControl" placeholder="Name">
-                </div>
-
-
-                <ul class="allBtns">
-                    <li><a href="#0" class="btns">Select providers</a></li>
-                    <li><a href="#0" class="btns">Back</a></li>
-                </ul>
             </div>
 
         </div>
 
     </div>
 </div>
+
+<div class="modal fade" id="quote" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="form-group">
+                    <div id="object_id_placeholder_div2">
+                        <input hidden="true" id="object_id_placeholder_input2" value="">
+                    </div>
+                    <label for="">Quote</label>
+                    <input type="text" name="quote" id="quoteInput" required class="form-control formControl"
+                           placeholder="Quote">
+                    <ul class="allBtns">
+                        <li>
+                            <button type="button" id="quoteButton" class="btns">Send quote</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+    $('.orderModalButton').click(function (e) {
+        console.log('clicked orderModalButton')
+        e.preventDefault();
+//        $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div").html(`<input hidden="true" id="object_id_placeholder_input" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#serviceProviderButton").click(function () {
+        var object_id = $("#object_id_placeholder_input").val();
+        console.log('Id ',object_id)
+        var serviceProviderId = $("#services").val();
+        console.log('Service Provider id',serviceProviderId)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/assign-service-provider" + "/"
+        $.ajax({
+            url:url,
+            method:'POST',
+            data:{
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'serviceProviderId':serviceProviderId,
+                'orderId':object_id
+            },
+            success: function (data) {
+            console.log('inside publicationId success')
+            window.location.href = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/order-management/"
+      }
+        })
+    });
+});
+
+
+
+
+
+</script>
+<script>
+$(document).ready(function () {
+    $('.orderQuoteButton').click(function (e) {
+        console.log('clicked orderModalButton')
+        e.preventDefault();
+//        $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div2").html(`<input hidden="true" id="object_id_placeholder_input2" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#quoteButton").click(function () {
+        var object_id = $("#object_id_placeholder_input2").val();
+        console.log('Id ',object_id)
+        var quote = $("#quoteInput").val();
+        console.log('Service Provider id',quote)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/send-quote" + "/"
+        $.ajax({
+            url:url,
+            method:'POST',
+            data:{
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'quote':quote,
+                'orderId':object_id
+            },
+            success: function (data) {
+            console.log('inside publicationId success')
+            window.location.href = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/order-management/"
+      }
+        })
+    });
+});
+
+
+
+
+
+</script>
+
 {% endblock body %}

@@ -1,15 +1,41 @@
 from django import forms
-from .models import User, ServiceProvider, Category
+from .models import User, ServiceProvider, Category, SubCategory, Services
+from src.models import Booking
 
 
 class AddServiceProviderForm(forms.ModelForm):
     class Meta:
         model = ServiceProvider
         fields = (
-        'full_name', 'country_code', 'phone_number', 'category', 'address', 'email', 'password', 'confirm_password')
+            'full_name', 'country_code', 'phone_number', 'category', 'sub_category', 'services', 'address', 'email',
+            'password', 'confirm_password')
 
 
 class AddCategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = '__all__'
+
+
+class SubCategoryForm(forms.ModelForm):
+    class Meta:
+        model = SubCategory
+        fields = '__all__'
+
+
+class SubAdminForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('full_name', 'email', 'phone_number', 'password', 'confirm_password')
+
+
+class UpdateServiceForm(forms.ModelForm):
+    class Meta:
+        model = Services
+        fields = '__all__'
+
+
+class AssignServiceProviderForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ('id', 'service_provider')

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+        <h2 class="main">Category Details</h2>
+        <div class="userDetails bgWhite padding-25">
+
+            <ul class="detailsUser padding-left-25">
+                <li><span class="first">Sub Category Id</span>{{object.id}}</li>
+                <li><span class="first">Sub Category Name</span>{{object.sub_category_name}}</li>
+                <li><span class="first">Category Name</span>{{object.category.category_name}}</li>
+                {% if object.sub_category_image %}
+                <li><span class="first">Category Image</span><img src="{{object.sub_category_image.url}}"></li>
+                {% else %}
+                <li><span class="first">Category Image</span></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+</section>
+{% endblock body %}

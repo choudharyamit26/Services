@@ -982,3 +982,13 @@ padding:0;
     color: #fff;
     background: #4e2a5b;
 }
+newSelect .select2-container--default .select2-search--inline .select2-search__field{
+height:36px !important;
+}
+
+form .select2-container .select2-selection{}
+form .select2-container .select2-selection ul.select2-selection__rendered{
+    min-height: 40px;
+    padding: 0 5px 2px 5px;
+}
+form .select2-container .select2-selection ul.select2-selection__rendered li{margin: 5px 5px 0px 0;}

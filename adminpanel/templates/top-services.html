@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="demandInner boxs">
+        <h2 class="main">Add Service</h2>
+        <div class="formDett padding-25 bgWhite">
+            <div class="row">
+                <div class="col-sm-8">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for obj in checked %}
+                        <input type="checkbox" name="service_name" value="{{obj.id}}" checked>
+                        <label>{{obj.service_name}}</label><br>
+                        {% endfor %}
+                        {% for obj in unchecked %}
+                        <input type="checkbox" name="service_name" value="{{obj.id}}">
+                        <label>{{obj.service_name}}</label><br>
+                        {% endfor %}
+                        <input type="submit" value="Submit" class="btns">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

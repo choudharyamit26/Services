@@ -14,6 +14,13 @@
     <!-- <link href="css/reset.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css'>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js'></script>
 </head>
 
 <body>
@@ -79,28 +86,45 @@
             <a href="{% url 'adminpanel:category-management' %}"><span class="icon"><i
                     class="fa fa-cogs"></i></span><span
                     class="iconContent">Category Management</span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:services-list' %}active{% endif %}">
+            <a href="{% url 'adminpanel:services-list' %}"><span class="icon"><i
+                    class="fa fa-wrench"></i></span><span
+                    class="iconContent">Service Management</span></a></li>
+
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:sub-category-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:sub-category-management' %}"><span class="icon"><i
+                    class="fa fa-cog"></i></span><span
+                    class="iconContent">SubCategory Management</span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:top-services-list' %}active{% endif %}">
+            <a href="{% url 'adminpanel:top-services-list' %}"><span class="icon"><i
+                    class="fa fa-list"></i></span><span
+                    class="iconContent">Top Services Management</span></a></li>
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:order-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:order-management' %}"><span class="icon"><i
                     class="fa fa-dollar-sign"></i></span><span
                     class="iconContent">Order Management</span></a></li>
-        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:verification-management' %}active{% endif %}">
-            <a href="{% url 'adminpanel:verification-management' %}"><span class="icon"><i class="fa fa-user-check"></i></span><span
-                    class="iconContent">Verification Management
-                            </span></a></li>
-        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:worker-management' %}active{% endif %}">
-            <a href="{% url 'adminpanel:worker-management' %}"><span class="icon"><i
-                    class="fa fa-users"></i></span><span
-                    class="iconContent">Worker Management</span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:rejected-order-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:rejected-order-management' %}"><span class="icon"><i
+                    class="fa fa-ban"></i></span><span
+                    class="iconContent">Rejected Orders</span></a></li>
+<!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:verification-management' %}active{% endif %}">-->
+<!--            <a href="{% url 'adminpanel:verification-management' %}"><span class="icon"><i class="fa fa-user-check"></i></span><span-->
+<!--                    class="iconContent">Verification Management-->
+<!--                            </span></a></li>-->
+<!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:worker-management' %}active{% endif %}">-->
+<!--            <a href="{% url 'adminpanel:worker-management' %}"><span class="icon"><i-->
+<!--                    class="fa fa-users"></i></span><span-->
+<!--                    class="iconContent">Worker Management</span></a></li>-->
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:offer-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:offer-management' %}"><span class="icon"><i
                     class="fa fa-percent"></i></span><span
                     class="iconContent">Offers & Discounts Management
                             </span></a></li>
-        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:finance-management' %}active{% endif %}">
-            <a href="{% url 'adminpanel:finance-management' %}"><span class="icon"><i
-                    class="fa fa-percent"></i></span><span
-                    class="iconContent">Finance Management
-                            </span></a></li>
+<!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:finance-management' %}active{% endif %}">-->
+<!--            <a href="{% url 'adminpanel:finance-management' %}"><span class="icon"><i-->
+<!--                    class="fa fa-percent"></i></span><span-->
+<!--                    class="iconContent">Finance Management-->
+<!--                            </span></a></li>-->
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:static-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:static-management' %}"><span class="icon"><i
                     class="fa fa-pen-square"></i></span><span

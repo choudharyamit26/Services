@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
 {% block body %}
 <section class="demandRight boxs">
+        <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     <div class="demandInner boxs">
         <div class="AddService">
             <h2 class="main">Sub-Admin Management
             </h2>
-            <a href="add-admin.html" class="btns">Add </a>
+            <a href="{% url 'adminpanel:add-sub-admin' %}" class="btns">Add SubAdmin</a>
         </div>
         <div class="tableList boxs bgWhite">
             <div class="scrollAll">
@@ -20,11 +32,12 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% for obj in object_list %}
                     <tr>
-                        <td>01</td>
-                        <td>USER42</td>
-                        <td>Deepanshu Tyagi</td>
-                        <td>deepanshu@gmail.com</td>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{obj.id}}</td>
+                        <td>{{obj.full_name}}</td>
+                        <td>{{obj.email}}</td>
                         <th class="textCenter flexProp">
                             <a href="{% url 'adminpanel:sub-admin-detail' %}"><i class="fa fa-eye colorBlue"></i></a>
                             <a href="#0" class="marginLR" data-toggle="modal" data-target="#myModal2"><i
@@ -32,7 +45,7 @@
                             <a href="{% url 'adminpanel:edit-sub-admin-detail' %}"><i class="fa fa-edit colorBlue"></i></a>
                         </th>
                     </tr>
-
+                    {% endfor %}
 
                     </tfoot>
                 </table>

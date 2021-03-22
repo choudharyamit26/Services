@@ -1,200 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ondemand | Add Admin</title>
-    <!-- Bootstrap -->
-    <link href="img/fav.png" rel="icon" type="icon/image">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <!-- <link href="css/reset.min.css" rel="stylesheet"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <link href="css/style.css" rel="stylesheet">
-</head>
-
-<body>
-    <header class="headerAll boxs">
-        <div class="headerLogo"><a href="#0"><img src="img/logo.png" alt="logo" class="img-fluid"></a>
-            <!-- <span class="humburger"><i class="fa fa-bars"></i></span> -->
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="headerRight">
-            <ul>
-                <li><a href="#0" class="bell"><i class="fa fa-bell"></i></a></li>
-                <li class="postrel">
-                    <a href="#0" class="profile"><img src="img/profile.jpg" alt="profle" class="img-fluid"><span>Hey,
-                            Admin</span></a>
-                    <div class="profileIn">
-                        <ul>
-                            <li>
-                                <a href="myprofile.html">
-                                    <span><i class="fas fa-user"></i></span>
-                                    Admin Profile
-                                </a>
-                            </li>
-                            <li>
-                                <a href="changeAddress.html">
-                                    <span><i class="fa fa-cog"></i></span>
-                                    Change Password
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#0" data-toggle="modal" data-target="#logout">
-                                    <span><i class="fas fa-sign-out-alt"></i></span>
-                                    Logout
-                                </a>
-                            </li>
-                        </ul>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="demandInner boxs">
+        <h2 class="main">Add SubAdmin
+        </h2>
+
+        <div class="formDett padding-25 bgWhite">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" class="form-control formControl" name="full_name" required
+                                   placeholder="Name">
+                        </div>
                     </div>
-                </li>
-            </ul>
-        </div>
-    </header>
-
-    <section class="sideNav boxs scrollbar" id="style-3">
-        <ul class="force-overflow">
-            <li><a href="dashboard.html"><span class="icon"><i class="fa fa-tachometer-alt"></i></span><span
-                        class="iconContent">Statistics</span></a></li>
-            <li><a href="user-management.html"><span class="icon"><i class="fa fa-user"></i></span><span class="iconContent">User
-                        Management</span></a></li>
-            <li><a href="service-provide-management.html"><span class="icon"><i class="fa fa-paper-plane"></i></span><span
-                        class="iconContent">Service
-                        Provider Management</span></a></li>
-            <li><a href="sub-admin-management.html" class="active"><span class="icon"><i class="fa fa-user-cog"></i></span><span class="iconContent">
-                        Sub-admin Management
-                    </span></a></li>
-            <li><a href="Category.html"><span class="icon"><i class="fa fa-cogs"></i></span><span
-                        class="iconContent">Category Management</span></a></li>
-                        <li><a href="order-management.html"><span class="icon"><i class="fa fa-dollar-sign"></i></span><span
-                            class="iconContent">Order Management</span></a></li>
-                            <li><a href="verification.html"><span class="icon"><i class="fa fa-user-check"></i></span><span
-                                class="iconContent">Verification Management
-                            </span></a></li>
-                            <li><a href="worker.html"><span class="icon"><i class="fa fa-users"></i></span><span
-                                class="iconContent">Worker Management</span></a></li>
-                            <li><a href="offer.html"><span class="icon"><i class="fa fa-percent"></i></span><span
-                                class="iconContent">Offers & Discounts Management
-                            </span></a></li>
-                            <li><a href="finance.html"><span class="icon"><i class="fa fa-percent"></i></span><span
-                                class="iconContent">Finance Management
-                            </span></a></li>
-                            <li><a href="static.html"><span class="icon"><i class="fa fa-pen-square"></i></span><span
-                                class="iconContent">Static Content Management
-                            </span></a></li>
-                            <li><a href="notification.html"><span class="icon"><i class="fa fa-bell"></i></span><span
-                                class="iconContent">Notification Management
-                            </span></a></li>
-                            <li><a href="login.html"><span class="icon"><i class="fa fa-sign-out-alt"></i></span><span
-                                class="iconContent">Logout
-                            </span></a></li>
-        </ul>
-    </section>
-    <section class="demandRight boxs">
-        <div class="demandInner boxs">
-         
-            <h2 class="main">Add Admin 
-                </h2>
-          
-<div class="formDett padding-25 bgWhite">
-    <form action="">
-    <div class="row">
-
-<div class="col-sm-6">
-        <div class="form-group formGroup">
-        <label for="" class="labelel"></label>
-        <input type="text" class="form-control formControl" placeholder="Name">
-    </div>
-</div>
-<div class="col-sm-6">
-    <div class="form-group formGroup">
-    <label for="" class="labelel"></label>
-    <input type="text" class="form-control formControl" placeholder="UserId">
-</div>
-</div>
-<div class="col-sm-6">
-    <div class="form-group formGroup">
-        <label for="" class="labelel"></label>
-        <input type="email" class="form-control formControl" placeholder="Email">
-    </div>
-</div>
-    <div class="col-sm-6">
-        <div class="form-group formGroup">
-            <label for="" class="labelel"></label>
-            <input type="number" class="form-control formControl" placeholder="phone Number">
-        </div>
-</div>
-<div class="col-sm-6">
-    <div class="form-group formGroup">
-        <label for="" class="labelel"></label>
-        <input type="text" class="form-control formControl" placeholder="Password">
-    </div>
-</div>
-<div class="col-sm-6">
-    <div class="form-group formGroup">
-        <label for="" class="labelel"></label>
-        <input type="text" class="form-control formControl" placeholder="Confirm Password">
-    </div>
-</div>
-
-<div class="CommonBtn CommonBtn2 boxs">
-    <button class="btns">Submit</button>
-
-</div>
-</form>
-        </div>
-    </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-        
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h2 class="main">Block/UnBlock User</h2>
-                <p class="head">Are you sure you want to Approve this Member ?</p>
-                <ul class="allBtns">
-                    <li><a href="#0" class="btns">Block</a></li>
-                    <li><a href="#0" class="btns">Unblock</a></li>
-                </ul>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup newSelect">
+                            <!--                            <label for="" class="labelel"></label>-->
+                            <!--                            <input type="text" class="form-control formControl" name="can_manage_dashboard" required placeholder="UserId">-->
+                            <select class="mySelect for" multiple="multiple" name="access_rights"
+                                    style="width: 100%"></select>
+                        </div>
+                    </div>
                 </div>
-           
-            </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="email" class="form-control formControl" name="email" required
+                                   placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="number" class="form-control formControl" name="phone_number" required
+                                   placeholder="Phone Number">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="password" class="form-control formControl" name="password" required
+                                   placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="password" class="form-control formControl" name="confirm_password"
+                                   placeholder="Confirm Password">
+                        </div>
+                    </div>
 
-        </div>
-    </div>
-    <div class="modal fade" id="logout" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-        
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                
-                <p class="head">Are you sure you want to Logout ?</p>
-                <ul class="allBtns">
-                    <li><a href="#0" class="btns">Yes</a></li>
-                    <li><a href="#0" class="btns">No</a></li>
-                </ul>
+                    <div class="CommonBtn CommonBtn2 boxs">
+                        <button class="btns" type="submit">Submit</button>
+                    </div>
                 </div>
-           
-            </div>
-
+            </form>
         </div>
     </div>
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.dataTables.min.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
-    <script src="js/custom.js"></script>
+</section>
+<script>
+var data = ["Can Manage User", "Can Manage Order", "Can Manage Provider", "Can Manage Category", "Can Manage Sub Category"];
+var placeholder = "select";
+$(".mySelect").select2({
+data: data,
+placeholder: placeholder,
+allowClear: false,
+minimumResultsForSearch: 5
+});
 
-</body>
+</script>
+<script>
+    $('select').selectpicker();
 
-</html>
+</script>
+{% endblock body %}

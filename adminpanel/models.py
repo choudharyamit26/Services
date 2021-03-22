@@ -33,8 +33,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_pic = models.ImageField(upload_to='media', null=True, blank=True)
     is_user = models.BooleanField(default=False)
     is_provider = models.BooleanField(default=False)
+    is_sub_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    can_manage_user = models.BooleanField(default=False)
+    can_manage_order = models.BooleanField(default=False)
+    can_manage_provider = models.BooleanField(default=False)
+    can_manage_category = models.BooleanField(default=False)
+    can_manage_sub_category = models.BooleanField(default=False)
+    # can_manage_branch = models.BooleanField(default=False)
+    # can_manage_receipts = models.BooleanField(default=False)
+    # can_manage_dashboard = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
@@ -58,6 +67,15 @@ class SubCategory(models.Model):
     sub_category_image = models.ImageField(upload_to='media', null=True, blank=True)
 
 
+class Services(models.Model):
+    """Services model"""
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='services_category')
+    sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+    service_name = models.CharField(default='', max_length=256)
+    image_1 = models.ImageField(upload_to='media')
+    image_2 = models.ImageField(upload_to='media')
+
+
 class ServiceProvider(models.Model):
     """Service provider Model"""
     full_name = models.CharField(default='', max_length=256)
@@ -68,5 +86,12 @@ class ServiceProvider(models.Model):
     country_code = models.IntegerField()
     phone_number = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+    services = models.ForeignKey(Services, on_delete=models.CASCADE)
     address = models.CharField(default='', max_length=556)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class TopServices(models.Model):
+    """Top services list"""
+    service = models.ForeignKey(Services, on_delete=models.CASCADE)

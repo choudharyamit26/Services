@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+
+        <h2 class="main">Add SubCategory
+        </h2>
+
+        <div class="formDett padding-25 bgWhite">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="uploadImg">
+                            <div class="avatar-upload">
+                                <div class="avatar-edit">
+                                    <input type='file' name="sub_category_image" id="imageUpload"/>
+                                    <label for="imageUpload"></label>
+                                </div>
+                                <div class="avatar-preview">
+                                    <div id="imagePreview"
+                                         style="background-image: url(http://i.pravatar.cc/500?img=7);">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <select name="category" id="services" required class="form-control formControl">
+                                {% for category in category %}
+                                <option value="{{category.pk}}">{{category.category_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" name="sub_category_name" required class="form-control formControl"
+                                   placeholder="Enter the Sub Category name.">
+                        </div>
+                    </div>
+                    <div class="CommonBtn CommonBtn2 boxs">
+                        <button class="btns" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock body %}

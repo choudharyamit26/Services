@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="demandInner boxs">
+        <h2 class="main">Add Service</h2>
+        <div class="formDett padding-25 bgWhite">
+            <div class="row">
+
+                <div class="col-sm-8">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <select name="category" id="services" required class="form-control formControl">
+                                {% for category in category %}
+                                <option value="{{category.pk}}">{{category.category_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <select name="sub_category" required class="form-control formControl">
+                                {% for category in sub_category %}
+                                <option value="{{category.pk}}">{{category.sub_category_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" class="form-control formControl" required name="service_name"
+                                   placeholder="Service Name">
+                        </div>
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="file" class="form-control formControl" required name="image_1"
+                                   placeholder="Image 1">
+                        </div>
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="file" class="form-control formControl" required name="image_2"
+                                   placeholder="Image 2">
+                        </div>
+                        <div class="CommonBtn">
+                            <button class="btns" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock body %}

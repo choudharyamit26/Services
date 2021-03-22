@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 {% block body %}
 <section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     <div class="demandInner boxs">
         <h2 class="main">User Management</h2>
         <div class="tableList boxs bgWhite">
@@ -14,7 +26,7 @@
                         <th>Email Id</th>
                         <th>Phone No.</th>
                         <th>Registration Date</th>
-                        <th>Action</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -29,7 +41,7 @@
                         <th class="textCenter flexProp">
                             <a href="{% url 'adminpanel:user-detail' user.id %}"><i class="fa fa-eye colorBlue"></i></a>
                             <label class="switch blockUnblock_btn" data-toggle="modal" data-target="#myModal">
-                                <input type="checkbox">
+                                <input type="checkbox" class="inbox" id="{{user.id}}" value="{{user.id}}">
                                 <span class="slider"></span>
                             </label>
                         </th>
@@ -53,8 +65,13 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h2 class="main">Block/UnBlock User</h2>
                 <p class="head">Are you sure you want to Block/UnBlock this Member ?</p>
+                <div id="object_id_placeholder_div">
+                    <input hidden="true" id="object_id_placeholder_input" value="">
+                </div>
                 <ul class="allBtns">
-                    <li><a href="#0" class="btns">Block</a></li>
+                    <li>
+                        <button id="modal_delete_button" class="btns">Block</button>
+                    </li>
                     <li><a href="#0" class="btns">Unblock</a></li>
                 </ul>
             </div>
@@ -63,4 +80,34 @@
 
     </div>
 </div>
+<script>
+
+$(document).ready(function () {
+    $('.inbox').click(function (e) {
+        console.log('clicked deleteButton')
+        e.preventDefault();
+//        $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div").html(`<input hidden="true" id="object_id_placeholder_input" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#modal_delete_button").click(function () {
+        var object_id = $("#object_id_placeholder_input").val();
+        console.log('Id ',object_id)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/block-user" + "/" + object_id + "/"
+        alert(object_id)
+        window.location.href = url
+    });
+});
+
+
+</script>
 {% endblock %}
