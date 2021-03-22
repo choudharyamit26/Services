@@ -82,6 +82,13 @@ class GeneralInquiry(models.Model):
     image_2 = models.ImageField(upload_to='media', null=True, blank=True)
 
 
+class RatingReview(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    order = models.ForeignKey(Booking,on_delete=models.CASCADE)
+    reviews = models.CharField(default='',max_length=256)
+    rating = models.IntegerField()
+
+
 @receiver(post_save, sender=AppUser)
 def promocode(sender, instance, created, **kwargs):
     if created:

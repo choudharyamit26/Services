@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from adminpanel.models import User
-from .models import AppUser, Settings, UserSearch, Booking, GeneralInquiry
+from .models import AppUser, Settings, UserSearch, GeneralInquiry, Booking, RatingReview
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -17,7 +17,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'full_name', 'country_code', 'phone_number', 'referral_code', 'language', 'device_token','device_type', 'password',
+            'full_name', 'country_code', 'phone_number', 'referral_code', 'language', 'device_token', 'device_type',
+            'password',
             'confirm_password')
 
 
@@ -30,7 +31,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('country_code', 'phone_number', 'device_token','device_type', 'language')
+        fields = ('country_code', 'phone_number', 'device_token', 'device_type', 'language')
 
 
 class CheckUserSerializer(serializers.ModelSerializer):
@@ -108,3 +109,22 @@ class GeneralInquirySerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneralInquiry
         fields = ('order', 'subject', 'message', 'image_1', 'image_2')
+
+
+class UpdateOrderStatusSerializer(serializers.ModelSerializer):
+    id = serializers.CharField()
+    status = serializers.CharField()
+
+    class Meta:
+        model = Booking
+        fields = ('id', 'status')
+
+
+class RatingAndReviewsSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    review = serializers.CharField()
+    rating = serializers.IntegerField()
+
+    class Meta:
+        model = RatingReview
+        fields = ('id', 'review', 'rating')

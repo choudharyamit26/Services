@@ -1,6 +1,7 @@
 from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, GetUserProfilePic, UpdateUserLanguage, \
     HomeView, SearchingServices, SaveSearchesHistory, GetUserPastSearches, BookingView, GetBookingDetail, ContactUsView, \
-    PrivacyPolicyView, TermsAndConditionView, AboutUsView, GeneralInquiryView, LogoutView
+    PrivacyPolicyView, TermsAndConditionView, AboutUsView, GeneralInquiryView, LogoutView, UpcomingBooking, PastBooking, \
+    OnGoingBooking, UpdateOrderStatus, RatingAndReviews, GetServiceReviewRatings
 from django.urls import path
 
 app_name = 'src'
@@ -17,6 +18,9 @@ urlpatterns = [
     path('save-search/', SaveSearchesHistory.as_view(), name='save-search'),
     path('get-saved-searches/', GetUserPastSearches.as_view(), name='get-saved-searches'),
     path('book-service/', BookingView.as_view(), name='book-service'),
+    path('upcoming-bookings/', UpcomingBooking.as_view(), name='upcoming-bookings'),
+    path('past-bookings/', PastBooking.as_view(), name='past-bookings'),
+    path('ongoing-bookings/', OnGoingBooking.as_view(), name='ongoing-bookings'),
     path('booking-detail/', GetBookingDetail.as_view(), name='booking-detail'),
     path('contact-us/', ContactUsView.as_view(), name='contact-us'),
     path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy-policy'),
@@ -24,4 +28,7 @@ urlpatterns = [
     path('about-us/', AboutUsView.as_view(), name='about-us'),
     path('inquiry/', GeneralInquiryView.as_view(), name='inquiry'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('update-order/', UpdateOrderStatus.as_view(), name='update-order'),
+    path('ratings-and-review/', RatingAndReviews.as_view(), name='ratings-and-review'),
+    path('service-ratings-and-review/', GetServiceReviewRatings.as_view(), name='service-ratings-and-review'),
 ]

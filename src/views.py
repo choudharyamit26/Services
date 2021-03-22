@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSerializer, UpdateUserProfileSerializer, \
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
-    GeneralInquirySerializer
+    GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs
+    AboutUs, RatingReview
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -79,7 +79,7 @@ class LoginView(ObtainAuthToken):
                 print('previous token ', user_device_token)
                 user_id.device_token = device_token
                 user_id.device_type = device_type
-                user_id.save(update_fields=['device_token','device_type'])
+                user_id.save(update_fields=['device_token', 'device_type'])
                 print('updated device token ', user_id.device_token)
                 token = token[0]
                 return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
@@ -416,3 +416,106 @@ class LogoutView(APIView):
         app_user.save()
         request.user.auth_token.delete()
         return Response({"msg": "Logged out successfully", "status": HTTP_200_OK})
+
+
+class UpdateOrderStatus(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateOrderStatusSerializer
+    model = Booking
+
+    def patch(self, request, *args, **kwargs):
+        order_id = self.request.POST['id']
+        status = self.request.POST['status']
+        order_obj = Booking.objects.get(id=order_id)
+        order_obj.status = status
+        order_obj.save()
+        return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
+
+
+class UpcomingBooking(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        order_obj = Booking.objects.filter(status='Started')
+        orders = []
+        for obj in order_obj:
+            orders.append({'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                           'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+        return Response({'data': orders, 'status': HTTP_200_OK})
+
+
+class PastBooking(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        order_obj = Booking.objects.filter(status='Completed')
+        orders = []
+        for obj in order_obj:
+            orders.append({'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                           'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+        return Response({'data': orders, 'status': HTTP_200_OK})
+
+
+class OnGoingBooking(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        order_obj = Booking.objects.filter(status='Accepted')
+        orders = []
+        for obj in order_obj:
+            orders.append({'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                           'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+        return Response({'data': orders, 'status': HTTP_200_OK})
+
+
+class RatingAndReviews(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = RatingReview
+    serializer_class = RatingAndReviewsSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        print(self.request.POST)
+        serializer = RatingAndReviewsSerializer(data=self.request.data)
+        if serializer.is_valid():
+            order = serializer.validated_data['id']
+            reviews = serializer.validated_data['review']
+            rating = serializer.validated_data['rating']
+            RatingReview.objects.create(user=app_user, order=Booking.objects.get(id=order), reviews=reviews,
+                                        rating=rating)
+            return Response({'message': 'Rating submitted successfully', 'status': HTTP_200_OK})
+        else:
+            return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+
+
+class GetServiceReviewRatings(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = RatingReview
+
+    def get(self, request, *args, **kwargs):
+        service_id = self.request.query_params.get('service_id')
+        try:
+            rating_obj = RatingReview.objects.filter(order__service__id=service_id)
+            ratings = []
+            for obj in rating_obj:
+                if obj.user.profile_pic:
+                    ratings.append(
+                        {'user_name': obj.user.full_name, 'user_image': obj.user.profile_pic.url, 'rating': obj.rating,
+                         'review': obj.reviews})
+                else:
+                    ratings.append(
+                        {'user_name': obj.user.full_name, 'user_image': '', 'rating': obj.rating,
+                         'review': obj.reviews})
+            return Response({'rating_count': len(rating_obj), 'data': ratings, 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
