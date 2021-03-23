@@ -96,6 +96,16 @@ class OffersAndDiscount(models.Model):
     percent = models.CharField(default='', max_length=20)
 
 
+class UserNotification(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    title = models.CharField(default='', max_length=2000)
+    title_arabic = models.CharField(default='', max_length=2000)
+    body = models.CharField(default='', max_length=2000)
+    body_arabic = models.CharField(default='', max_length=2000)
+    read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 @receiver(post_save, sender=AppUser)
 def promocode(sender, instance, created, **kwargs):
     if created:

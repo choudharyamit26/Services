@@ -6,12 +6,12 @@ from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSeriali
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
     GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs, RatingReview, OffersAndDiscount
+    AboutUs, RatingReview, OffersAndDiscount, UserNotification
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from adminpanel.models import User, Services, TopServices, ServiceProvider
+from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications
 
 
 class CreateUser(APIView):
@@ -48,6 +48,11 @@ class CreateUser(APIView):
                 app_user_settings.language = language
                 app_user_settings.save()
                 token = Token.objects.get_or_create(user=user)
+                AdminNotifications.objects.create(
+                    user=User.objects.get(email='admin@email.com'),
+                    title='New User Registration',
+                    body='A new user has registered on the platform'
+                )
                 return Response({'message': 'User created successfully', 'id': app_user.id, 'token': token[0].key,
                                  'full_name': app_user.full_name, 'country_code': user.country_code,
                                  'phone_number': user.phone_number, 'status': HTTP_200_OK})
@@ -219,11 +224,15 @@ class SearchingServices(APIView):
 
     def get(self, request, *args, **kwargs):
         searched_value = self.request.query_params.get('search')
-        services = Services.objects.filter(service_name__icontains=searched_value)
-        print(services)
-        service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
-        return Response(
-            {'services': services.values(), 'service_providers': service_providers.values(), 'status': HTTP_200_OK})
+        try:
+            services = Services.objects.filter(service_name__icontains=searched_value)
+            print(services)
+            # categories = Category.objects.filter(category_name__icontains=searched_value)
+            service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
+            return Response(
+                {'services': services.values(), 'service_providers': service_providers.values(), 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class SaveSearchesHistory(APIView):
@@ -308,6 +317,11 @@ class BookingView(APIView):
                     discount=discount,
                     total=total,
                     default_address=default_address
+                )
+                AdminNotifications.objects.create(
+                    user=User.objects.get(email='admin@email.com'),
+                    title='New Booking Request',
+                    body='A new service booking request has been placed on the platform'
                 )
                 return Response(
                     {'message': 'Service booked successfully', 'booking': booking.id, 'status': HTTP_200_OK})
@@ -442,6 +456,11 @@ class UpdateOrderStatus(APIView):
         order_obj = Booking.objects.get(id=order_id)
         order_obj.status = status
         order_obj.save()
+        AdminNotifications.objects.create(
+            user=User.objects.get(email='admin@email.com'),
+            title='Booking Update',
+            body='Status of service request with id {} has been updated to {}'.format(order_obj.id, order_obj.status)
+        )
         return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
 
 
@@ -553,3 +572,15 @@ class GetAllOffersAndDiscount(APIView):
         for obj in offers_obj:
             offers.append({'coupon_code': obj.coupon_code, 'percent': obj.percent})
         return Response({'data': offers, 'status': HTTP_200_OK})
+
+
+class GetUserDetail(APIView):
+    model = AppUser
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        return Response(
+            {'country_code': app_user.user.country_code, 'phone_number': app_user.user.phone_number, 'name': app_user.full_name})

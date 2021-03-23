@@ -21,7 +21,7 @@ from django.contrib import messages
 
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
-from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices
+from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
 from src.models import Booking, OffersAndDiscount
 
 
@@ -240,11 +240,22 @@ class StaticContentManagementView(View):
         return render(self.request, 'static.html')
 
 
-class NotificationManagementView(View):
+class NotificationManagementView(ListView):
     template_name = 'notification.html'
+    model = AdminNotifications
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'notification.html')
+
+
+class ReadNotificationView(View):
+    model = AdminNotifications
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'notification.html')
+        notifications = AdminNotifications.objects.filter(read=False)
+        for notification in notifications:
+            notification.read = True
+            notification.save()
+        return HttpResponse('Read all notification')
 
 
 class AdminProfileView(View):
@@ -646,11 +657,14 @@ class AddServices(CreateView):
         category = self.request.POST['category']
         sub_category = self.request.POST['sub_category']
         service_name = self.request.POST['service_name']
+        field_1 = self.request.POST['field_1']
+        field_2 = self.request.POST['field_2']
+        field_3 = self.request.POST['field_3']
         image_1 = self.request.FILES['image_1']
         image_2 = self.request.FILES['image_2']
         Services.objects.create(category=Category.objects.get(id=category),
                                 sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name,
-                                image_1=image_1, image_2=image_2)
+                                image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3l)
         messages.success(self.request, 'Service added successfully')
         return redirect("adminpanel:services-list")
 
@@ -735,3 +749,11 @@ class BlockUser(View):
         print(kwargs['pk'])
         messages.info(self.request, "User blocked successfully")
         return redirect("adminpanel:user-management")
+
+
+class NotificationCount(View):
+    model = AdminNotifications
+
+    def get(self, request, *args, **kwargs):
+        notification_count = AdminNotifications.objects.filter(read=False).count()
+        return HttpResponse(notification_count)

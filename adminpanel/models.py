@@ -72,6 +72,9 @@ class Services(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='services_category')
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     service_name = models.CharField(default='', max_length=256)
+    field_1 = models.CharField(default='', max_length=256)
+    field_2 = models.CharField(default='', max_length=256)
+    field_3 = models.CharField(default='', max_length=256)
     image_1 = models.ImageField(upload_to='media')
     image_2 = models.ImageField(upload_to='media')
 
@@ -95,3 +98,12 @@ class ServiceProvider(models.Model):
 class TopServices(models.Model):
     """Top services list"""
     service = models.ForeignKey(Services, on_delete=models.CASCADE)
+
+
+class AdminNotifications(models.Model):
+    """Notification model for admin panel"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(default='', max_length=256)
+    body = models.CharField(default='', max_length=256)
+    read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

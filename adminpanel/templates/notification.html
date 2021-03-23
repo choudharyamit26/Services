@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
 {% block body %}
+<script>
+    var protocol = window.location.protocol
+    var hostname = window.location.hostname
+    var port = window.location.port
+    var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/read-notification" + "/"
+    console.log(url)
+    fetch(url)
+      .then(function (response) {
+        return response;
+      })
+      .then(function (myJson) {
+        console.log(myJson)
+      })
+      .catch(function (error) {
+        console.log("Error: " + error);
+      });
+
+
+
+
+
+
+
+</script>
+
 <section class="demandRight boxs">
     <div class="demandInner boxs">
         <div class="AddService">
@@ -10,61 +35,21 @@
         <div class="tableList boxs bgWhite">
             <div class="notifcationList">
                 <ul>
+                    {% for obj in object_list %}
                     <li>
+                        {% if obj.title == 'New User Registration' %}
                         <div class="iconLeft">
                             <span><i class="fa  fa-shopping-cart fa-2x"></i></span>
                         </div>
+                        {% endif %}
                         <div class="iconContent2">
-                            <h2>New order received</h2>
-                            <p class="time">3 days ago</p>
-                            <p class="para1">Notification in case of any new order received.</p>
-                            <p class="para2">Donec id elit non mi porta.</p>
+                            <h2>{{obj.title}}</h2>
+                            <p class="time">{{obj.created_at}}</p>
+                            <p class="para1">{{obj.body}}</p>
                         </div>
                     </li>
-                    <li>
-                        <div class="iconLeft">
-                            <span><i class="fa  fa-user fa-2x"></i></span>
-                        </div>
-                        <div class="iconContent2">
-                            <h2>New order received</h2>
-                            <p class="time">3 days ago</p>
-                            <p class="para1">Notification in case of any new order received.</p>
-                            <p class="para2">Donec id elit non mi porta.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="iconLeft">
-                            <span><i class="fa  fa-shopping-cart fa-2x"></i></span>
-                        </div>
-                        <div class="iconContent2">
-                            <h2>New order received</h2>
-                            <p class="time">3 days ago</p>
-                            <p class="para1">Notification in case of any new order received.</p>
-                            <p class="para2">Donec id elit non mi porta.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="iconLeft">
-                            <span><i class="fa  fa-shopping-cart fa-2x"></i></span>
-                        </div>
-                        <div class="iconContent2">
-                            <h2>New order received</h2>
-                            <p class="time">3 days ago</p>
-                            <p class="para1">Notification in case of any new order received.</p>
-                            <p class="para2">Donec id elit non mi porta.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="iconLeft">
-                            <span><i class="fa  fa-shopping-cart fa-2x"></i></span>
-                        </div>
-                        <div class="iconContent2">
-                            <h2>New order received</h2>
-                            <p class="time">3 days ago</p>
-                            <p class="para1">Notification in case of any new order received.</p>
-                            <p class="para2">Donec id elit non mi porta.</p>
-                        </div>
-                    </li>
+                    {% endfor %}
+
                 </ul>
             </div>
         </div>

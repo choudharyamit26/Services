@@ -19,8 +19,24 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css'>
 
-<script src="{% static 'js/jquery.js' %}"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js'></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js'></script>
+    <script>
+    var protocol = window.location.protocol
+    var hostname = window.location.hostname
+    var port = window.location.port
+    var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/notification-count" + "/"
+    fetch(url)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        document.querySelector("#count").innerHTML = myJson;
+      })
+      .catch(function (error) {
+        console.log("Error: " + error);
+      });
+    </script>
 </head>
 
 <body>
@@ -31,8 +47,8 @@
     <div class="headerRight">
         <ul>
             <li><a href="{% url 'adminpanel:notification-management' %}" class="bell" style="position:relative;">
-                <span class="bellNoti">30</span>
-                <i class="fa fa-bell"></i></a>
+<!--                <span class="bellNoti">30</span>-->
+                <i class="fa fa-bell bellNoti" id="count"></i></a>
             </li>
             <li class="postrel">
                 <a href="#0" class="profile"><img src="{% static 'img/profile.jpg' %}" alt="profle"
@@ -107,24 +123,24 @@
             <a href="{% url 'adminpanel:rejected-order-management' %}"><span class="icon"><i
                     class="fa fa-ban"></i></span><span
                     class="iconContent">Rejected Orders</span></a></li>
-<!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:verification-management' %}active{% endif %}">-->
-<!--            <a href="{% url 'adminpanel:verification-management' %}"><span class="icon"><i class="fa fa-user-check"></i></span><span-->
-<!--                    class="iconContent">Verification Management-->
-<!--                            </span></a></li>-->
-<!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:worker-management' %}active{% endif %}">-->
-<!--            <a href="{% url 'adminpanel:worker-management' %}"><span class="icon"><i-->
-<!--                    class="fa fa-users"></i></span><span-->
-<!--                    class="iconContent">Worker Management</span></a></li>-->
+        <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:verification-management' %}active{% endif %}">-->
+        <!--            <a href="{% url 'adminpanel:verification-management' %}"><span class="icon"><i class="fa fa-user-check"></i></span><span-->
+        <!--                    class="iconContent">Verification Management-->
+        <!--                            </span></a></li>-->
+        <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:worker-management' %}active{% endif %}">-->
+        <!--            <a href="{% url 'adminpanel:worker-management' %}"><span class="icon"><i-->
+        <!--                    class="fa fa-users"></i></span><span-->
+        <!--                    class="iconContent">Worker Management</span></a></li>-->
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:offer-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:offer-management' %}"><span class="icon"><i
                     class="fa fa-percent"></i></span><span
                     class="iconContent">Offers & Discounts Management
                             </span></a></li>
-<!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:finance-management' %}active{% endif %}">-->
-<!--            <a href="{% url 'adminpanel:finance-management' %}"><span class="icon"><i-->
-<!--                    class="fa fa-percent"></i></span><span-->
-<!--                    class="iconContent">Finance Management-->
-<!--                            </span></a></li>-->
+        <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:finance-management' %}active{% endif %}">-->
+        <!--            <a href="{% url 'adminpanel:finance-management' %}"><span class="icon"><i-->
+        <!--                    class="fa fa-percent"></i></span><span-->
+        <!--                    class="iconContent">Finance Management-->
+        <!--                            </span></a></li>-->
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:static-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:static-management' %}"><span class="icon"><i
                     class="fa fa-pen-square"></i></span><span
@@ -170,6 +186,25 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
 <script src="{% static 'js/custom.js' %}"></script>
+    <script>
+    var protocol = window.location.protocol
+    var hostname = window.location.hostname
+    var port = window.location.port
+    var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/notification-count" + "/"
+    fetch(url)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        document.querySelector("#count").innerHTML = myJson;
+      })
+      .catch(function (error) {
+        console.log("Error: " + error);
+      });
+
+
+
+    </script>
 </body>
 
 </html>
