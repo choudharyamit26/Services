@@ -16,6 +16,7 @@ class AppUser(models.Model):
     device_type = models.CharField(default='', max_length=3000)
     lat = models.CharField(default='', max_length=3000)
     lang = models.CharField(default='', max_length=3000)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class UserPromoCode(models.Model):

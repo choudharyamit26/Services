@@ -23,7 +23,6 @@
                         <th>S.No</th>
                         <th>User Id</th>
                         <th>Name</th>
-                        <th>Email Id</th>
                         <th>Phone No.</th>
                         <th>Registration Date</th>
                         <th>Actions</th>
@@ -35,8 +34,7 @@
                         <td>{{forloop.counter}}</td>
                         <td>{{user.id}}</td>
                         <td>{{user.full_name}}</td>
-                        <td>{{user.email}}</td>
-                        <td>{{user.phone_number}}</td>
+                        <td>{{user.user.phone_number}}</td>
                         <td>{{user.created_at}}</td>
                         <th class="textCenter flexProp">
                             <a href="{% url 'adminpanel:user-detail' user.id %}"><i class="fa fa-eye colorBlue"></i></a>

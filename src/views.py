@@ -94,7 +94,7 @@ class LoginView(ObtainAuthToken):
                 user_id.save(update_fields=['device_token', 'device_type', 'lang', 'lat'])
                 print('updated device token ', user_id.device_token)
                 token = token[0]
-                return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
+                return Response({'token': token.key, 'id': user_id.id,'full_name':user_id.full_name, 'country_code': user_obj.country_code,
                                  'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
                                  'lang': user_id.lang})
             except Exception as e:

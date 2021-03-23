@@ -22,7 +22,7 @@ from django.contrib import messages
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
-from src.models import Booking, OffersAndDiscount
+from src.models import Booking, OffersAndDiscount,AppUser
 
 
 class LoginView(View):
@@ -64,7 +64,7 @@ class UserManagementView(View):
     template_name = 'user-management.html'
 
     def get(self, request, *args, **kwargs):
-        users = User.objects.filter(is_superuser=False, is_provider=False, is_sub_admin=False)
+        users = AppUser.objects.all()
         # users = User.objects.filter(is_provider=False)
         # print(users)
         # print(User.objects.all())
