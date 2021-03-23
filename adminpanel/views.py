@@ -664,7 +664,7 @@ class AddServices(CreateView):
         image_2 = self.request.FILES['image_2']
         Services.objects.create(category=Category.objects.get(id=category),
                                 sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name,
-                                image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3l)
+                                image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3)
         messages.success(self.request, 'Service added successfully')
         return redirect("adminpanel:services-list")
 
