@@ -157,6 +157,8 @@ class UpdateUserProfile(APIView):
                 print(profile_pic)
                 app_user.profile_pic = profile_pic
                 app_user.save()
+                UserNotification.objects.create(user=app_user, title='Profile pic update',
+                                                body='Your profile pic has been updated successfully')
                 return Response({'message': 'Profile updated successfully', 'status': HTTP_200_OK})
             else:
                 return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
@@ -583,4 +585,47 @@ class GetUserDetail(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         return Response(
-            {'country_code': app_user.user.country_code, 'phone_number': app_user.user.phone_number, 'name': app_user.full_name})
+            {'country_code': app_user.user.country_code, 'phone_number': app_user.user.phone_number,
+             'name': app_user.full_name})
+
+
+class NotificationList(APIView):
+    model = UserNotification
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        notifications = UserNotification.objects.filter(user=app_user, read=False)
+        notification_list = []
+        for notification in notifications:
+            notification_list.append({'id': notification.id, 'title': notification.title, 'body': notification.body})
+        return Response({'data': notification_list, 'status': HTTP_200_OK})
+
+
+class GetUserNotificationCount(APIView):
+    model = UserNotification
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        notification_count = UserNotification.objects.filter(user=app_user, read=False).count()
+        return Response({'count': notification_count, 'status': HTTP_200_OK})
+
+
+class UpdateNotification(APIView):
+    model = UserNotification
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        notifications = UserNotification.objects.filter(user=app_user, read=False)
+        for notification in notifications:
+            notification.read = True
+            notification.save()
+        return Response({'message': 'Notifications updates successfully', 'status': HTTP_200_OK})

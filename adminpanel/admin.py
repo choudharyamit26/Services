@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
 from .models import *
-from src.models import AppUser,Settings,UserPromoCode
+from src.models import AppUser,Settings,UserPromoCode,UserNotification
 
 
 class UserAdmin(BaseUserAdmin):
@@ -34,3 +34,4 @@ admin.site.register(Settings)
 admin.site.register(Services)
 admin.site.register(TopServices)
 admin.site.register(AdminNotifications)
+admin.site.register(UserNotification)
