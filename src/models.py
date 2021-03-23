@@ -15,7 +15,7 @@ class AppUser(models.Model):
     device_token = models.CharField(default='', max_length=3000)
     device_type = models.CharField(default='', max_length=3000)
     lat = models.CharField(default='', max_length=3000)
-    long = models.CharField(default='', max_length=3000)
+    lang = models.CharField(default='', max_length=3000)
 
 
 class UserPromoCode(models.Model):

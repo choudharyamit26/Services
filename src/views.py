@@ -31,7 +31,7 @@ class CreateUser(APIView):
             device_type = serializer.validated_data['device_type']
             language = serializer.validated_data['language']
             lat = serializer.validated_data['lat']
-            long = serializer.validated_data['long']
+            lang = serializer.validated_data['lang']
             try:
                 User.objects.get(phone_number=phone_number)
                 return Response({'message': 'User with this number already exists', 'status': HTTP_400_BAD_REQUEST})
@@ -43,7 +43,7 @@ class CreateUser(APIView):
                 user.set_password('Test@123')
                 app_user = AppUser.objects.create(user=user, full_name=full_name, referral_code=referral_code,
                                                   device_token=device_token, device_type=device_type, lat=lat,
-                                                  long=long)
+                                                  lang=lang)
                 app_user_settings = Settings.objects.get(user=app_user)
                 app_user_settings.language = language
                 app_user_settings.save()
@@ -70,7 +70,7 @@ class LoginView(ObtainAuthToken):
             device_type = serializer.validated_data['device_type']
             language = serializer.validated_data['language']
             lat = serializer.validated_data['lat']
-            long = serializer.validated_data['long']
+            lang = serializer.validated_data['lang']
             try:
                 user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
                 user_id = AppUser.objects.get(user=user_obj)
@@ -84,14 +84,14 @@ class LoginView(ObtainAuthToken):
                 print('previous token ', user_device_token)
                 user_id.device_token = device_token
                 user_id.device_type = device_type
-                user_id.long = long
+                user_id.lang = lang
                 user_id.lat = lat
-                user_id.save(update_fields=['device_token', 'device_type', 'long', 'lat'])
+                user_id.save(update_fields=['device_token', 'device_type', 'lang', 'lat'])
                 print('updated device token ', user_id.device_token)
                 token = token[0]
                 return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
                                  'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
-                                 'long': user_id.long})
+                                 'lang': user_id.lang})
             except Exception as e:
                 print(e)
                 try:
@@ -106,13 +106,13 @@ class LoginView(ObtainAuthToken):
                     user_id.device_token = device_token
                     user_id.device_type = device_type
                     user_id.lat = lat
-                    user_id.long = long
-                    user_id.save(update_fields=['device_token', 'device_type', 'lat', 'long'])
+                    user_id.lang = lang
+                    user_id.save(update_fields=['device_token', 'device_type', 'lat', 'lang'])
                     print('updated device token ', user_id.device_token)
                     token = token[0]
                     return Response({'token': token.key, 'id': user_id.id, 'country_code': user_obj.country_code,
                                      'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
-                                     'long': user_id.long})
+                                     'lang': user_id.lang})
                 except Exception as e:
                     return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
         else:
