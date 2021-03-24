@@ -254,7 +254,7 @@ class GetServiceDetail(APIView):
         service_obj = Services.objects.get(id=id)
         ratings_obj = Booking.objects.filter(service=id).count()
         ratings = 0
-        for obj in ratings_obj:
+        for obj in RatingReview.objects.filter(order__service=id):
             ratings += obj.rating
         average_ratings = ratings / ratings_obj
         return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
