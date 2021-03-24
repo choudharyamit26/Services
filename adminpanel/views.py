@@ -22,7 +22,7 @@ from django.contrib import messages
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
-from src.models import Booking, OffersAndDiscount,AppUser
+from src.models import Booking, OffersAndDiscount, AppUser
 
 
 class LoginView(View):
@@ -660,11 +660,14 @@ class AddServices(CreateView):
         field_1 = self.request.POST['field_1']
         field_2 = self.request.POST['field_2']
         field_3 = self.request.POST['field_3']
+        field_4 = self.request.POST['field_4']
+        base_price = self.request.POST['base_price']
         image_1 = self.request.FILES['image_1']
         image_2 = self.request.FILES['image_2']
         Services.objects.create(category=Category.objects.get(id=category),
                                 sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name,
-                                image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3)
+                                image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3,
+                                field_4=field_4, base_price=base_price)
         messages.success(self.request, 'Service added successfully')
         return redirect("adminpanel:services-list")
 
@@ -757,3 +760,10 @@ class NotificationCount(View):
     def get(self, request, *args, **kwargs):
         notification_count = AdminNotifications.objects.filter(read=False).count()
         return HttpResponse(notification_count)
+
+
+class InquiryView(View):
+    template_name = 'inquiry.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'inquiry.html')

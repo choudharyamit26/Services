@@ -252,9 +252,16 @@ class GetServiceDetail(APIView):
     def get(self, request, *args, **kwargs):
         id = self.request.query_params.get('id')
         service_obj = Services.objects.get(id=id)
+        ratings_obj = Booking.objects.filter(service=id).count()
+        ratings = 0
+        for obj in ratings_obj:
+            ratings += obj.rating
+        average_ratings = ratings / ratings_obj
         return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
                          'field_1': service_obj.field_1, 'field_2': service_obj.field_2, 'field_3': service_obj.field_3,
-                         'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url, 'status': HTTP_200_OK})
+                         'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                         'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url, 'status': HTTP_200_OK,
+                         'rating_count': ratings_obj, 'average_rating': average_ratings})
 
 
 class SearchingServices(APIView):

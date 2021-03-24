@@ -47,8 +47,8 @@
     <div class="headerRight">
         <ul>
             <li><a href="{% url 'adminpanel:notification-management' %}" class="bell" style="position:relative;">
-<!--                <span class="bellNoti">30</span>-->
-                <i class="fa fa-bell bellNoti" id="count"></i></a>
+                <span class="bellNoti" id="count">30</span>
+                <i class="fa fa-bell"></i></a>
             </li>
             <li class="postrel">
                 <a href="#0" class="profile"><img src="{% static 'img/profile.jpg' %}" alt="profle"
@@ -145,6 +145,11 @@
             <a href="{% url 'adminpanel:static-management' %}"><span class="icon"><i
                     class="fa fa-pen-square"></i></span><span
                     class="iconContent">Static Content Management
+                            </span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:inquiry' %}active{% endif %}">
+            <a href="{% url 'adminpanel:inquiry' %}"><span class="icon"><i
+                    class="fa fa-question-circle"></i></span><span
+                    class="iconContent">Inquiries
                             </span></a></li>
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:notification-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:notification-management' %}"><span class="icon"><i

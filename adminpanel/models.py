@@ -75,6 +75,8 @@ class Services(models.Model):
     field_1 = models.CharField(default='', max_length=256)
     field_2 = models.CharField(default='', max_length=256)
     field_3 = models.CharField(default='', max_length=256)
+    field_4 = models.CharField(default='', max_length=256)
+    base_price = models.CharField(default='', max_length=256)
     image_1 = models.ImageField(upload_to='media')
     image_2 = models.ImageField(upload_to='media')
 
