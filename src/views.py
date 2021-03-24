@@ -94,7 +94,8 @@ class LoginView(ObtainAuthToken):
                 user_id.save(update_fields=['device_token', 'device_type', 'lang', 'lat'])
                 print('updated device token ', user_id.device_token)
                 token = token[0]
-                return Response({'token': token.key, 'id': user_id.id,'full_name':user_id.full_name, 'country_code': user_obj.country_code,
+                return Response({'token': token.key, 'id': user_id.id, 'full_name': user_id.full_name,
+                                 'country_code': user_obj.country_code,
                                  'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
                                  'lang': user_id.lang})
             except Exception as e:
@@ -217,7 +218,8 @@ class HomeView(APIView):
                 {'id': object.service.id, 'service_name': object.service.service_name,
                  'image_1': object.service.image_1.url,
                  'image_2': object.service.image_2.url})
-        return Response({'services': services.values(), 'top_services': top_services_list, 'status': HTTP_200_OK})
+        return Response({'services': services.values(), 'top_services': top_services_list,
+                         'categories': Category.objects.all().values(), 'status': HTTP_200_OK})
 
 
 class SearchingServices(APIView):
