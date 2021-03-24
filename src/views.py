@@ -11,7 +11,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications
+from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications, SubCategory
 
 
 class CreateUser(APIView):
@@ -220,6 +220,41 @@ class HomeView(APIView):
                  'image_2': object.service.image_2.url})
         return Response({'services': services.values(), 'top_services': top_services_list,
                          'categories': Category.objects.all().values(), 'status': HTTP_200_OK})
+
+
+class GetSubCategory(APIView):
+    model = Category
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        category = self.request.query_params.get('category')
+        sub_categories = SubCategory.objects.filter(category=category)
+        return Response({'data': sub_categories.values(), 'status': HTTP_200_OK})
+
+
+class GetServices(APIView):
+    model = Services
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        sub_category = self.request.query_params.get('sub_category')
+        services = Services.objects.filter(sub_category=sub_category)
+        return Response({'data': services.values(), 'status': HTTP_200_OK})
+
+
+class GetServiceDetail(APIView):
+    model = Services
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        id = self.request.query_params.get('id')
+        service_obj = Services.objects.get(id=id)
+        return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
+                         'field_1': service_obj.field_1, 'field_2': service_obj.field_2, 'field_3': service_obj.field_3,
+                         'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url, 'status': HTTP_200_OK})
 
 
 class SearchingServices(APIView):

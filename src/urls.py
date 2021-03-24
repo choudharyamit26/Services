@@ -2,7 +2,8 @@ from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, Ge
     HomeView, SearchingServices, SaveSearchesHistory, GetUserPastSearches, BookingView, GetBookingDetail, ContactUsView, \
     PrivacyPolicyView, TermsAndConditionView, AboutUsView, GeneralInquiryView, LogoutView, UpcomingBooking, PastBooking, \
     OnGoingBooking, UpdateOrderStatus, RatingAndReviews, GetServiceReviewRatings, GetDefaultOfferPercentView, \
-    GetAllOffersAndDiscount, GetUserDetail, NotificationList, GetUserNotificationCount, UpdateNotification
+    GetAllOffersAndDiscount, GetUserDetail, NotificationList, GetUserNotificationCount, UpdateNotification, \
+    GetSubCategory, GetServices, GetServiceDetail
 from django.urls import path
 
 app_name = 'src'
@@ -38,4 +39,7 @@ urlpatterns = [
     path('get-user-notification-list/', NotificationList.as_view(), name='get-user-notification-list'),
     path('get-user-notification-count/', GetUserNotificationCount.as_view(), name='get-user-notification-count'),
     path('update-user-notification/', UpdateNotification.as_view(), name='update-user-notification'),
+    path('get-subcategories/', GetSubCategory.as_view(), name='get-subcategories'),
+    path('get-services/', GetServices.as_view(), name='get-services'),
+    path('get-service-detail/', GetServiceDetail.as_view(), name='get-service-detail'),
 ]
