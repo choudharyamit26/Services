@@ -281,7 +281,7 @@ class SearchingServices(APIView):
             # categories = Category.objects.filter(category_name__icontains=searched_value)
             categories = []
             for service in services:
-                c = service.category
+                c = service.category.id
                 if Category.objects.get(id=c).category_image:
                     categories.append(
                         {'id': Category.objects.get(id=c).id, 'category_name': Category.objects.get(id=c).category_name,
