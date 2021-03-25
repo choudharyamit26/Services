@@ -251,17 +251,22 @@ class GetServiceDetail(APIView):
 
     def get(self, request, *args, **kwargs):
         id = self.request.query_params.get('id')
-        service_obj = Services.objects.get(id=id)
-        ratings_obj = Booking.objects.filter(service=id).count()
-        ratings = 0
-        for obj in RatingReview.objects.filter(order__service=id):
-            ratings += obj.rating
-        average_ratings = ratings / ratings_obj
-        return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
-                         'field_1': service_obj.field_1, 'field_2': service_obj.field_2, 'field_3': service_obj.field_3,
-                         'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
-                         'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url, 'status': HTTP_200_OK,
-                         'rating_count': ratings_obj, 'average_rating': average_ratings})
+        try:
+            service_obj = Services.objects.get(id=id)
+            ratings_obj = Booking.objects.filter(service=id).count()
+            ratings = 0
+            for obj in RatingReview.objects.filter(order__service=id):
+                ratings += obj.rating
+            average_ratings = ratings / ratings_obj
+            return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
+                             'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
+                             'field_3': service_obj.field_3,
+                             'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                             'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
+                             'status': HTTP_200_OK,
+                             'rating_count': ratings_obj, 'average_rating': average_ratings})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class SearchingServices(APIView):
@@ -274,9 +279,21 @@ class SearchingServices(APIView):
             services = Services.objects.filter(service_name__icontains=searched_value)
             print(services)
             # categories = Category.objects.filter(category_name__icontains=searched_value)
+            categories = []
+            for service in services:
+                c = service.category
+                if Category.objects.get(id=c).category_image:
+                    categories.append(
+                        {'id': Category.objects.get(id=c).id, 'category_name': Category.objects.get(id=c).category_name,
+                         'category_image': Category.objects.get(id=c).category_image.url})
+                else:
+                    categories.append(
+                        {'id': Category.objects.get(id=c).id, 'category_name': Category.objects.get(id=c).category_name,
+                         'category_image': ''})
             service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
             return Response(
-                {'services': services.values(), 'service_providers': service_providers.values(), 'status': HTTP_200_OK})
+                {'services': services.values(), 'service_providers': service_providers.values(),
+                 'categories': categories, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
