@@ -81,10 +81,21 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 AUTH_USER_MODEL = 'adminpanel.User'
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'khalian',
+        'USER': 'khalian_user',
+        'PASSWORD': 'khalian_user',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
