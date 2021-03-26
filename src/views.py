@@ -210,16 +210,32 @@ class HomeView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        service_list = []
+        category_list = []
         services = Services.objects.all()
-        top_services = TopServices.objects.all()
-        top_services_list = []
-        for object in top_services:
-            top_services_list.append(
-                {'id': object.service.id, 'service_name': object.service.service_name,
-                 'image_1': object.service.image_1.url,
-                 'image_2': object.service.image_2.url})
-        return Response({'services': services.values(), 'top_services': top_services_list,
-                         'categories': Category.objects.all().values(), 'status': HTTP_200_OK})
+        categories = Category.objects.all()
+        for category in categories:
+            if category.category_image:
+                category_list.append({'id': category.id, 'category_name': category.category_name,
+                                      'category_image': category.category_image.url})
+            else:
+                category_list.append({'id': category.id, 'category_name': category.category_name,
+                                      'category_image': ''})
+        for service in services:
+            service_list.append(
+                {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                 'service_name': service.service_name, 'field_1': service.field_1,
+                 'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                 'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
+            top_services = TopServices.objects.all()
+            top_services_list = []
+            for object in top_services:
+                top_services_list.append(
+                    {'id': object.service.id, 'service_name': object.service.service_name,
+                     'image_1': object.service.image_1.url,
+                     'image_2': object.service.image_2.url})
+            return Response({'services': service_list, 'top_services': top_services_list,
+                             'categories': category_list, 'status': HTTP_200_OK})
 
 
 class GetSubCategory(APIView):
@@ -229,8 +245,20 @@ class GetSubCategory(APIView):
 
     def get(self, request, *args, **kwargs):
         category = self.request.query_params.get('category')
+        print(category)
         sub_categories = SubCategory.objects.filter(category=category)
-        return Response({'data': sub_categories.values(), 'status': HTTP_200_OK})
+        sub_categories_list = []
+        for sub_category in sub_categories:
+            if sub_category.sub_category_image:
+                sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
+                                            'sub_category_name': sub_category.sub_category_name,
+                                            'sub_category_image': sub_category.sub_category_image
+                                           .url})
+            else:
+                sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
+                                            'sub_category_name': sub_category.sub_category_name,
+                                            'sub_category_image': ''})
+        return Response({'data': sub_categories_list, 'status': HTTP_200_OK})
 
 
 class GetServices(APIView):
@@ -241,7 +269,14 @@ class GetServices(APIView):
     def get(self, request, *args, **kwargs):
         sub_category = self.request.query_params.get('sub_category')
         services = Services.objects.filter(sub_category=sub_category)
-        return Response({'data': services.values(), 'status': HTTP_200_OK})
+        service_list = []
+        for service in services:
+            service_list.append(
+                {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                 'service_name': service.service_name, 'field_1': service.field_1,
+                 'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                 'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
+        return Response({'data': service_list, 'status': HTTP_200_OK})
 
 
 class GetServiceDetail(APIView):
@@ -287,11 +322,13 @@ class SearchingServices(APIView):
                 c = service.category.id
                 if Category.objects.get(id=c).category_image:
                     categories.append(
-                        {'id': Category.objects.get(id=c).id, 'category_name': Category.objects.get(id=c).category_name,
+                        {'id': Category.objects.get(id=c).id,
+                         'category_name': Category.objects.get(id=c).category_name,
                          'category_image': Category.objects.get(id=c).category_image.url})
                 else:
                     categories.append(
-                        {'id': Category.objects.get(id=c).id, 'category_name': Category.objects.get(id=c).category_name,
+                        {'id': Category.objects.get(id=c).id,
+                         'category_name': Category.objects.get(id=c).category_name,
                          'category_image': ''})
             service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
             return Response(
@@ -419,7 +456,8 @@ class GetBookingDetail(APIView):
             try:
                 booking = Booking.objects.get(user=app_user, id=booking_id)
                 return Response(
-                    {'id': booking.id, 'service_id': booking.service.id, 'service_name': booking.service.service_name,
+                    {'id': booking.id, 'service_id': booking.service.id,
+                     'service_name': booking.service.service_name,
                      'service_provider_id': booking.service_provider.full_name, 'booking_date': booking.date,
                      'booking_time': booking.time, 'address': booking.address, 'building': booking.building,
                      'city': booking.city, 'landmark': booking.landmark, 'default_address': booking.default_address,
@@ -529,7 +567,8 @@ class UpdateOrderStatus(APIView):
         AdminNotifications.objects.create(
             user=User.objects.get(email='admin@email.com'),
             title='Booking Update',
-            body='Status of service request with id {} has been updated to {}'.format(order_obj.id, order_obj.status)
+            body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
+                                                                                      order_obj.status)
         )
         return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
 
@@ -543,8 +582,9 @@ class UpcomingBooking(APIView):
         order_obj = Booking.objects.filter(status='Started')
         orders = []
         for obj in order_obj:
-            orders.append({'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                           'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+            orders.append(
+                {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
         return Response({'data': orders, 'status': HTTP_200_OK})
 
 
@@ -557,8 +597,9 @@ class PastBooking(APIView):
         order_obj = Booking.objects.filter(status='Completed')
         orders = []
         for obj in order_obj:
-            orders.append({'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                           'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+            orders.append(
+                {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
         return Response({'data': orders, 'status': HTTP_200_OK})
 
 
@@ -571,8 +612,9 @@ class OnGoingBooking(APIView):
         order_obj = Booking.objects.filter(status='Accepted')
         orders = []
         for obj in order_obj:
-            orders.append({'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                           'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+            orders.append(
+                {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
         return Response({'data': orders, 'status': HTTP_200_OK})
 
 
@@ -611,7 +653,8 @@ class GetServiceReviewRatings(APIView):
             for obj in rating_obj:
                 if obj.user.profile_pic:
                     ratings.append(
-                        {'user_name': obj.user.full_name, 'user_image': obj.user.profile_pic.url, 'rating': obj.rating,
+                        {'user_name': obj.user.full_name, 'user_image': obj.user.profile_pic.url,
+                         'rating': obj.rating,
                          'review': obj.reviews})
                 else:
                     ratings.append(
@@ -668,7 +711,8 @@ class NotificationList(APIView):
         notifications = UserNotification.objects.filter(user=app_user, read=False)
         notification_list = []
         for notification in notifications:
-            notification_list.append({'id': notification.id, 'title': notification.title, 'body': notification.body})
+            notification_list.append(
+                {'id': notification.id, 'title': notification.title, 'body': notification.body})
         return Response({'data': notification_list, 'status': HTTP_200_OK})
 
 
