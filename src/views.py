@@ -357,6 +357,7 @@ class SaveSearchesHistory(APIView):
                 searched_value = serializer.validated_data['searched_value']
                 try:
                     UserSearch.objects.get(searched_value=searched_value.lower())
+                    return Response({"message": "Searches saved successfully", 'status': HTTP_200_OK})
                 except Exception as e:
                     print(e)
                     UserSearch.objects.create(
