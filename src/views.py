@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -314,7 +315,8 @@ class SearchingServices(APIView):
     def get(self, request, *args, **kwargs):
         searched_value = self.request.query_params.get('search')
         try:
-            services = Services.objects.filter(service_name__icontains=searched_value)
+            services = Services.objects.filter(
+                Q(category__category_name__icontains=searched_value) | Q(service_name__icontains=searched_value))
             print(services)
             # categories = Category.objects.filter(category_name__icontains=searched_value)
             categories = []
