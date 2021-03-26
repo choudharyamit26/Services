@@ -29,7 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(default='', max_length=100)
     confirm_password = models.CharField(default='', max_length=100)
     country_code = models.IntegerField(null=True, blank=True)
-    phone_number = models.IntegerField(null=True, blank=True)
+    phone_number = models.BigIntegerField(null=True, blank=True)
     profile_pic = models.ImageField(upload_to='media', null=True, blank=True)
     is_user = models.BooleanField(default=False)
     is_provider = models.BooleanField(default=False)
