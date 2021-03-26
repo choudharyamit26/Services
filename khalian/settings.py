@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'src'
+    'src',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -133,11 +134,11 @@ LOGIN_REDIRECT_URL = 'adminpanel:dashboard'
 LOGOUT_REDIRECT_URL = 'adminpanel:login'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 DEFAULT_FROM_EMAIL = 'roo3a07078@gmail.com'
 EMAIL_USE_TLS = True
@@ -148,3 +149,22 @@ EMAIL_HOST_PASSWORD = 'Abdullah@414'
 EMAIL_PORT = 587
 SERVER_EMAIL = 'roo3a07078@gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+
+# Client S3 BUCKET CONFIG
+AWS_LOCATION = 'static'
+AWS_ACCESS_KEY_ID = 'AKIA3LZVUP7W6MLNQQCD '
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'khalian-bucket'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_FILE_OVERWRITE = False
+AWS_S3_REGION_NAME = "ap-south-1"
+AWS_S3_HOST = "s3.ap-south-1.amazonaws.com"
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+AWS_DEFAULT_ACL = None
