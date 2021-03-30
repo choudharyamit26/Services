@@ -466,6 +466,7 @@ class GetBookingDetail(APIView):
                      'city': booking.city, 'landmark': booking.landmark, 'default_address': booking.default_address,
                      'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                      'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                     'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                      'booked_at': booking.created_at,
                      'status': HTTP_200_OK})
             except Exception as e:
@@ -640,7 +641,7 @@ class OnGoingBooking(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         try:
-            order_obj = Booking.objects.filter(user=app_user,status='Accepted')
+            order_obj = Booking.objects.filter(user=app_user, status='Accepted')
             orders = []
             for obj in order_obj:
                 orders.append(
@@ -649,7 +650,7 @@ class OnGoingBooking(APIView):
                      'address': obj.address, 'booking_status': obj.status})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
-            return Response({'message':str(e),'status':HTTP_400_BAD_REQUEST})
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class RatingAndReviews(APIView):
