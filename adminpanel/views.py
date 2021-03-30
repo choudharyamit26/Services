@@ -488,7 +488,7 @@ class AddServiceProvider(CreateView):
         confirm_password = self.request.POST['confirm_password']
         # profile_pic = self.request.POST.get('profile_pic' or None)
         profile_pic = self.request.FILES.get('profile_pic' or None)
-        # print(self.request.FILES['profile_pic'])
+        print(self.request.FILES['profile_pic'])
         # print(type(self.request.FILES['profile_pic']))
         # print(profile_pic)
         # print(type(profile_pic))
@@ -537,7 +537,7 @@ class AddServiceProvider(CreateView):
                     country_code=country_code,
                     phone_number=phone_number,
                     is_provider=True,
-                    profile_pic=profile_pic
+                    # profile_pic=profile_pic
                 )
                 user.set_password(password)
                 user.save()
