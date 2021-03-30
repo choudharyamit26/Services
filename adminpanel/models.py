@@ -89,7 +89,7 @@ class ServiceProvider(models.Model):
     confirm_password = models.CharField(default='', max_length=100)
     profile_pic = models.ImageField(upload_to='media', null=True, blank=True)
     country_code = models.IntegerField()
-    phone_number = models.IntegerField()
+    phone_number = models.BigIntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     services = models.ForeignKey(Services, on_delete=models.CASCADE)
