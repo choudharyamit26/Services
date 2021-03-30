@@ -582,7 +582,7 @@ class UpcomingBooking(APIView):
     model = Booking
 
     def get(self, request, *args, **kwargs):
-        order_obj = Booking.objects.filter(status='Started')
+        order_obj = Booking.objects.filter(status='started')
         orders = []
         for obj in order_obj:
             orders.append(
