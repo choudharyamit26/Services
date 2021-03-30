@@ -582,14 +582,19 @@ class UpcomingBooking(APIView):
     model = Booking
 
     def get(self, request, *args, **kwargs):
-        order_obj = Booking.objects.filter(status='started')
-        orders = []
-        for obj in order_obj:
-            orders.append(
-                {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
-                 'address': obj.address, 'booking_status': obj.status})
-        return Response({'data': orders, 'status': HTTP_200_OK})
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        try:
+            order_obj = Booking.objects.filter(user=app_user, status='started')
+            orders = []
+            for obj in order_obj:
+                orders.append(
+                    {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                     'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                     'address': obj.address, 'booking_status': obj.status})
+            return Response({'data': orders, 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class PastBooking(APIView):
@@ -598,14 +603,32 @@ class PastBooking(APIView):
     model = Booking
 
     def get(self, request, *args, **kwargs):
-        order_obj = Booking.objects.filter(status='Completed')
-        orders = []
-        for obj in order_obj:
-            orders.append(
-                {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
-                 'address': obj.address, 'booking_status': obj.status})
-        return Response({'data': orders, 'status': HTTP_200_OK})
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        try:
+            order_obj = Booking.objects.filter(user=app_user, status='Completed')
+            orders = []
+            # try:
+            #     for obj in order_obj:
+            #         print(obj)
+            # except Exception as e:
+            #     print(e)
+            for obj in order_obj:
+                try:
+                    rating = RatingReview.objects.get(order=obj.id)
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
+                         'review': rating.reviews, 'rating_status': True})
+                except Exception as e:
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
+            return Response({'data': orders, 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class OnGoingBooking(APIView):
@@ -614,14 +637,19 @@ class OnGoingBooking(APIView):
     model = Booking
 
     def get(self, request, *args, **kwargs):
-        order_obj = Booking.objects.filter(status='Accepted')
-        orders = []
-        for obj in order_obj:
-            orders.append(
-                {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
-                 'address': obj.address, 'booking_status': obj.status})
-        return Response({'data': orders, 'status': HTTP_200_OK})
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        try:
+            order_obj = Booking.objects.filter(user=app_user,status='Accepted')
+            orders = []
+            for obj in order_obj:
+                orders.append(
+                    {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                     'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                     'address': obj.address, 'booking_status': obj.status})
+            return Response({'data': orders, 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message':str(e),'status':HTTP_400_BAD_REQUEST})
 
 
 class RatingAndReviews(APIView):
