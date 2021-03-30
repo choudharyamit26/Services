@@ -588,7 +588,7 @@ class UpcomingBooking(APIView):
             orders.append(
                 {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                  'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
-                 'address': obj.address,'booking_status':obj.status})
+                 'address': obj.address, 'booking_status': obj.status})
         return Response({'data': orders, 'status': HTTP_200_OK})
 
 
@@ -603,7 +603,8 @@ class PastBooking(APIView):
         for obj in order_obj:
             orders.append(
                 {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                 'address': obj.address, 'booking_status': obj.status})
         return Response({'data': orders, 'status': HTTP_200_OK})
 
 
@@ -618,7 +619,8 @@ class OnGoingBooking(APIView):
         for obj in order_obj:
             orders.append(
                 {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time})
+                 'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                 'address': obj.address, 'booking_status': obj.status})
         return Response({'data': orders, 'status': HTTP_200_OK})
 
 
