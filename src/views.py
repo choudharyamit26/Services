@@ -228,14 +228,14 @@ class HomeView(APIView):
                  'service_name': service.service_name, 'field_1': service.field_1,
                  'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
                  'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
-            top_services = TopServices.objects.all()
-            top_services_list = []
-            for object in top_services:
-                top_services_list.append(
-                    {'id': object.service.id, 'service_name': object.service.service_name,
-                     'image_1': object.service.image_1.url,
-                     'image_2': object.service.image_2.url})
-            return Response({'services': service_list, 'top_services': top_services_list,
+        top_services = TopServices.objects.all()
+        top_services_list = []
+        for object in top_services:
+            top_services_list.append(
+                {'id': object.service.id, 'service_name': object.service.service_name,
+                 'image_1': object.service.image_1.url,
+                 'image_2': object.service.image_2.url})
+        return Response({'services': service_list, 'top_services': top_services_list,
                              'categories': category_list, 'status': HTTP_200_OK})
 
 
@@ -316,7 +316,8 @@ class SearchingServices(APIView):
         searched_value = self.request.query_params.get('search')
         try:
             services = Services.objects.filter(
-                Q(category__category_name__icontains=searched_value) | Q(service_name__icontains=searched_value))
+                Q(category__category_name__icontains=searched_value.lower()) | Q(
+                    service_name__icontains=searched_value.lower()))
             print(services)
             # categories = Category.objects.filter(category_name__icontains=searched_value)
             categories = []

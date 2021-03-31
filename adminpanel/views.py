@@ -108,7 +108,7 @@ class AddCategoryView(CreateView):
         category_name = self.request.POST['category_name']
         Category.objects.create(
             category_image=image,
-            category_name=category_name
+            category_name=category_name.lower()
         )
         messages.success(self.request, 'Category added successfully')
         return redirect("adminpanel:category-management")
@@ -556,7 +556,7 @@ class AddSubCategory(CreateView):
         print(self.request.POST)
         SubCategory.objects.create(
             category=Category.objects.get(id=self.request.POST['category']),
-            sub_category_name=self.request.POST['sub_category_name'],
+            sub_category_name=self.request.POST['sub_category_name'].lower(),
             sub_category_image=self.request.FILES.get('sub_category_image' or None),
         )
         messages.success(self.request, 'Sub Category added successfully')
@@ -665,7 +665,7 @@ class AddServices(CreateView):
         image_1 = self.request.FILES['image_1']
         image_2 = self.request.FILES['image_2']
         Services.objects.create(category=Category.objects.get(id=category),
-                                sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name,
+                                sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name.lower(),
                                 image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3,
                                 field_4=field_4, base_price=base_price)
         messages.success(self.request, 'Service added successfully')
