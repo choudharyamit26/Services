@@ -211,6 +211,8 @@ class HomeView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        user_id = AppUser.objects.get(user=user)
         service_list = []
         category_list = []
         services = Services.objects.all()
@@ -236,7 +238,7 @@ class HomeView(APIView):
                  'image_1': object.service.image_1.url,
                  'image_2': object.service.image_2.url})
         return Response({'services': service_list, 'top_services': top_services_list,
-                             'categories': category_list, 'status': HTTP_200_OK})
+                             'categories': category_list, 'status': HTTP_200_OK,'lat':user_id.lat,'long':user_id.lang})
 
 
 class GetSubCategory(APIView):
