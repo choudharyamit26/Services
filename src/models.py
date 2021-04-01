@@ -85,6 +85,15 @@ class GeneralInquiry(models.Model):
     image_2 = models.ImageField(upload_to='media', null=True, blank=True)
 
 
+class Inquiry(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    service = models.ForeignKey(Services, on_delete=models.CASCADE)
+    subject = models.CharField(default='', max_length=1000)
+    message = models.CharField(default='', max_length=2000)
+    image_1 = models.ImageField(upload_to='media', null=True, blank=True)
+    image_2 = models.ImageField(upload_to='media', null=True, blank=True)
+
+
 class RatingReview(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     order = models.ForeignKey(Booking, on_delete=models.CASCADE)

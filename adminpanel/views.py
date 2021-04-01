@@ -22,7 +22,7 @@ from django.contrib import messages
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
-from src.models import Booking, OffersAndDiscount, AppUser
+from src.models import Booking, OffersAndDiscount, AppUser,GeneralInquiry,Inquiry
 
 
 class LoginView(View):
@@ -665,7 +665,8 @@ class AddServices(CreateView):
         image_1 = self.request.FILES['image_1']
         image_2 = self.request.FILES['image_2']
         Services.objects.create(category=Category.objects.get(id=category),
-                                sub_category=SubCategory.objects.get(id=sub_category), service_name=service_name.lower(),
+                                sub_category=SubCategory.objects.get(id=sub_category),
+                                service_name=service_name.lower(),
                                 image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3,
                                 field_4=field_4, base_price=base_price)
         messages.success(self.request, 'Service added successfully')
@@ -762,8 +763,15 @@ class NotificationCount(View):
         return HttpResponse(notification_count)
 
 
-class InquiryView(View):
+class InquiryView(ListView):
     template_name = 'inquiry.html'
+    model = GeneralInquiry
 
-    def get(self, request, *args, **kwargs):
-        return render(self.request, 'inquiry.html')
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        inquiries = Inquiry.objects.all()
+        context['inquiries'] = inquiries
+        return context
+
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'inquiry.html')

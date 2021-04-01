@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSerializer, UpdateUserProfileSerializer, \
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
-    GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer
+    GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer, InquirySerializer
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs, RatingReview, OffersAndDiscount, UserNotification
+    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -546,6 +546,33 @@ class GeneralInquiryView(APIView):
             return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
 
 
+class InquiryView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = InquirySerializer
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        serializer = InquirySerializer(data=self.request.data)
+        if serializer.is_valid():
+            service = serializer.validated_data['service']
+            try:
+                service_obj = Services.objects.get(id=service)
+                subject = serializer.validated_data['subject']
+                message = serializer.validated_data['message']
+                image_1 = serializer.validated_data['image_1']
+                image_2 = serializer.validated_data['image_2']
+                Inquiry.objects.create(user=app_user, service=service_obj, subject=subject, message=message,
+                                       image_1=image_1,
+                                       image_2=image_2)
+                return Response({'message': 'Inquiry submitted successfully', 'status': HTTP_200_OK})
+            except Exception as e:
+                return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+        else:
+            return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+
+
 class LogoutView(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -791,3 +818,12 @@ class GetUsersBooking(APIView):
         app_user = AppUser.objects.get(user=user)
         bookings = Booking.objects.filter(user=app_user)
         return Response({'data': [booking.id for booking in bookings], 'status': HTTP_200_OK})
+
+
+class GetServiceName(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        services = Services.objects.all()
+        return Response({'data':services.values(), 'status':HTTP_200_OK})

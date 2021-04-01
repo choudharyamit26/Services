@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import UserSearch, Booking, ContactUs, TermsAndCondition, AboutUs, PrivacyPolicy, GeneralInquiry, \
-    RatingReview, OffersAndDiscount
+    RatingReview, OffersAndDiscount,Inquiry
 
 # Register your models here.
 
@@ -13,3 +13,4 @@ admin.site.register(PrivacyPolicy)
 admin.site.register(GeneralInquiry)
 admin.site.register(RatingReview)
 admin.site.register(OffersAndDiscount)
+admin.site.register(Inquiry)

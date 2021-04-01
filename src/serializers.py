@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from adminpanel.models import User
-from .models import AppUser, Settings, UserSearch, GeneralInquiry, Booking, RatingReview
+from .models import AppUser, Settings, UserSearch, GeneralInquiry, Booking, RatingReview, Inquiry
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -131,3 +131,15 @@ class RatingAndReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RatingReview
         fields = ('id', 'review', 'rating')
+
+
+class InquirySerializer(serializers.ModelSerializer):
+    service = serializers.IntegerField()
+    subject = serializers.CharField()
+    message = serializers.CharField()
+    image_1 = serializers.ImageField(required=False, allow_null=True)
+    image_2 = serializers.ImageField(required=False, allow_null=True)
+
+    class Meta:
+        model = Inquiry
+        fields = ('service', 'subject', 'message', 'image_1', 'image_2')

@@ -3,7 +3,7 @@ from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, Ge
     PrivacyPolicyView, TermsAndConditionView, AboutUsView, GeneralInquiryView, LogoutView, UpcomingBooking, PastBooking, \
     OnGoingBooking, UpdateOrderStatus, RatingAndReviews, GetServiceReviewRatings, GetDefaultOfferPercentView, \
     GetAllOffersAndDiscount, GetUserDetail, NotificationList, GetUserNotificationCount, UpdateNotification, \
-    GetSubCategory, GetServices, GetServiceDetail,GetUsersBooking
+    GetSubCategory, GetServices, GetServiceDetail, GetUsersBooking, InquiryView,GetServiceName
 from django.urls import path
 
 app_name = 'src'
@@ -28,7 +28,7 @@ urlpatterns = [
     path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy-policy'),
     path('terms-and-condition/', TermsAndConditionView.as_view(), name='terms-and-condition'),
     path('about-us/', AboutUsView.as_view(), name='about-us'),
-    path('inquiry/', GeneralInquiryView.as_view(), name='inquiry'),
+    path('help-with-order/', GeneralInquiryView.as_view(), name='help-with-order'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('update-order/', UpdateOrderStatus.as_view(), name='update-order'),
     path('ratings-and-review/', RatingAndReviews.as_view(), name='ratings-and-review'),
@@ -43,4 +43,6 @@ urlpatterns = [
     path('get-services/', GetServices.as_view(), name='get-services'),
     path('get-service-detail/', GetServiceDetail.as_view(), name='get-service-detail'),
     path('get-users-bookings-ids/', GetUsersBooking.as_view(), name='get-users-bookings-ids'),
+    path('general-inquiry/', InquiryView.as_view(), name='general-inquiry'),
+    path('services/', GetServiceName.as_view(), name='services'),
 ]
