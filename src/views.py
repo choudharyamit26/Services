@@ -817,7 +817,7 @@ class GetUsersBooking(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         bookings = Booking.objects.filter(user=app_user)
-        return Response({'data': [booking.id for booking in bookings], 'status': HTTP_200_OK})
+        return Response({'data': [str(booking.id) for booking in bookings], 'status': HTTP_200_OK})
 
 
 class GetServiceName(APIView):
