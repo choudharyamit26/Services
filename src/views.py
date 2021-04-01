@@ -238,7 +238,7 @@ class HomeView(APIView):
                  'image_1': object.service.image_1.url,
                  'image_2': object.service.image_2.url})
         return Response({'services': service_list, 'top_services': top_services_list,
-                             'categories': category_list, 'status': HTTP_200_OK,'lat':user_id.lat,'long':user_id.lang})
+                         'categories': category_list, 'status': HTTP_200_OK, 'lat': user_id.lat, 'long': user_id.lang})
 
 
 class GetSubCategory(APIView):
@@ -779,3 +779,15 @@ class UpdateNotification(APIView):
             notification.read = True
             notification.save()
         return Response({'message': 'Notifications updates successfully', 'status': HTTP_200_OK})
+
+
+class GetUsersBooking(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
+        bookings = Booking.objects.filter(user=app_user)
+        return Response({'data': [booking.id for booking in bookings], 'status': HTTP_200_OK})
