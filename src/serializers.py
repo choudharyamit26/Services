@@ -73,25 +73,26 @@ class UserSearchSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     service = serializers.CharField()
     requirement = serializers.CharField()
-    service_provider = serializers.CharField()
+    # service_provider = serializers.CharField()
     date = serializers.CharField()
     time = serializers.CharField()
     address = serializers.CharField()
-    building = serializers.CharField()
-    city = serializers.CharField()
-    landmark = serializers.CharField()
+    # building = serializers.CharField()
+    # city = serializers.CharField()
+    # landmark = serializers.CharField()
     status = serializers.CharField()
-    sub_total = serializers.FloatField()
-    fees = serializers.FloatField()
-    discount = serializers.FloatField()
-    total = serializers.FloatField()
+    sub_total = serializers.FloatField(required=False)
+    fees = serializers.FloatField(required=False)
+    discount = serializers.FloatField(required=False)
+    total = serializers.FloatField(required=False)
     default_address = serializers.BooleanField()
+    image_1 = serializers.ImageField()
 
     class Meta:
         model = Booking
         fields = (
-            'service', 'service_provider', 'date', 'time', 'requirement', 'address', 'building', 'city', 'landmark',
-            'status', 'sub_total', 'fees', 'discount', 'total', 'default_address')
+            'service', 'date', 'time', 'requirement', 'address', 'status', 'sub_total', 'fees', 'discount', 'total',
+            'default_address', 'image_1')
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):

@@ -402,35 +402,35 @@ class BookingView(APIView):
             try:
                 requirement = serializer.validated_data['requirement']
                 service = serializer.validated_data['service']
-                service_provider = serializer.validated_data['service_provider']
+                # service_provider = serializer.validated_data['service_provider']
                 date = serializer.validated_data['date']
                 time = serializer.validated_data['time']
                 address = serializer.validated_data['address']
-                building = serializer.validated_data['building']
-                city = serializer.validated_data['city']
-                landmark = serializer.validated_data['landmark']
+                # building = serializer.validated_data['building']
+                # city = serializer.validated_data['city']
+                # landmark = serializer.validated_data['landmark']
                 status = serializer.validated_data['status']
                 default_address = serializer.validated_data['default_address']
-                sub_total = serializer.validated_data['sub_total']
-                fees = serializer.validated_data['fees']
-                discount = serializer.validated_data['discount']
-                total = serializer.validated_data['total']
+                # sub_total = serializer.validated_data['sub_total']
+                # fees = serializer.validated_data['fees']
+                # discount = serializer.validated_data['discount']
+                # total = serializer.validated_data['total']
                 booking = Booking.objects.create(
                     user=app_user,
                     requirement=requirement,
                     service=Services.objects.get(id=service),
-                    service_provider=ServiceProvider.objects.get(id=service_provider),
+                    # service_provider=ServiceProvider.objects.get(id=service_provider),
                     date=date,
                     time=time,
                     address=address,
-                    building=building,
-                    city=city,
-                    landmark=landmark,
+                    # building=building,
+                    # city=city,
+                    # landmark=landmark,
                     status=status,
-                    sub_total=sub_total,
-                    fees=fees,
-                    discount=discount,
-                    total=total,
+                    # sub_total=sub_total,
+                    # fees=fees,
+                    # discount=discount,
+                    # total=total,
                     default_address=default_address
                 )
                 AdminNotifications.objects.create(
