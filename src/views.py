@@ -453,7 +453,7 @@ class BookingView(APIView):
                 # sub_total = serializer.validated_data['sub_total']
                 # fees = serializer.validated_data['fees']
                 # discount = serializer.validated_data['discount']
-                # total = serializer.validated_data['total']
+                total = serializer.validated_data['total']
                 booking = Booking.objects.create(
                     user=app_user,
                     requirement=requirement,
@@ -469,7 +469,7 @@ class BookingView(APIView):
                     # sub_total=sub_total,
                     # fees=fees,
                     # discount=discount,
-                    # total=total,
+                    total=total,
                     default_address=default_address
                 )
                 AdminNotifications.objects.create(
