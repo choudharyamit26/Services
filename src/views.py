@@ -502,17 +502,30 @@ class GetBookingDetail(APIView):
             # booking_id = serializer.validated_data.get('id')
             try:
                 booking = Booking.objects.get(user=app_user, id=booking_id)
-                return Response(
-                    {'id': booking.id, 'service_id': booking.service.id,
-                     'service_name': booking.service.service_name,
-                     'service_provider_id': booking.service_provider.full_name, 'booking_date': booking.date,
-                     'booking_time': booking.time, 'address': booking.address, 'building': booking.building,
-                     'city': booking.city, 'landmark': booking.landmark, 'default_address': booking.default_address,
-                     'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                     'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                     'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                     'booked_at': booking.created_at,
-                     'status': HTTP_200_OK})
+                try:
+                    return Response(
+                        {'id': booking.id, 'service_id': booking.service.id,
+                         'service_name': booking.service.service_name,
+                         'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
+                         'booking_time': booking.time, 'address': booking.address, 'building': booking.building,
+                         'city': booking.city, 'landmark': booking.landmark, 'default_address': booking.default_address,
+                         'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                         'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                         'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                         'booked_at': booking.created_at,
+                         'status': HTTP_200_OK})
+                except Exception as e:
+                    return Response(
+                        {'id': booking.id, 'service_id': booking.service.id,
+                         'service_name': booking.service.service_name,
+                         'service_provider_id': '', 'booking_date': booking.date,
+                         'booking_time': booking.time, 'address': booking.address, 'building': booking.building,
+                         'city': booking.city, 'landmark': booking.landmark, 'default_address': booking.default_address,
+                         'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                         'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                         'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                         'booked_at': booking.created_at,
+                         'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_200_OK})
         else:
