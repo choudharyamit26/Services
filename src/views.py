@@ -276,11 +276,20 @@ class GetServices(APIView):
         services = Services.objects.filter(sub_category=sub_category)
         service_list = []
         for service in services:
+            ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
+            ratings = 0
+            for obj in RatingReview.objects.filter(order__service=service.id):
+                ratings += obj.rating
+            try:
+                average_ratings = ratings / ratings_obj
+            except Exception as e:
+                average_ratings = 0
             service_list.append(
                 {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
                  'service_name': service.service_name, 'field_1': service.field_1,
                  'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
-                 'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
+                 'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url,
+                 'average_ratings': average_ratings, 'reviews': ratings_obj})
         return Response({'data': service_list, 'status': HTTP_200_OK})
 
 
@@ -293,7 +302,8 @@ class GetServiceDetail(APIView):
         id = self.request.query_params.get('id')
         try:
             service_obj = Services.objects.get(id=id)
-            ratings_obj = Booking.objects.filter(service=id).count()
+            # ratings_obj = Booking.objects.filter(service=id).count()
+            ratings_obj = RatingReview.objects.filter(order__service=id).count()
             ratings = 0
             for obj in RatingReview.objects.filter(order__service=id):
                 ratings += obj.rating
@@ -325,21 +335,50 @@ class SearchingServices(APIView):
             print(services)
             # categories = Category.objects.filter(category_name__icontains=searched_value)
             categories = []
+            service_list = []
+            for service_obj in services:
+                ratings_obj = RatingReview.objects.filter(order__service=service_obj.id).count()
+                ratings = 0
+                for obj in RatingReview.objects.filter(order__service=service_obj.id):
+                    ratings += obj.rating
+                try:
+                    average_ratings = ratings / ratings_obj
+                except Exception as e:
+                    average_ratings = 0
+                service_list.append({'service_id': service_obj.id, 'service_name': service_obj.service_name,
+                                     'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
+                                     'field_3': service_obj.field_3,
+                                     'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                                     'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
+                                     'status': HTTP_200_OK,
+                                     'rating_count': ratings_obj, 'average_rating': average_ratings})
             for service in services:
                 c = service.category.id
+                ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
+                ratings = 0
+                for obj in RatingReview.objects.filter(order__service=service.id):
+                    ratings += obj.rating
+                try:
+                    average_ratings = ratings / ratings_obj
+                except Exception as e:
+                    average_ratings = 0
                 if Category.objects.get(id=c).category_image:
                     categories.append(
                         {'id': Category.objects.get(id=c).id,
                          'category_name': Category.objects.get(id=c).category_name,
-                         'category_image': Category.objects.get(id=c).category_image.url})
+                         'category_image': Category.objects.get(id=c).category_image.url,
+                         'average_ratings': average_ratings, 'service_id': service.id,
+                         'service_name': service.service_name, 'reviews_count': ratings_obj})
                 else:
                     categories.append(
                         {'id': Category.objects.get(id=c).id,
                          'category_name': Category.objects.get(id=c).category_name,
-                         'category_image': ''})
+                         'category_image': '', 'service_id': service.id,
+                         'service_name': service.service_name, 'average_ratings': average_ratings,
+                         'reviews_count': ratings_obj})
             service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
             return Response(
-                {'services': services.values(), 'service_providers': service_providers.values(),
+                {'services': service_list, 'service_providers': service_providers.values(),
                  'categories': categories, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
