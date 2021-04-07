@@ -505,7 +505,7 @@ class GetBookingDetail(APIView):
                 try:
                     return Response(
                         {'id': booking.id, 'service_id': booking.service.id,
-                         'service_name': booking.service.service_name,
+                         'service_name': booking.service.service_name,'quote':booking.quote,
                          'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
                          'booking_time': booking.time, 'address': booking.address,
                          'default_address': booking.default_address,
@@ -517,7 +517,7 @@ class GetBookingDetail(APIView):
                 except Exception as e:
                     return Response(
                         {'id': booking.id, 'service_id': booking.service.id,
-                         'service_name': booking.service.service_name,
+                         'service_name': booking.service.service_name,'quote':booking.quote,
                          'service_provider_id': '', 'booking_date': booking.date,
                          'booking_time': booking.time, 'address': booking.address,
                          'default_address': booking.default_address,
