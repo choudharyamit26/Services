@@ -3,7 +3,9 @@ from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, Ge
     PrivacyPolicyView, TermsAndConditionView, AboutUsView, GeneralInquiryView, LogoutView, UpcomingBooking, PastBooking, \
     OnGoingBooking, UpdateOrderStatus, RatingAndReviews, GetServiceReviewRatings, GetDefaultOfferPercentView, \
     GetAllOffersAndDiscount, GetUserDetail, NotificationList, GetUserNotificationCount, UpdateNotification, \
-    GetSubCategory, GetServices, GetServiceDetail, GetUsersBooking, InquiryView,GetServiceName
+    GetSubCategory, GetServices, GetServiceDetail, GetUsersBooking, InquiryView, GetServiceName, ServiceProviderLogin, \
+    ForgetPassword, ServiceProviderLogoutView, ServiceProviderDashboard, NewRequestView, NewBookingRequestDetail, \
+    UpdateBookingByServiceProvider, ServiceProviderCompletedTasks, ServiceProviderOnGoingTasks,ProviderRegisterView
 from django.urls import path
 
 app_name = 'src'
@@ -45,4 +47,17 @@ urlpatterns = [
     path('get-users-bookings-ids/', GetUsersBooking.as_view(), name='get-users-bookings-ids'),
     path('general-inquiry/', InquiryView.as_view(), name='general-inquiry'),
     path('services/', GetServiceName.as_view(), name='services'),
+    path('service-provider-login/', ServiceProviderLogin.as_view(), name='service-provider-login'),
+    path('forget-password/', ForgetPassword.as_view(), name='forget-password'),
+    path('service-provider-logout/', ServiceProviderLogoutView.as_view(), name='service-provider-logout'),
+    path('service-provider-dashboard/', ServiceProviderDashboard.as_view(), name='service-provider-dashboard'),
+    path('new-booking-requests/', NewRequestView.as_view(), name='new-booking-requests'),
+    path('new-booking-request-detail/', NewBookingRequestDetail.as_view(), name='new-booking-request-detail'),
+    path('update-booking-status-by-service-provider/', UpdateBookingByServiceProvider.as_view(),
+         name='update-booking-status-by-service-provider'),
+    path('service-provider-completed-tasks/', ServiceProviderCompletedTasks.as_view(),
+         name='service-provider-completed-tasks'),
+    path('service-provider-on-going-tasks/', ServiceProviderOnGoingTasks.as_view(),
+         name='service-on-going-completed-tasks'),
+    path('provider-register-from-user-app/',ProviderRegisterView.as_view(),name='provider-register-from-user-app')
 ]

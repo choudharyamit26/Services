@@ -51,9 +51,11 @@ class Booking(models.Model):
     sub_total = models.FloatField(null=True, blank=True)
     fees = models.FloatField(null=True, blank=True)
     discount = models.FloatField(null=True, blank=True)
-    total = models.FloatField(null=True, blank=True)
+    total = models.FloatField(default=0, null=True, blank=True)
     default_address = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    image_1 = models.ImageField(upload_to='media', null=True, blank=True)
+    image_2 = models.ImageField(upload_to='media', null=True, blank=True)
 
 
 class ContactUs(models.Model):
@@ -114,6 +116,16 @@ class UserNotification(models.Model):
     body_arabic = models.CharField(default='', max_length=2000)
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class ProviderRegistration(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media')
+    service_provider_name = models.CharField(default='', max_length=200)
+    country_code = models.IntegerField()
+    phone_number = models.BigIntegerField()
+    email = models.EmailField()
+    password = models.CharField(default='', max_length=400)
 
 
 @receiver(post_save, sender=AppUser)

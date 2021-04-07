@@ -94,6 +94,8 @@ class ServiceProvider(models.Model):
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     services = models.ForeignKey(Services, on_delete=models.CASCADE)
     address = models.CharField(default='', max_length=556)
+    device_token = models.CharField(default='', max_length=3000)
+    device_type = models.CharField(default='', max_length=3000)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

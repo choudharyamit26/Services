@@ -5,9 +5,11 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSerializer, UpdateUserProfileSerializer, \
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
-    GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer, InquirySerializer
+    GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer, InquirySerializer, \
+    ServiceProviderLoginSerializer, ForgetPasswordSerializer, NewBookingRequestDetailSerializer, \
+    UpdateBookingByServiceProviderSerializer, ProviderRegistrationSerializer
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry
+    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry, ProviderRegistration
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -579,11 +581,14 @@ class LogoutView(APIView):
 
     def post(self, request, *args, **kwargs):
         user = self.request.user
-        app_user = AppUser.objects.get(user=user)
-        app_user.device_token = ''
-        app_user.save()
-        request.user.auth_token.delete()
-        return Response({"msg": "Logged out successfully", "status": HTTP_200_OK})
+        try:
+            app_user = AppUser.objects.get(user=user)
+            app_user.device_token = ''
+            app_user.save()
+            request.user.auth_token.delete()
+            return Response({"msg": "Logged out successfully", "status": HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class UpdateOrderStatus(APIView):
@@ -827,3 +832,268 @@ class GetServiceName(APIView):
     def get(self, request, *args, **kwargs):
         services = Services.objects.all()
         return Response({'data': services.values(), 'status': HTTP_200_OK})
+
+
+class ServiceProviderLogin(APIView):
+    model = ServiceProvider
+    serializer_class = ServiceProviderLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = ServiceProviderLoginSerializer(data=self.request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            device_token = serializer.validated_data['device_token']
+            device_type = serializer.validated_data['device_type']
+            try:
+                user_obj = User.objects.get(email=email)
+                check_password = user_obj.check_password(password)
+                if check_password:
+                    try:
+                        existing_token = Token.objects.get(user=user_obj)
+                        existing_token.delete()
+                        token = Token.objects.get_or_create(user=user_obj)
+                        service_provider = ServiceProvider.objects.get(email=email)
+                        service_provider.device_token = device_token
+                        service_provider.device_type = device_type
+                        service_provider.save()
+                        return Response(
+                            {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
+                             "full_name": service_provider.full_name,
+                             'status': HTTP_200_OK})
+                    except Exception as e:
+                        token = Token.objects.get_or_create(user=user_obj)
+                        service_provider = ServiceProvider.objects.get(email=email)
+                        service_provider.device_token = device_token
+                        service_provider.device_type = device_type
+                        service_provider.save()
+                        return Response(
+                            {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
+                             "full_name": service_provider.full_name,
+                             'status': HTTP_200_OK})
+                else:
+                    return Response({'message': 'Incorrect password', 'status': HTTP_400_BAD_REQUEST})
+            except Exception as e:
+                return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+        else:
+            return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+
+
+class ForgetPassword(APIView):
+    model = User
+    serializer_class = ForgetPasswordSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = ForgetPasswordSerializer(data=self.request.data)
+        if serializer.is_valid():
+            country_code = serializer.validated_data['country_code']
+            phone_number = serializer.validated_data['phone_number']
+            password = serializer.validated_data['password']
+            confirm_password = serializer.validated_data['confirm_password']
+            try:
+                user = User.objects.get(country_code=country_code, phone_number=phone_number)
+                if password == confirm_password:
+                    user.set_password(password)
+                    user.save()
+                    return Response({"message": "Password updated successfully", "status": HTTP_200_OK})
+                else:
+                    return Response(
+                        {"message": "Password and Confirm password did not match", "status": HTTP_400_BAD_REQUEST})
+            except Exception as e:
+                return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+        else:
+            return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+
+
+class ServiceProviderLogoutView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        try:
+            app_user = ServiceProvider.objects.get(email=user.email)
+            app_user.device_token = ''
+            app_user.save()
+            request.user.auth_token.delete()
+            return Response({"msg": "Logged out successfully", "status": HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class ServiceProviderDashboard(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        service_provider_obj = ServiceProvider.objects.get(email=user.email)
+        booking_obj = Booking.objects.filter(service_provider=service_provider_obj)
+        active_booking_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Started').count()
+        completed_booking_obj = Booking.objects.filter(service_provider=service_provider_obj,
+                                                       status='Completed').count()
+        earning = 0
+        for booking in booking_obj:
+            print('ID--->>', booking.id)
+            print('Total--->>', booking.total)
+            try:
+                earning += booking.total
+            except Exception as e:
+                earning += 0
+        return Response(
+            {'total_bookings': booking_obj.count(), 'active_booking': active_booking_obj,
+             'completed_booking': completed_booking_obj, 'total_earning': earning})
+
+
+class NewRequestView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        new_booking_list = []
+        user = self.request.user
+        service_provider_obj = ServiceProvider.objects.get(email=user.email)
+        bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Started')
+        return Response({'data': bookings_obj.values(), 'status': HTTP_200_OK})
+
+
+class NewBookingRequestDetail(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+    serializer_class = NewBookingRequestDetailSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = NewBookingRequestDetailSerializer(data=self.request.data)
+        if serializer.is_valid():
+            id = serializer.validated_data['id']
+            try:
+                booking_obj = Booking.objects.get(id=id)
+                return Response({'id': booking_obj.id, 'date': booking_obj.date, 'status': booking_obj.status,
+                                 'total': booking_obj.total, 'service_id': booking_obj.service.id,
+                                 'service_name': booking_obj.service.service_name,
+                                 'customer_name': booking_obj.user.full_name,
+                                 'customer_contact_number': booking_obj.user.user.country_code + booking_obj.user.user.phone_number,
+                                 'customer_address': booking_obj.address})
+            except Exception as e:
+                return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+        else:
+            return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+
+
+class UpdateBookingByServiceProvider(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+    serializer_class = UpdateBookingByServiceProviderSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        service_provider = ServiceProvider.objects.get(email=user.email)
+        serializer = UpdateBookingByServiceProviderSerializer(data=self.request.data)
+        if serializer.is_valid():
+            id = serializer.validated_data['id']
+            status = serializer.validated_data['status']
+            image_1 = serializer.validated_data['image_1']
+            image_2 = serializer.validated_data['image_2']
+            try:
+                booking_obj = Booking.objects.get(id=id, service_provider=service_provider)
+                booking_obj.status = status
+                booking_obj.image_1 = image_1
+                booking_obj.image_2 = image_2
+                booking_obj.save()
+                return Response({'message': 'Booking updated successfully', 'status': HTTP_200_OK})
+            except Exception as e:
+                return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+        else:
+            return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+
+
+class ServiceProviderCompletedTasks(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        service_provider = ServiceProvider.objects.get(email=user.email)
+        try:
+            order_obj = Booking.objects.filter(service_provider=service_provider, status='Completed')
+            orders = []
+            for obj in order_obj:
+                try:
+                    rating = RatingReview.objects.get(order=obj.id)
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
+                         'review': rating.reviews, 'rating_status': True})
+                except Exception as e:
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
+            return Response({'data': orders, 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class ServiceProviderOnGoingTasks(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        service_provider = ServiceProvider.objects.get(email=user.email)
+        try:
+            order_obj = Booking.objects.filter(service_provider=service_provider, status='Accepted')
+            orders = []
+            for obj in order_obj:
+                try:
+                    rating = RatingReview.objects.get(order=obj.id)
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
+                         'review': rating.reviews, 'rating_status': True})
+                except Exception as e:
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
+            return Response({'data': orders, 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class ProviderRegisterView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = ProviderRegistration
+    serializer_class = ProviderRegistrationSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+        try:
+            app_user = AppUser.objects.get(user=user)
+            serializer = ProviderRegistrationSerializer(data=self.request.data)
+            if serializer.is_valid():
+                image = serializer.validated_data['image']
+                service_provider_name = serializer.validated_data['service_provider_name']
+                country_code = serializer.validated_data['country_code']
+                phone_number = serializer.validated_data['phone_number']
+                email = serializer.validated_data['email']
+                password = serializer.validated_data['password']
+                ProviderRegistration.objects.create(user=app_user, image=image,
+                                                    service_provider_name=service_provider_name,
+                                                    country_code=country_code, phone_number=phone_number, email=email,
+                                                    password=password)
+                return Response(
+                    {'message': "Provider registration request submitted successfully", 'status': HTTP_200_OK})
+            else:
+                return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})

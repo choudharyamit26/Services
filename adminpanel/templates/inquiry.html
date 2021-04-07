@@ -71,6 +71,7 @@
                                     <th>S.No</th>
                                     <th>User Id</th>
                                     <th>User Name</th>
+                                    <th>Service Name</th>
                                     <th>Subject</th>
                                     <th>Message</th>
                                     <th>Image1</th>
@@ -86,6 +87,7 @@
                                     <td>{{obj.user.id}}</td>
                                     <td>{{obj.user.full_name}}</td>
                                     <td>{{obj.subject}}</td>
+                                    <td>{{obj.service.service_name}}</td>
                                     <td>{{obj.message}}</td>
                                     {% if obj.image_1 %}
                                     <td><img src="{{obj.image_1.url}}" alt="img" class="img-fluid"></td>

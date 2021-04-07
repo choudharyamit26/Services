@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from adminpanel.models import User
-from .models import AppUser, Settings, UserSearch, GeneralInquiry, Booking, RatingReview, Inquiry
+from adminpanel.models import User, ServiceProvider
+from .models import AppUser, Settings, UserSearch, GeneralInquiry, Booking, RatingReview, Inquiry, ProviderRegistration
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -143,3 +143,58 @@ class InquirySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inquiry
         fields = ('service', 'subject', 'message', 'image_1', 'image_2')
+
+
+class ServiceProviderLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(style={'input_type': 'password'})
+    device_token = serializers.CharField()
+    device_type = serializers.CharField()
+
+    class Meta:
+        model = ServiceProvider
+        fields = ('email', 'password', 'device_token', 'device_type')
+
+
+class ForgetPasswordSerializer(serializers.ModelSerializer):
+    country_code = serializers.IntegerField()
+    phone_number = serializers.IntegerField()
+    password = serializers.CharField(style={'input_type': 'password'})
+    confirm_password = serializers.CharField(style={'input_type': 'password'})
+
+    class Meta:
+        model = User
+        fields = ('country_code', 'phone_number', 'password', 'confirm_password')
+
+
+class NewBookingRequestDetailSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Booking
+        fields = ('id',)
+
+
+class UpdateBookingByServiceProviderSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    status = serializers.CharField()
+    image_1 = serializers.ImageField()
+    image_2 = serializers.ImageField()
+
+    class Meta:
+        model = Booking
+        fields = ('id', 'status', 'image_1', 'image_2')
+
+
+class ProviderRegistrationSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    country_code = serializers.IntegerField()
+    phone_number = serializers.IntegerField()
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    service_provider_name = serializers.CharField()
+
+    class Meta:
+        model = ProviderRegistration
+        fields = ('image', 'country_code', 'phone_number', 'email', 'password', 'service_provider_name')
+        # exclude = ('user',)
