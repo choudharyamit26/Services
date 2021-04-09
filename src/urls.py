@@ -5,8 +5,9 @@ from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, Ge
     GetAllOffersAndDiscount, GetUserDetail, NotificationList, GetUserNotificationCount, UpdateNotification, \
     GetSubCategory, GetServices, GetServiceDetail, GetUsersBooking, InquiryView, GetServiceName, ServiceProviderLogin, \
     ForgetPassword, ServiceProviderLogoutView, ServiceProviderDashboard, NewRequestView, NewBookingRequestDetail, \
-    UpdateBookingByServiceProvider, ServiceProviderCompletedTasks, ServiceProviderOnGoingTasks,ProviderRegisterView
+    UpdateBookingByServiceProvider, ServiceProviderCompletedTasks, ServiceProviderOnGoingTasks, ProviderRegisterView
 from django.urls import path
+from rest_framework.schemas import get_schema_view
 
 app_name = 'src'
 
@@ -59,5 +60,16 @@ urlpatterns = [
          name='service-provider-completed-tasks'),
     path('service-provider-on-going-tasks/', ServiceProviderOnGoingTasks.as_view(),
          name='service-on-going-completed-tasks'),
-    path('provider-register-from-user-app/',ProviderRegisterView.as_view(),name='provider-register-from-user-app')
+    path('provider-register-from-user-app/', ProviderRegisterView.as_view(), name='provider-register-from-user-app'),
+    path('openapi/', get_schema_view(
+        title="Khalian",
+        description="API for all things …",
+        version="1.0.0"
+    ), name='openapi-schema'),
 ]
+
+# schema_view = get_schema_view(
+#     title='Server Monitoring API',
+#     url='http://127.0.0.1:8000/api/',
+#     patterns=urlpatterns,
+# )

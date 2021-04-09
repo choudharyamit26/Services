@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'src',
-    'storages'
+    'storages',
+    'fcm_django'
 ]
 
 MIDDLEWARE = [
@@ -76,9 +77,18 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         # 'src.CustomTokenAuthentication.CustomTokenAuthentication'
     ),
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ],
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '1/day',
+    #     'user': '3/day'
+    # }
     # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',)
 }
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 AUTH_USER_MODEL = 'adminpanel.User'
@@ -150,8 +160,6 @@ EMAIL_PORT = 587
 SERVER_EMAIL = 'roo3a07078@gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-
-
 # Client S3 BUCKET CONFIG
 AWS_LOCATION = 'static'
 AWS_ACCESS_KEY_ID = 'AKIA3LZVUP7W6MLNQQCD '
@@ -168,3 +176,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 AWS_DEFAULT_ACL = None
+
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AAAAaa4-PrE:APA91bHVWBjoKm4MPQBXUFh9xUdYC3Rn9bb5c_RtcxVs7tbByussyZ3aP4fgEYxWOCnKKjhPneikcMHtKUlZdKpd0idgDUGX4ZPGOslF6aTKOPk3nySWUM7GBLIIOjYi3_IYDIs_b_r_"
+}

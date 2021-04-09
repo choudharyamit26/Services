@@ -22,7 +22,8 @@ from django.contrib import messages
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
-from src.models import Booking, OffersAndDiscount, AppUser,GeneralInquiry,Inquiry
+from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry
+from src.fcm_notification import send_to_one, send_another
 
 
 class LoginView(View):
@@ -150,6 +151,22 @@ class AssignServiceProvider(CreateView):
         order_obj = Booking.objects.get(id=order)
         order_obj.service_provider = ServiceProvider.objects.get(id=service_provider_id)
         order_obj.save()
+        service_provider_device_type = order_obj.service_provider.device_type
+        service_provider_device_token = order_obj.service_provider.device_token
+        if service_provider_device_type == 'android':
+            data_message = {
+                "title": "New Message",
+                "body": f"You have received a new service request for order with order ID {order_obj.id}"
+            }
+            respo = send_to_one(service_provider_device_token, data_message)
+            print(respo)
+        else:
+            title = "New Message"
+            body = f"You have received a new service request for order with order ID {order_obj.id}"
+            # message_type = "NewMessage"
+            # sound = 'notifications.mp3'
+            respo = send_another(service_provider_device_token, title, body)
+            print(respo)
         messages.success(self.request, 'Service provider assigned successfully')
         return redirect("adminpanel:order-management")
 
@@ -163,6 +180,22 @@ class SendQuoteView(CreateView):
         order_obj = Booking.objects.get(id=self.request.POST['orderId'])
         order_obj.quote = self.request.POST['quote']
         order_obj.save()
+        user_device_type = order_obj.user.device_type
+        user_device_token = order_obj.user.device_token
+        if user_device_type == 'android':
+            data_message = {
+                "title": "New Message",
+                "body": f"You have received a quote for order with order ID {order_obj.id}"
+            }
+            respo = send_to_one(user_device_token, data_message)
+            print(respo)
+        else:
+            title = "New Message"
+            body = f"You have received a quote for order with order ID {order_obj.id}"
+            # message_type = "NewMessage"
+            # sound = 'notifications.mp3'
+            respo = send_another(user_device_token, title, body)
+            print(respo)
         return redirect("adminpanel:order-management")
 
 
@@ -299,7 +332,49 @@ class EditSubAdmin(View):
     template_name = 'edit-admin.html'
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'edit-admin.html')
+        return render(self.request, 'edit-admin.html', {'object': User.objects.get(id=kwargs['pk'])})
+
+    def post(self, request, *args, **kwargs):
+        name = self.request.POST['full_name']
+        email = self.request.POST['email']
+        phone_number = self.request.POST['phone_number']
+        # password = self.request.POST['password']
+        # confirm_password = self.request.POST['confirm_password']
+        access_rights = self.request.POST.getlist('access_rights')
+        # try:
+        #     user_obj = User.objects.get(Q(email=email) | Q(phone_number=phone_number))
+        #     messages.error(self.request, 'User with this email/phone already exists')
+        #     return render(self.request, 'add-admin.html')
+        # except Exception as e:
+        # print('Exception----->>>', e)
+        # user = User.objects.create(
+        #     full_name=name,
+        #     email=email,
+        #     phone_number=phone_number,
+        #     is_sub_admin=True
+        # )
+        user = User.objects.get(id=kwargs['pk'])
+        user.full_name = name
+        user.email = email
+        user.phone_number = phone_number
+        for right in access_rights:
+            if '_'.join(right.lower().split()) == 'can_manage_user':
+                user.can_manage_user = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_order':
+                user.can_manage_order = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_provider':
+                user.can_manage_provider = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_category':
+                user.can_manage_category = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_sub_category':
+                user.can_manage_sub_category = True
+                user.save()
+        messages.success(self.request, 'Sub Admin edited successfully')
+        return redirect("adminpanel:sub-admin-management")
 
 
 class PasswordResetConfirmView(View):
@@ -613,6 +688,7 @@ class AddSubAdmin(CreateView):
                 user = User.objects.create(
                     full_name=name,
                     email=email,
+                    phone_number=phone_number,
                     is_sub_admin=True
                 )
                 user.set_password(password)

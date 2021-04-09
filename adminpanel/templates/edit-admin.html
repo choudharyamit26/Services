@@ -7,45 +7,51 @@
         </h2>
 
         <div class="formDett padding-25 bgWhite">
-            <form action="">
+            <form method="post">
+                {% csrf_token %}
                 <div class="row">
 
                     <div class="col-sm-6">
                         <div class="form-group formGroup">
                             <label for="" class="labelel"></label>
-                            <input type="text" class="form-control formControl" placeholder="Name">
+                            <input type="text" class="form-control formControl" name="full_name" placeholder="Name"
+                                   value="{{object.full_name}}">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group formGroup">
                             <label for="" class="labelel"></label>
-                            <input type="text" class="form-control formControl" placeholder="UserId">
+                            <input type="email" class="form-control formControl" name="email" placeholder="Email"
+                                   value="{{object.email}}">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group formGroup">
                             <label for="" class="labelel"></label>
-                            <input type="email" class="form-control formControl" placeholder="Email">
+                            <input type="number" class="form-control formControl" name="phone_number" placeholder="Phone Number"
+                                   value="{{object.phone_number}}">
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group formGroup">
-                            <label for="" class="labelel"></label>
-                            <input type="number" class="form-control formControl" placeholder="phone Number">
+                        <div class="form-group formGroup newSelect">
+                            <!--                            <label for="" class="labelel"></label>-->
+                            <!--                            <input type="text" class="form-control formControl" name="can_manage_dashboard" required placeholder="UserId">-->
+                            <select class="mySelect for" multiple="multiple" name="access_rights"
+                                    style="width: 100%"></select>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group formGroup">
-                            <label for="" class="labelel"></label>
-                            <input type="text" class="form-control formControl" placeholder="Password">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group formGroup">
-                            <label for="" class="labelel"></label>
-                            <input type="text" class="form-control formControl" placeholder="Confirm Password">
-                        </div>
-                    </div>
+<!--                    <div class="col-sm-6">-->
+<!--                        <div class="form-group formGroup">-->
+<!--                            <label for="" class="labelel"></label>-->
+<!--                            <input type="text" class="form-control formControl" placeholder="Password">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-sm-6">-->
+<!--                        <div class="form-group formGroup">-->
+<!--                            <label for="" class="labelel"></label>-->
+<!--                            <input type="text" class="form-control formControl" placeholder="Confirm Password">-->
+<!--                        </div>-->
+<!--                    </div>-->
 
 
                     <div class="CommonBtn CommonBtn2 boxs">
@@ -78,4 +84,19 @@
 
     </div>
 </div>
+<script>
+var data = ["Can Manage User", "Can Manage Order", "Can Manage Provider", "Can Manage Category", "Can Manage Sub Category"];
+var placeholder = "select";
+$(".mySelect").select2({
+data: data,
+placeholder: placeholder,
+allowClear: false,
+minimumResultsForSearch: 5
+});
+
+</script>
+<script>
+    $('select').selectpicker();
+
+</script>
 {% endblock body %}

@@ -56,6 +56,8 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     image_1 = models.ImageField(upload_to='media', null=True, blank=True)
     image_2 = models.ImageField(upload_to='media', null=True, blank=True)
+    promocode = models.CharField(default='', max_length=100)
+    promocode_applied = models.BooleanField(default=False)
 
 
 class ContactUs(models.Model):

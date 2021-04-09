@@ -39,10 +39,10 @@
                         <td>{{obj.full_name}}</td>
                         <td>{{obj.email}}</td>
                         <th class="textCenter flexProp">
-                            <a href="{% url 'adminpanel:sub-admin-detail' %}"><i class="fa fa-eye colorBlue"></i></a>
+                            <a href="{% url 'adminpanel:sub-admin-detail' obj.id %}"><i class="fa fa-eye colorBlue"></i></a>
                             <a href="#0" class="marginLR" data-toggle="modal" data-target="#myModal2"><i
                                     class="fa fa-trash-alt colorBlue"></i></a>
-                            <a href="{% url 'adminpanel:edit-sub-admin-detail' %}"><i class="fa fa-edit colorBlue"></i></a>
+                            <a href="{% url 'adminpanel:edit-sub-admin-detail' obj.id %}"><i class="fa fa-edit colorBlue"></i></a>
                         </th>
                     </tr>
                     {% endfor %}

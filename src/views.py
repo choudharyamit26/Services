@@ -1,5 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
@@ -211,6 +213,10 @@ class HomeView(APIView):
     model = Services
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    # from rest_framework.throttling import UserRateThrottle
+    # throttle_classes = [UserRateThrottle]
+    # @method_decorator(cache_page(60 * 60 * 2))
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
@@ -505,7 +511,7 @@ class GetBookingDetail(APIView):
                 try:
                     return Response(
                         {'id': booking.id, 'service_id': booking.service.id,
-                         'service_name': booking.service.service_name,'quote':booking.quote,
+                         'service_name': booking.service.service_name, 'quote': booking.quote,
                          'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
                          'booking_time': booking.time, 'address': booking.address,
                          'default_address': booking.default_address,
@@ -517,7 +523,7 @@ class GetBookingDetail(APIView):
                 except Exception as e:
                     return Response(
                         {'id': booking.id, 'service_id': booking.service.id,
-                         'service_name': booking.service.service_name,'quote':booking.quote,
+                         'service_name': booking.service.service_name, 'quote': booking.quote,
                          'service_provider_id': '', 'booking_date': booking.date,
                          'booking_time': booking.time, 'address': booking.address,
                          'default_address': booking.default_address,
@@ -544,6 +550,7 @@ class ContactUsView(APIView):
 
 
 class PrivacyPolicyView(APIView):
+    """Privacy policy api"""
     model = PrivacyPolicy
 
     def get(self, request, *args, **kwargs):
@@ -652,16 +659,37 @@ class UpdateOrderStatus(APIView):
     def patch(self, request, *args, **kwargs):
         order_id = self.request.POST['id']
         status = self.request.POST['status']
-        order_obj = Booking.objects.get(id=order_id)
-        order_obj.status = status
-        order_obj.save()
-        AdminNotifications.objects.create(
-            user=User.objects.get(email='admin@email.com'),
-            title='Booking Update',
-            body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
-                                                                                      order_obj.status)
-        )
-        return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
+        try:
+            order_obj = Booking.objects.get(id=order_id)
+            order_obj.status = status
+            order_obj.save()
+            AdminNotifications.objects.create(
+                user=User.objects.get(email='admin@email.com'),
+                title='Booking Update',
+                body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
+                                                                                          order_obj.status)
+            )
+            return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class ApplyPromoCodeView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def post(self, request, *args, **kwargs):
+        order_id = self.request.POST['id']
+        promocode = self.request.POST['promocode']
+        try:
+            order_obj = Booking.objects.get(id=order_id)
+            order_obj.promocode = promocode
+            order_obj.promocode_applied = True
+            order_obj.save()
+            return Response({'message': 'Promocode applied successfully', 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class UpcomingBooking(APIView):

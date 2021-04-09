@@ -67,11 +67,11 @@
                         <th>
                             {% if obj.status == 'Accepted' %}
                             <button value="{{obj.id}}" class="btns orderModalButton" data-toggle="modal"
-                                    data-target="#assign">Assign Workers
+                                    data-target="#assign">Assign Providers
                             </button>
                             {% else %}
                             <button value="{{obj.id}}" class="btns orderQuoteButton" data-toggle="modal"
-                                    data-target="#quote">Send Quote
+                                    data-target="#quote">Send offer price
                             </button>
                             {% endif %}
                         </th>
@@ -86,10 +86,8 @@
 
 <div class="modal fade" id="assign" role="dialog">
     <div class="modal-dialog">
-
         <!-- Modal content-->
         <div class="modal-content">
-
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <div class="form-group">
@@ -110,18 +108,14 @@
                     </ul>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>
 
 <div class="modal fade" id="quote" role="dialog">
     <div class="modal-dialog">
-
         <!-- Modal content-->
         <div class="modal-content">
-
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <div class="form-group">
@@ -129,8 +123,8 @@
                         <input hidden="true" id="object_id_placeholder_input2" value="">
                     </div>
                     <label for="">Quote</label>
-                    <input type="text" name="quote" id="quoteInput" required class="form-control formControl"
-                           placeholder="Quote">
+                    <input type="number" name="quote" id="quoteInput" required class="form-control formControl"
+                           placeholder="SAR">
                     <ul class="allBtns">
                         <li>
                             <button type="button" id="quoteButton" class="btns">Send quote</button>
