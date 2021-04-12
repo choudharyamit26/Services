@@ -103,6 +103,7 @@ class RatingReview(models.Model):
     order = models.ForeignKey(Booking, on_delete=models.CASCADE)
     reviews = models.CharField(default='', max_length=256)
     rating = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class OffersAndDiscount(models.Model):
