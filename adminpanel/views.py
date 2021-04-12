@@ -192,9 +192,9 @@ class SendQuoteView(CreateView):
         else:
             title = "New Message"
             body = f"You have received a quote for order with order ID {order_obj.id}"
-            # message_type = "NewMessage"
+            message_type = "NewMessage"
             # sound = 'notifications.mp3'
-            respo = send_another(user_device_token, title, body)
+            respo = send_another(user_device_token, title, body,message_type)
             print(respo)
         return redirect("adminpanel:order-management")
 
