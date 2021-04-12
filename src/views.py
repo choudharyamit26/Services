@@ -518,7 +518,8 @@ class GetBookingDetail(APIView):
                          'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                          'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                          'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                         'booked_at': booking.created_at,
+                         'booked_at': booking.created_at, 'promocode_name': booking.promocode,
+                         'promocode_status': booking.promocode_applied,
                          'status': HTTP_200_OK})
                 except Exception as e:
                     return Response(
@@ -530,7 +531,8 @@ class GetBookingDetail(APIView):
                          'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                          'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                          'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                         'booked_at': booking.created_at,
+                         'booked_at': booking.created_at, 'promocode_name': booking.promocode,
+                         'promocode_status': booking.promocode_applied,
                          'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_200_OK})
