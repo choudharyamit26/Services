@@ -23,6 +23,7 @@
 
 
 
+
 </script>
 
 <section class="demandRight boxs">
@@ -40,6 +41,14 @@
                         {% if obj.title == 'New User Registration' %}
                         <div class="iconLeft">
                             <span><i class="fa  fa-shopping-cart fa-2x"></i></span>
+                        </div>
+                        {% elif obj.title == 'New Booking Request' %}
+                        <div class="iconLeft">
+                            <span><i class="fa fa-dollar-sign fa-2x"></i></span>
+                        </div>
+                        {% elif obj.title == 'Booking Update' %}
+                        <div class="iconLeft">
+                            <span><i class="fa fa-wrench fa-2x"></i></span>
                         </div>
                         {% endif %}
                         <div class="iconContent2">
