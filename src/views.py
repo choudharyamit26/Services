@@ -658,7 +658,7 @@ class UpdateOrderStatus(APIView):
     serializer_class = UpdateOrderStatusSerializer
     model = Booking
 
-    def patch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         order_id = self.request.POST['id']
         status = self.request.POST['status']
         try:
