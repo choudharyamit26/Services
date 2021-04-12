@@ -807,11 +807,11 @@ class GetServiceReviewRatings(APIView):
                     ratings.append(
                         {'user_name': obj.user.full_name, 'user_image': obj.user.profile_pic.url,
                          'rating': obj.rating,
-                         'review': obj.reviews})
+                         'review': obj.reviews, 'created_at': obj.created_at})
                 else:
                     ratings.append(
                         {'user_name': obj.user.full_name, 'user_image': '', 'rating': obj.rating,
-                         'review': obj.reviews})
+                         'review': obj.reviews, 'created_at': obj.created_at})
             return Response({'rating_count': len(rating_obj), 'data': ratings, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
