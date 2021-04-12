@@ -22,7 +22,7 @@ from django.contrib import messages
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
-from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry
+from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration
 from src.fcm_notification import send_to_one, send_another
 
 
@@ -849,5 +849,9 @@ class InquiryView(ListView):
         context['inquiries'] = inquiries
         return context
 
+
+class UserProviderRegistrations(ListView):
+    template_name = 'user-provider-registration.html'
+    model = ProviderRegistration
     # def get(self, request, *args, **kwargs):
     #     return render(self.request, 'inquiry.html')

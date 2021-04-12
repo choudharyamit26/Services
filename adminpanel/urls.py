@@ -8,7 +8,7 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     CategoryDetail, AddCategoryView, SubCategoryView, SubCategoryDetail, AddSubCategory, AddSubAdmin, BlockUser, \
     AddServices, ServicesList, UpdateService, TopServicesView, TopServicesList, DeleteTopService, AssignServiceProvider, \
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
-    ReadNotificationView,InquiryView
+    ReadNotificationView, InquiryView, UserProviderRegistrations
 
 app_name = 'adminpanel'
 
@@ -60,4 +60,6 @@ urlpatterns = [
                   path('notification-count/', NotificationCount.as_view(), name='notification-count'),
                   path('read-notification/', ReadNotificationView.as_view(), name='read-notification'),
                   path('inquiry/', InquiryView.as_view(), name='inquiry'),
+                  path('user-provider-registration/', UserProviderRegistrations.as_view(),
+                       name='user-provider-registration'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -123,6 +123,10 @@
             <a href="{% url 'adminpanel:rejected-order-management' %}"><span class="icon"><i
                     class="fa fa-ban"></i></span><span
                     class="iconContent">Rejected Orders</span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:user-provider-registration' %}active{% endif %}">
+            <a href="{% url 'adminpanel:user-provider-registration' %}"><span class="icon"><i
+                    class="fa fa-check-square"></i></span><span
+                    class="iconContent">User Provider Registration</span></a></li>
         <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:verification-management' %}active{% endif %}">-->
         <!--            <a href="{% url 'adminpanel:verification-management' %}"><span class="icon"><i class="fa fa-user-check"></i></span><span-->
         <!--                    class="iconContent">Verification Management-->
