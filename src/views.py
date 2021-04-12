@@ -864,7 +864,8 @@ class NotificationList(APIView):
         notification_list = []
         for notification in notifications:
             notification_list.append(
-                {'id': notification.id, 'title': notification.title, 'body': notification.body})
+                {'id': notification.id, 'title': notification.title, 'body': notification.body,
+                 'created_at': notification.created_at})
         return Response({'data': notification_list, 'status': HTTP_200_OK})
 
 
