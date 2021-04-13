@@ -703,7 +703,7 @@ class UpcomingBooking(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         try:
-            order_obj = Booking.objects.filter(user=app_user, status='Started')
+            order_obj = Booking.objects.filter(Q(user=app_user, status='Started') | Q(user=app_user, status='started'))
             orders = []
             for obj in order_obj:
                 orders.append(
