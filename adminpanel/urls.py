@@ -8,7 +8,7 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     CategoryDetail, AddCategoryView, SubCategoryView, SubCategoryDetail, AddSubCategory, AddSubAdmin, BlockUser, \
     AddServices, ServicesList, UpdateService, TopServicesView, TopServicesList, DeleteTopService, AssignServiceProvider, \
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
-    ReadNotificationView, InquiryView, UserProviderRegistrations
+    ReadNotificationView, InquiryView, UserProviderRegistrations,OrderDetail
 
 app_name = 'adminpanel'
 
@@ -23,6 +23,7 @@ urlpatterns = [
                   path('category-management/', CategoryView.as_view(), name='category-management'),
                   path('category-detail/<int:pk>/', CategoryDetail.as_view(), name='category-detail'),
                   path('order-management/', OrderManagementView.as_view(), name='order-management'),
+                  path('order-detail/<int:pk>/', OrderDetail.as_view(), name='order-detail'),
                   path('rejected-order-management/', RejectedOrderView.as_view(), name='rejected-order-management'),
                   path('verification-management/', VerificationManagementView.as_view(),
                        name='verification-management'),

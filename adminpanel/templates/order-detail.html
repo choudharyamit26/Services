@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+        <h2 class="main">Category Details</h2>
+        <div class="userDetails bgWhite padding-25">
+
+            <ul class="detailsUser padding-left-25">
+                <li><span class="first">Order Id</span>{{object.id}}</li>
+                <li><span class="first">Order Date</span>{{object.date}}</li>
+                <li><span class="first">Order Time</span>{{object.time}}</li>
+                <li><span class="first">User ID</span>{{object.user.id}}</li>
+                <li><span class="first">Order Name</span>{{object.user.full_name}}</li>
+                <li><span class="first">Order Address</span>{{object.address}}</li>
+                <li><span class="first">Service Name</span>{{object.service.service_name}}</li>
+                <li><span class="first">Requirement</span>{{object.requirement}}</li>
+                {% if object.image_1 %}
+                <li><span class="first">Image1</span>
+                    <figure style="200px;"><img src="{{object.image_1.url}}" style="width:100%;"></figure>
+                </li>
+                {% else %}
+                <li><span class="first">Image1</span></li>
+                {% endif %}
+                {% if object.image_2 %}
+                <li><span class="first">Image2</span>
+                    <figure style="200px;"><img src="{{object.image_2.url}}" style="width:100%;"></figure>
+                </li>
+                {% else %}
+                <li><span class="first">Image2</span></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+</section>
+{% endblock body %}

@@ -130,6 +130,11 @@ class OrderManagementView(ListView):
                        'service_provider': ServiceProvider.objects.all()})
 
 
+class OrderDetail(DetailView):
+    model = Booking
+    template_name = 'order-detail.html'
+
+
 class RejectedOrderView(ListView):
     model = Booking
     template_name = 'rejected-order-management.html'
@@ -194,7 +199,7 @@ class SendQuoteView(CreateView):
             body = f"You have received a quote for order with order ID {order_obj.id}"
             message_type = "NewMessage"
             # sound = 'notifications.mp3'
-            respo = send_another(user_device_token, title, body,message_type)
+            respo = send_another(user_device_token, title, body, message_type)
             print(respo)
         return redirect("adminpanel:order-management")
 

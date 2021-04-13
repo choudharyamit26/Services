@@ -65,6 +65,7 @@
                         <th>{{obj.address}}</th>
                         <th>{{obj.service.service_name}}</th>
                         <th>
+                            <a href="{% url 'adminpanel:order-detail' obj.id %}" class="btns">View Detail </a>
                             {% if obj.status == 'Accepted' %}
                             <button value="{{obj.id}}" class="btns orderModalButton" data-toggle="modal"
                                     data-target="#assign">Assign Providers
