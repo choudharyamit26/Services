@@ -22,7 +22,8 @@ from django.contrib import messages
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
-from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration
+from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration, ContactUs, \
+    PrivacyPolicy, TermsAndCondition, AboutUs
 from src.fcm_notification import send_to_one, send_another
 
 
@@ -272,11 +273,26 @@ class FinanceManagementView(View):
         return render(self.request, 'finance.html')
 
 
-class StaticContentManagementView(View):
+class StaticContentManagementView(ListView):
     template_name = 'static.html'
+    model = ContactUs
 
-    def get(self, request, *args, **kwargs):
-        return render(self.request, 'static.html')
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'static.html')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['contact_us'] = ContactUs.objects.all().first()
+        context['terms_condition'] = TermsAndCondition.objects.all().first()
+        context['privacy_policy'] = PrivacyPolicy.objects.all().first()
+        context['about_us'] = AboutUs.objects.all().first()
+        return context
+
+
+# class UpdateContactUs(UpdateView):
+#     template_name = 'update-contact-us.html'
+#     model = ContactUs
+#     form_class = ContactUsForm
 
 
 class NotificationManagementView(ListView):

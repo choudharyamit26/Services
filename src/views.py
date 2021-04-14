@@ -766,7 +766,8 @@ class OnGoingBooking(APIView):
             for obj in order_obj:
                 orders.append(
                     {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                     'image_2': obj.service.image_2.url, 'price': obj.total,'base_price': obj.service.base_price, 'date': obj.date, 'time': obj.time,
+                     'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                     'date': obj.date, 'time': obj.time,
                      'address': obj.address, 'booking_status': obj.status})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
@@ -1220,5 +1221,25 @@ class ApplyCoupon(APIView):
             order_obj.promocode_applied = True
             order_obj.save()
             return Response({'message': "Coupon applied successfully", 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class RemoveCoupoun(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def post(self, request, *args, **kwargs):
+        order = self.request.POST['order']
+        try:
+            order_obj = Booking.objects.get(id=order)
+            order_obj.discount = 0
+            order_obj.total = 0
+            order_obj.sub_total = order_obj.quote
+            order_obj.promocode = ''
+            order_obj.promocode_applied = False
+            order_obj.save()
+            return Response({'message': 'Coupon removed successfully', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
