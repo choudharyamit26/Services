@@ -5,7 +5,8 @@ from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, Ge
     GetAllOffersAndDiscount, GetUserDetail, NotificationList, GetUserNotificationCount, UpdateNotification, \
     GetSubCategory, GetServices, GetServiceDetail, GetUsersBooking, InquiryView, GetServiceName, ServiceProviderLogin, \
     ForgetPassword, ServiceProviderLogoutView, ServiceProviderDashboard, NewRequestView, NewBookingRequestDetail, \
-    UpdateBookingByServiceProvider, ServiceProviderCompletedTasks, ServiceProviderOnGoingTasks, ProviderRegisterView
+    UpdateBookingByServiceProvider, ServiceProviderCompletedTasks, ServiceProviderOnGoingTasks, ProviderRegisterView, \
+    CouponList,ApplyCoupon
 from django.urls import path
 from rest_framework.schemas import get_schema_view
 
@@ -61,6 +62,8 @@ urlpatterns = [
     path('service-provider-on-going-tasks/', ServiceProviderOnGoingTasks.as_view(),
          name='service-on-going-completed-tasks'),
     path('provider-register-from-user-app/', ProviderRegisterView.as_view(), name='provider-register-from-user-app'),
+    path('coupon-list/', CouponList.as_view(), name='coupon-list'),
+    path('apply-coupon/', ApplyCoupon.as_view(), name='apply-coupon'),
     path('openapi/', get_schema_view(
         title="Khalian",
         description="API for all things …",

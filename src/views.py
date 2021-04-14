@@ -708,7 +708,8 @@ class UpcomingBooking(APIView):
             for obj in order_obj:
                 orders.append(
                     {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                     'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                     'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                     'date': obj.date, 'time': obj.time,
                      'address': obj.address, 'booking_status': obj.status})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
@@ -765,7 +766,7 @@ class OnGoingBooking(APIView):
             for obj in order_obj:
                 orders.append(
                     {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                     'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                     'image_2': obj.service.image_2.url, 'price': obj.total,'base_price': obj.service.base_price, 'date': obj.date, 'time': obj.time,
                      'address': obj.address, 'booking_status': obj.status})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
@@ -1180,5 +1181,42 @@ class ProviderRegisterView(APIView):
                     {'message': "Provider registration request submitted successfully", 'status': HTTP_200_OK})
             else:
                 return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class CouponList(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = OffersAndDiscount
+
+    def get(self, request, *args, **kwargs):
+        coupons = OffersAndDiscount.objects.all()
+        coupon_list = []
+        for coupon in coupons:
+            coupon_list.append({'id': coupon.id, 'coupon_code': coupon.coupon_code, 'percent': coupon.percent})
+        return Response({'data': coupon_list, 'status': HTTP_200_OK})
+
+
+class ApplyCoupon(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    model = Booking
+
+    def post(self, request, *args, **kwargs):
+        coupon = self.request.POST['coupon']
+        order = self.request.POST['order']
+        try:
+            coupon_obj = OffersAndDiscount.objects.get(id=coupon)
+            order_obj = Booking.objects.get(id=order)
+            quote = order_obj.quote
+            percent = coupon_obj.percent
+            print(type((int(percent) / 100)))
+            order_obj.sub_total = quote - (float((int(percent) / 100)) * quote)
+            print(quote - float((int(percent) / 100)) * quote)
+            order_obj.discount = (float((int(percent) / 100))) * quote
+            order_obj.total = quote - (float((int(percent) / 100)) * quote) + order_obj.fees
+            order_obj.save()
+            return Response({'message': "Coupon applied successfully", 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
