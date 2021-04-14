@@ -509,35 +509,67 @@ class GetBookingDetail(APIView):
             try:
                 booking = Booking.objects.get(user=app_user, id=booking_id)
                 try:
-                    return Response(
-                        {'id': booking.id, 'service_id': booking.service.id,
-                         'service_name': booking.service.service_name, 'quote': booking.quote,
-                         'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
-                         'booking_time': booking.time, 'address': booking.address,
-                         'default_address': booking.default_address,
-                         'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                         'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                         'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                         'booked_at': booking.created_at,
-                         'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
-                         'promocode_name': booking.promocode,
-                         'promocode_status': booking.promocode_applied,
-                         'status': HTTP_200_OK})
+                    if booking.promocode_applied:
+                        return Response(
+                            {'id': booking.id, 'service_id': booking.service.id,
+                             'service_name': booking.service.service_name, 'quote': booking.quote,
+                             'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
+                             'booking_time': booking.time, 'address': booking.address,
+                             'default_address': booking.default_address,
+                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                             'booked_at': booking.created_at,
+                             'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
+                             'promocode_name': booking.promocode,
+                             'promocode_status': booking.promocode_applied,
+                             'status': HTTP_200_OK})
+                    else:
+                        return Response(
+                            {'id': booking.id, 'service_id': booking.service.id,
+                             'service_name': booking.service.service_name, 'quote': booking.quote,
+                             'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
+                             'booking_time': booking.time, 'address': booking.address,
+                             'default_address': booking.default_address,
+                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                             'booked_at': booking.created_at,
+                             'promocode_id': '',
+                             'promocode_name': booking.promocode,
+                             'promocode_status': booking.promocode_applied,
+                             'status': HTTP_200_OK})
                 except Exception as e:
-                    return Response(
-                        {'id': booking.id, 'service_id': booking.service.id,
-                         'service_name': booking.service.service_name, 'quote': booking.quote,
-                         'service_provider_id': '', 'booking_date': booking.date,
-                         'booking_time': booking.time, 'address': booking.address,
-                         'default_address': booking.default_address,
-                         'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                         'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                         'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                         'booked_at': booking.created_at,
-                         'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
-                         'promocode_name': booking.promocode,
-                         'promocode_status': booking.promocode_applied,
-                         'status': HTTP_200_OK})
+                    if booking.promocode_applied:
+                        return Response(
+                            {'id': booking.id, 'service_id': booking.service.id,
+                             'service_name': booking.service.service_name, 'quote': booking.quote,
+                             'service_provider_id': '', 'booking_date': booking.date,
+                             'booking_time': booking.time, 'address': booking.address,
+                             'default_address': booking.default_address,
+                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                             'booked_at': booking.created_at,
+                             'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
+                             'promocode_name': booking.promocode,
+                             'promocode_status': booking.promocode_applied,
+                             'status': HTTP_200_OK})
+                    else:
+                        return Response(
+                            {'id': booking.id, 'service_id': booking.service.id,
+                             'service_name': booking.service.service_name, 'quote': booking.quote,
+                             'service_provider_id': '', 'booking_date': booking.date,
+                             'booking_time': booking.time, 'address': booking.address,
+                             'default_address': booking.default_address,
+                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
+                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                             'booked_at': booking.created_at,
+                             'promocode_id': '',
+                             'promocode_name': booking.promocode,
+                             'promocode_status': booking.promocode_applied,
+                             'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_200_OK})
         else:
