@@ -20,7 +20,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
-    AssignServiceProviderForm, UpdateOfferForm
+    AssignServiceProviderForm, UpdateOfferForm, ContactUsForm, AboutUsForm, TermsAndConditionForm, PrivacyPolicyForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
 from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration, ContactUs, \
     PrivacyPolicy, TermsAndCondition, AboutUs
@@ -289,10 +289,32 @@ class StaticContentManagementView(ListView):
         return context
 
 
-# class UpdateContactUs(UpdateView):
-#     template_name = 'update-contact-us.html'
-#     model = ContactUs
-#     form_class = ContactUsForm
+class UpdateContactUs(UpdateView):
+    template_name = 'update-contact-us.html'
+    model = ContactUs
+    form_class = ContactUsForm
+    success_url = reverse_lazy("adminpanel:static-management")
+
+
+class UpdateAboutUs(UpdateView):
+    template_name = 'update-about-us.html'
+    model = AboutUs
+    form_class = AboutUsForm
+    success_url = reverse_lazy("adminpanel:static-management")
+
+
+class UpdateTermsAndCondition(UpdateView):
+    template_name = 'update-terms-condition.html'
+    model = TermsAndCondition
+    form_class = TermsAndConditionForm
+    success_url = reverse_lazy("adminpanel:static-management")
+
+
+class UpdatePrivacyPolicy(UpdateView):
+    template_name = 'update-privacy-policy.html'
+    model = PrivacyPolicy
+    form_class = PrivacyPolicyForm
+    success_url = reverse_lazy("adminpanel:static-management")
 
 
 class NotificationManagementView(ListView):

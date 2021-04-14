@@ -12,38 +12,64 @@
                 <li><a data-toggle="tab" href="#menu1">Terms & conditions</a></li>
                 <li><a data-toggle="tab" href="#menu2">Contact Us</a></li>
                 <li><a data-toggle="tab" href="#menu3">Privacy Policy</a></li>
-<!--                <li><a data-toggle="tab" href="#menu4">FAQ</a></li>-->
+                <!--                <li><a data-toggle="tab" href="#menu4">FAQ</a></li>-->
             </ul>
             <div class="tab-content">
                 <div id="home" class="tab-pane fade in active show">
                     <h2 class="head">About This App</h2>
-                    <p class="main">
-                        {{about_us.content}}<br><br>
-                        {{about_us.content_arabic}}
-                    </p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p class="main">
+                                {{about_us.content}}<br><br>
+                                {{about_us.content_arabic}}
+                            </p>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btns" href="{% url 'adminpanel:update-about-us' about_us.id %}">Edit</a>
+                        </div>
+
+                    </div>
                 </div>
                 <div id="menu1" class="tab-pane fade">
                     <h2 class="head">Terms & Conditions</h2>
-                    <p class="main">
-                    {{terms_condition.terms}}<br><br>
-                    {{terms_condition.terms_arabic}}<br><br>
-                    </p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p class="main">
+                                {{terms_condition.terms}}<br><br>
+                                {{terms_condition.terms_arabic}}<br><br>
+                            </p>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btns" href="{% url 'adminpanel:update-terms-and-condition' terms_condition.id %}">Edit</a>
+                        </div>
+                    </div>
                 </div>
                 <div id="menu2" class="tab-pane fade">
                     <h2 class="head">Contact Us</h2><br>
                     <div class="row">
                         <div class="col-sm-6">
-                        {{contact_us.phone_number}}<br><br>
-                        {{contact_us.email}}
+                            {{contact_us.phone_number}}<br><br>
+                            {{contact_us.email}}
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btns" href="{% url 'adminpanel:update-contact-us' contact_us.id %}">Edit</a>
                         </div>
                     </div>
                 </div>
                 <div id="menu3" class="tab-pane fade">
                     <h2 class="head">Privacy Policy</h2>
-                    <p class="main">
-                        {{privacy_policy.policy}}<br><br>
-                        {{privacy_policy.policy_arabic}}
-                    </p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p class="main">
+                                {{privacy_policy.policy}}<br><br>
+                                {{privacy_policy.policy_arabic}}
+                            </p>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btns"
+                               href="{% url 'adminpanel:update-privacy-policy' privacy_policy.id %}">Edit</a>
+                        </div>
+                    </div>
                 </div>
                 <div id="menu4" class="tab-pane fade">
                     <h2 class="head">FAQ</h2>

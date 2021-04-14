@@ -8,7 +8,8 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     CategoryDetail, AddCategoryView, SubCategoryView, SubCategoryDetail, AddSubCategory, AddSubAdmin, BlockUser, \
     AddServices, ServicesList, UpdateService, TopServicesView, TopServicesList, DeleteTopService, AssignServiceProvider, \
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
-    ReadNotificationView, InquiryView, UserProviderRegistrations,OrderDetail
+    ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
+    UpdateTermsAndCondition,UpdatePrivacyPolicy
 
 app_name = 'adminpanel'
 
@@ -61,6 +62,11 @@ urlpatterns = [
                   path('notification-count/', NotificationCount.as_view(), name='notification-count'),
                   path('read-notification/', ReadNotificationView.as_view(), name='read-notification'),
                   path('inquiry/', InquiryView.as_view(), name='inquiry'),
+                  path('update-contact-us/<int:pk>/', UpdateContactUs.as_view(), name='update-contact-us'),
+                  path('update-about-us/<int:pk>/', UpdateAboutUs.as_view(), name='update-about-us'),
+                  path('update-privacy-policy/<int:pk>/', UpdatePrivacyPolicy.as_view(), name='update-privacy-policy'),
+                  path('update-terms-and-condition/<int:pk>/', UpdateTermsAndCondition.as_view(),
+                       name='update-terms-and-condition'),
                   path('user-provider-registration/', UserProviderRegistrations.as_view(),
                        name='user-provider-registration'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

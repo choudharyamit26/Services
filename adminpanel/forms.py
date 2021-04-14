@@ -1,6 +1,6 @@
 from django import forms
 from .models import User, ServiceProvider, Category, SubCategory, Services
-from src.models import Booking, OffersAndDiscount
+from src.models import Booking, OffersAndDiscount, ContactUs, AboutUs, TermsAndCondition, PrivacyPolicy
 
 
 class AddServiceProviderForm(forms.ModelForm):
@@ -45,3 +45,27 @@ class UpdateOfferForm(forms.ModelForm):
     class Meta:
         model = OffersAndDiscount
         fields = ('coupon_code', 'percent')
+
+
+class ContactUsForm(forms.ModelForm):
+    class Meta:
+        model = ContactUs
+        fields = ('phone_number', 'email')
+
+
+class AboutUsForm(forms.ModelForm):
+    class Meta:
+        model = AboutUs
+        fields = ('content', 'content_arabic')
+
+
+class TermsAndConditionForm(forms.ModelForm):
+    class Meta:
+        model = TermsAndCondition
+        fields = ('terms', 'terms_arabic')
+
+
+class PrivacyPolicyForm(forms.ModelForm):
+    class Meta:
+        model = PrivacyPolicy
+        fields = ('policy', 'policy_arabic')

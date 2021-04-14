@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="demandInner boxs">
+
+        <h2 class="main">Update Contact Us
+        </h2>
+
+        <div class="formDett padding-25 bgWhite">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="number" name="phone_number" required class="form-control formControl"
+                                   placeholder="Enter the phone number">
+                        </div>
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="email" name="email" required class="form-control formControl"
+                                   placeholder="Enter the email">
+                        </div>
+                    </div>
+                    <div class="CommonBtn CommonBtn2 boxs">
+                        <button class="btns" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock body %}
