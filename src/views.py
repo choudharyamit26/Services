@@ -1216,6 +1216,8 @@ class ApplyCoupon(APIView):
             print(quote - float((int(percent) / 100)) * quote)
             order_obj.discount = (float((int(percent) / 100))) * quote
             order_obj.total = quote - (float((int(percent) / 100)) * quote) + order_obj.fees
+            order_obj.promocode = coupon_obj.coupon_code
+            order_obj.promocode_applied = True
             order_obj.save()
             return Response({'message': "Coupon applied successfully", 'status': HTTP_200_OK})
         except Exception as e:
