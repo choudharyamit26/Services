@@ -110,11 +110,11 @@ class GeneralInquirySerializer(serializers.ModelSerializer):
     subject = serializers.CharField()
     message = serializers.CharField()
     image_1 = serializers.FileField(required=False, allow_null=True)
-    image_2 = serializers.FileField(required=False, allow_null=True)
+    # image_2 = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = GeneralInquiry
-        fields = ('order', 'subject', 'message', 'image_1', 'image_2')
+        fields = ('order', 'subject', 'message', 'image_1')
 
 
 class UpdateOrderStatusSerializer(serializers.ModelSerializer):
@@ -141,11 +141,11 @@ class InquirySerializer(serializers.ModelSerializer):
     subject = serializers.CharField()
     message = serializers.CharField()
     image_1 = serializers.ImageField(required=False, allow_null=True)
-    image_2 = serializers.ImageField(required=False, allow_null=True)
+    # image_2 = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Inquiry
-        fields = ('service', 'subject', 'message', 'image_1', 'image_2')
+        fields = ('service', 'subject', 'message', 'image_1')
 
 
 class ServiceProviderLoginSerializer(serializers.ModelSerializer):

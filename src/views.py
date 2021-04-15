@@ -657,7 +657,7 @@ class GeneralInquiryView(APIView):
             subject = serializer.validated_data['subject']
             message = serializer.validated_data['message']
             image_1 = serializer.validated_data['image_1']
-            image_2 = serializer.validated_data['image_2']
+            # image_2 = serializer.validated_data['image_2']
             try:
                 GeneralInquiry.objects.create(
                     user=app_user,
@@ -665,7 +665,7 @@ class GeneralInquiryView(APIView):
                     subject=subject,
                     message=message,
                     image_1=image_1,
-                    image_2=image_2
+                    # image_2=image_2
                 )
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
@@ -690,10 +690,9 @@ class InquiryView(APIView):
                 subject = serializer.validated_data['subject']
                 message = serializer.validated_data['message']
                 image_1 = serializer.validated_data['image_1']
-                image_2 = serializer.validated_data['image_2']
+                # image_2 = serializer.validated_data['image_2']
                 Inquiry.objects.create(user=app_user, service=service_obj, subject=subject, message=message,
-                                       image_1=image_1,
-                                       image_2=image_2)
+                                       image_1=image_1)
                 return Response({'message': 'Inquiry submitted successfully', 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
