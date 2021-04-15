@@ -186,6 +186,10 @@ class SendQuoteView(CreateView):
         order_obj = Booking.objects.get(id=self.request.POST['orderId'])
         order_obj.quote = self.request.POST['quote']
         order_obj.sub_total = self.request.POST['quote']
+        if order_obj.night_booking:
+            order_obj.total = self.request.POST['quote'] + 100
+        else:
+            order_obj.total = self.request.POST['quote']
         order_obj.save()
         user_device_type = order_obj.user.device_type
         user_device_token = order_obj.user.device_token

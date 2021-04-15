@@ -459,7 +459,7 @@ class BookingView(APIView):
                 # sub_total = serializer.validated_data['sub_total']
                 # fees = serializer.validated_data['fees']
                 # discount = serializer.validated_data['discount']
-                total = serializer.validated_data['total']
+                # total = serializer.validated_data['total']
                 night_booking = serializer.validated_data['night_booking']
                 if night_booking:
                     booking = Booking.objects.create(
