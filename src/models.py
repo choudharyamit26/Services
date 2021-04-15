@@ -58,6 +58,7 @@ class Booking(models.Model):
     image_2 = models.ImageField(upload_to='media', null=True, blank=True)
     promocode = models.CharField(default='', max_length=100)
     promocode_applied = models.BooleanField(default=False)
+    night_booking = models.BooleanField(default=False)
 
 
 class ContactUs(models.Model):

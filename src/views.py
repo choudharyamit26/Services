@@ -460,24 +460,47 @@ class BookingView(APIView):
                 # fees = serializer.validated_data['fees']
                 # discount = serializer.validated_data['discount']
                 total = serializer.validated_data['total']
-                booking = Booking.objects.create(
-                    user=app_user,
-                    requirement=requirement,
-                    service=Services.objects.get(id=service),
-                    # service_provider=ServiceProvider.objects.get(id=service_provider),
-                    date=date,
-                    time=time,
-                    address=address,
-                    # building=building,
-                    # city=city,
-                    # landmark=landmark,
-                    status=status,
-                    # sub_total=sub_total,
-                    # fees=fees,
-                    # discount=discount,
-                    total=total,
-                    default_address=default_address
-                )
+                night_booking = serializer.validated_data['night_booking']
+                if night_booking:
+                    booking = Booking.objects.create(
+                        user=app_user,
+                        requirement=requirement,
+                        service=Services.objects.get(id=service),
+                        # service_provider=ServiceProvider.objects.get(id=service_provider),
+                        date=date,
+                        time=time,
+                        address=address,
+                        # building=building,
+                        # city=city,
+                        # landmark=landmark,
+                        status=status,
+                        # sub_total=sub_total,
+                        fees=100,
+                        # discount=discount,
+                        total=total,
+                        default_address=default_address,
+                        night_booking=night_booking
+                    )
+                else:
+                    booking = Booking.objects.create(
+                        user=app_user,
+                        requirement=requirement,
+                        service=Services.objects.get(id=service),
+                        # service_provider=ServiceProvider.objects.get(id=service_provider),
+                        date=date,
+                        time=time,
+                        address=address,
+                        # building=building,
+                        # city=city,
+                        # landmark=landmark,
+                        status=status,
+                        # sub_total=sub_total,
+                        # fees=fees,
+                        # discount=discount,
+                        total=total,
+                        default_address=default_address,
+                        night_booking=night_booking
+                    )
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
                     title='New Booking Request',
@@ -1279,3 +1302,13 @@ class RemoveCoupoun(APIView):
             return Response({'message': 'Coupon removed successfully', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class GuestUserToken(APIView):
+
+    def get(self, request, *args, **kwargs):
+        users = User.objects.filter(is_superuser=True)
+        # print(users)
+        # print(users[0])
+        token = Token.objects.get_or_create(user=users[0])
+        return Response({'token': token[0].key, 'status': HTTP_200_OK})

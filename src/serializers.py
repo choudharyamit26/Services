@@ -86,13 +86,14 @@ class BookingSerializer(serializers.ModelSerializer):
     discount = serializers.FloatField(required=False)
     total = serializers.FloatField(required=False)
     default_address = serializers.BooleanField()
+    night_booking = serializers.BooleanField(required=True)
     image_1 = serializers.ImageField()
 
     class Meta:
         model = Booking
         fields = (
             'service', 'date', 'time', 'requirement', 'address', 'status', 'sub_total', 'fees', 'discount', 'total',
-            'default_address', 'image_1')
+            'default_address', 'image_1', 'night_booking')
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):
