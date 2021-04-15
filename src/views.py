@@ -477,7 +477,7 @@ class BookingView(APIView):
                         # sub_total=sub_total,
                         fees=100,
                         # discount=discount,
-                        total=total,
+                        total=Services.objects.get(id=service).base_price,
                         default_address=default_address,
                         night_booking=night_booking
                     )
@@ -497,7 +497,7 @@ class BookingView(APIView):
                         # sub_total=sub_total,
                         # fees=fees,
                         # discount=discount,
-                        total=total,
+                        total=Services.objects.get(id=service).base_price,
                         default_address=default_address,
                         night_booking=night_booking
                     )
