@@ -66,11 +66,6 @@ urlpatterns = [
     path('apply-coupon/', ApplyCoupon.as_view(), name='apply-coupon'),
     path('guest-user/', GuestUserToken.as_view(), name='guest-user'),
     path('remove-coupon/', RemoveCoupoun.as_view(), name='remove-coupon'),
-    path('openapi/', get_schema_view(
-        title="Khalian",
-        description="API for all things …",
-        version="1.0.0"
-    ), name='openapi-schema'),
 ]
 
 # schema_view = get_schema_view(

@@ -109,8 +109,8 @@ class GeneralInquirySerializer(serializers.ModelSerializer):
     order = serializers.CharField()
     subject = serializers.CharField()
     message = serializers.CharField()
-    image_1 = serializers.FileField()
-    image_2 = serializers.FileField()
+    image_1 = serializers.FileField(required=False, allow_null=True)
+    image_2 = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = GeneralInquiry
