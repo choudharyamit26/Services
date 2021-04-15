@@ -1272,7 +1272,7 @@ class ApplyCoupon(APIView):
             quote = order_obj.quote
             percent = coupon_obj.percent
             print(type((int(percent) / 100)))
-            order_obj.sub_total = quote - (float((int(percent) / 100)) * quote)
+            # order_obj.sub_total = quote - (float((int(percent) / 100)) * quote)
             print(quote - float((int(percent) / 100)) * quote)
             order_obj.discount = (float((int(percent) / 100))) * quote
             order_obj.total = quote - (float((int(percent) / 100)) * quote) + order_obj.fees
