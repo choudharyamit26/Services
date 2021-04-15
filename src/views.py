@@ -1300,7 +1300,10 @@ class RemoveCoupoun(APIView):
         try:
             order_obj = Booking.objects.get(id=order)
             order_obj.discount = 0
-            order_obj.total = order_obj.quote
+            if order_obj.night_booking:
+                order_obj.total = order_obj.quote + 100
+            else:
+                order_obj.total = order_obj.quote
             order_obj.sub_total = order_obj.quote
             order_obj.promocode = ''
             order_obj.promocode_applied = False
