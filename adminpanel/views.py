@@ -187,7 +187,7 @@ class SendQuoteView(CreateView):
         order_obj.quote = self.request.POST['quote']
         order_obj.sub_total = self.request.POST['quote']
         if order_obj.night_booking:
-            order_obj.total = self.request.POST['quote'] + 100
+            order_obj.total = float(self.request.POST['quote']) + 100
         else:
             order_obj.total = self.request.POST['quote']
         order_obj.save()
