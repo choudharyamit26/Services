@@ -461,6 +461,8 @@ class BookingView(APIView):
                 # discount = serializer.validated_data['discount']
                 # total = serializer.validated_data['total']
                 night_booking = serializer.validated_data['night_booking']
+                image_2 = serializer.validated_data['image_2']
+                image_1 = serializer.validated_data['image_1']
                 if night_booking:
                     booking = Booking.objects.create(
                         user=app_user,
@@ -479,7 +481,9 @@ class BookingView(APIView):
                         # discount=discount,
                         total=Services.objects.get(id=service).base_price,
                         default_address=default_address,
-                        night_booking=night_booking
+                        night_booking=night_booking,
+                        image_1=image_1,
+                        image_2=image_2
                     )
                 else:
                     booking = Booking.objects.create(
@@ -499,7 +503,9 @@ class BookingView(APIView):
                         # discount=discount,
                         total=Services.objects.get(id=service).base_price,
                         default_address=default_address,
-                        night_booking=night_booking
+                        night_booking=night_booking,
+                        image_1=image_1,
+                        image_2=image_2
                     )
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
@@ -1294,7 +1300,7 @@ class RemoveCoupoun(APIView):
         try:
             order_obj = Booking.objects.get(id=order)
             order_obj.discount = 0
-            order_obj.total = 0
+            order_obj.total = order_obj.quote
             order_obj.sub_total = order_obj.quote
             order_obj.promocode = ''
             order_obj.promocode_applied = False

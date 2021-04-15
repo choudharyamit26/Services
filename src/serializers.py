@@ -88,12 +88,13 @@ class BookingSerializer(serializers.ModelSerializer):
     default_address = serializers.BooleanField()
     night_booking = serializers.BooleanField(required=True)
     image_1 = serializers.ImageField()
+    image_2 = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Booking
         fields = (
             'service', 'date', 'time', 'requirement', 'address', 'status', 'sub_total', 'fees', 'discount', 'total',
-            'default_address', 'image_1', 'night_booking')
+            'default_address', 'image_1','image_2', 'night_booking')
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):
