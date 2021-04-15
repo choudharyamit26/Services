@@ -768,7 +768,8 @@ class UpcomingBooking(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         try:
-            order_obj = Booking.objects.filter(Q(user=app_user, status='Started') | Q(user=app_user, status='started'))
+            order_obj = Booking.objects.filter(
+                Q(user=app_user, status='Started') | Q(user=app_user, status='started')).order_by('-id')
             orders = []
             for obj in order_obj:
                 orders.append(
@@ -790,7 +791,7 @@ class PastBooking(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         try:
-            order_obj = Booking.objects.filter(user=app_user, status='Completed')
+            order_obj = Booking.objects.filter(user=app_user, status='Completed').order_by('-id')
             orders = []
             # try:
             #     for obj in order_obj:
@@ -826,7 +827,7 @@ class OnGoingBooking(APIView):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
         try:
-            order_obj = Booking.objects.filter(user=app_user, status='Accepted')
+            order_obj = Booking.objects.filter(user=app_user, status='Accepted').order_by('-id')
             orders = []
             for obj in order_obj:
                 orders.append(
