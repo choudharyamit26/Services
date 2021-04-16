@@ -488,6 +488,8 @@ class BookingView(APIView):
                         image_1=image_1,
                         image_2=image_2
                     )
+                    UserNotification.objects.create(user=app_user, title='New Order',
+                                                    body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
                 else:
                     booking = Booking.objects.create(
                         user=app_user,
@@ -510,6 +512,8 @@ class BookingView(APIView):
                         image_1=image_1,
                         image_2=image_2
                     )
+                    UserNotification.objects.create(user=app_user, title='New Order',
+                                                    body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
                     title='New Booking Request',
@@ -547,7 +551,7 @@ class GetBookingDetail(APIView):
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
                              'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address,'base_price':booking.service.base_price,
+                             'default_address': booking.default_address, 'base_price': booking.service.base_price,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                              'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
@@ -562,7 +566,7 @@ class GetBookingDetail(APIView):
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
                              'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address,'base_price':booking.service.base_price,
+                             'default_address': booking.default_address, 'base_price': booking.service.base_price,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                              'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
@@ -578,7 +582,7 @@ class GetBookingDetail(APIView):
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_id': '', 'booking_date': booking.date,
                              'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address,'base_price':booking.service.base_price,
+                             'default_address': booking.default_address, 'base_price': booking.service.base_price,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                              'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
@@ -592,7 +596,8 @@ class GetBookingDetail(APIView):
                             {'id': booking.id, 'service_id': booking.service.id,
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_id': '', 'booking_date': booking.date,
-                             'booking_time': booking.time, 'address': booking.address,'base_price':booking.service.base_price,
+                             'booking_time': booking.time, 'address': booking.address,
+                             'base_price': booking.service.base_price,
                              'default_address': booking.default_address,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
@@ -732,6 +737,8 @@ class UpdateOrderStatus(APIView):
             order_obj = Booking.objects.get(id=order_id)
             order_obj.status = status
             order_obj.save()
+            UserNotification.objects.create(user=order_obj.user, title='ORDER STATUS UPDATE',
+                                            body=f'Status of service request with Order Id {order_obj.id} has been updated to {order_obj.status}.')
             AdminNotifications.objects.create(
                 user=User.objects.get(email='admin@email.com'),
                 title='Booking Update',
@@ -1006,7 +1013,8 @@ class ServiceProviderLogin(APIView):
                 if check_password:
                     try:
                         if user_obj.is_blocked:
-                            return Response({'message': 'You are blocked.Contact admin', 'status': HTTP_400_BAD_REQUEST})
+                            return Response(
+                                {'message': 'You are blocked.Contact admin', 'status': HTTP_400_BAD_REQUEST})
                         else:
                             existing_token = Token.objects.get(user=user_obj)
                             existing_token.delete()
@@ -1021,7 +1029,8 @@ class ServiceProviderLogin(APIView):
                                  'status': HTTP_200_OK})
                     except Exception as e:
                         if user_obj.is_blocked:
-                            return Response({'message': 'You are blocked.Contact admin', 'status': HTTP_400_BAD_REQUEST})
+                            return Response(
+                                {'message': 'You are blocked.Contact admin', 'status': HTTP_400_BAD_REQUEST})
                         else:
                             token = Token.objects.get_or_create(user=user_obj)
                             service_provider = ServiceProvider.objects.get(email=email)
@@ -1165,6 +1174,8 @@ class UpdateBookingByServiceProvider(APIView):
                 booking_obj.image_1 = image_1
                 booking_obj.image_2 = image_2
                 booking_obj.save()
+                UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
+                                                body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us! ')
                 return Response({'message': 'Booking updated successfully', 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})

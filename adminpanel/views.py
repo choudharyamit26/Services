@@ -23,7 +23,7 @@ from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, Sub
     AssignServiceProviderForm, UpdateOfferForm, ContactUsForm, AboutUsForm, TermsAndConditionForm, PrivacyPolicyForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
 from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration, ContactUs, \
-    PrivacyPolicy, TermsAndCondition, AboutUs
+    PrivacyPolicy, TermsAndCondition, AboutUs, UserNotification
 from src.fcm_notification import send_to_one, send_another
 
 
@@ -261,6 +261,8 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         user_device_type = order_obj.user.device_type
         user_device_token = order_obj.user.device_token
         if user_device_type == 'android':
+            UserNotification.objects.create(user=order_obj.user, title='QUOTE',
+                                            body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it ')
             data_message = {
                 "title": "New Message",
                 "body": f"You have received a quote for order with order ID {order_obj.id}"
@@ -268,6 +270,8 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
             respo = send_to_one(user_device_token, data_message)
             print(respo)
         else:
+            UserNotification.objects.create(user=order_obj.user, title='QUOTE',
+                                            body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it.')
             title = "New Message"
             body = f"You have received a quote for order with order ID {order_obj.id}"
             message_type = "NewMessage"
@@ -308,14 +312,14 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
     login_url = "adminpanel:login"
 
 
-class DeleteOfferView(LoginRequiredMixin,DeleteView):
+class DeleteOfferView(LoginRequiredMixin, DeleteView):
     template_name = 'delete-offer.html'
     model = OffersAndDiscount
     success_url = reverse_lazy("adminpanel:offer-management")
     login_url = "adminpanel:login"
 
 
-class UpdateOfferView(LoginRequiredMixin,UpdateView):
+class UpdateOfferView(LoginRequiredMixin, UpdateView):
     template_name = 'update-coupon.html'
     model = OffersAndDiscount
     form_class = UpdateOfferForm
@@ -331,7 +335,7 @@ class UpdateOfferView(LoginRequiredMixin,UpdateView):
         return redirect("adminpanel:offer-management")
 
 
-class AddOffers(LoginRequiredMixin,CreateView):
+class AddOffers(LoginRequiredMixin, CreateView):
     template_name = 'update-coupon.html'
     model = OffersAndDiscount
     form_class = UpdateOfferForm
@@ -344,7 +348,7 @@ class AddOffers(LoginRequiredMixin,CreateView):
         return redirect("adminpanel:offer-management")
 
 
-class FinanceManagementView(LoginRequiredMixin,View):
+class FinanceManagementView(LoginRequiredMixin, View):
     template_name = 'finance.html'
     login_url = "adminpanel:login"
 
@@ -352,7 +356,7 @@ class FinanceManagementView(LoginRequiredMixin,View):
         return render(self.request, 'finance.html')
 
 
-class StaticContentManagementView(LoginRequiredMixin,ListView):
+class StaticContentManagementView(LoginRequiredMixin, ListView):
     template_name = 'static.html'
     model = ContactUs
     login_url = "adminpanel:login"
@@ -369,7 +373,7 @@ class StaticContentManagementView(LoginRequiredMixin,ListView):
         return context
 
 
-class UpdateContactUs(LoginRequiredMixin,UpdateView):
+class UpdateContactUs(LoginRequiredMixin, UpdateView):
     template_name = 'update-contact-us.html'
     model = ContactUs
     form_class = ContactUsForm
@@ -377,7 +381,7 @@ class UpdateContactUs(LoginRequiredMixin,UpdateView):
     login_url = "adminpanel:login"
 
 
-class UpdateAboutUs(LoginRequiredMixin,UpdateView):
+class UpdateAboutUs(LoginRequiredMixin, UpdateView):
     template_name = 'update-about-us.html'
     model = AboutUs
     form_class = AboutUsForm
@@ -385,7 +389,7 @@ class UpdateAboutUs(LoginRequiredMixin,UpdateView):
     login_url = "adminpanel:login"
 
 
-class UpdateTermsAndCondition(LoginRequiredMixin,UpdateView):
+class UpdateTermsAndCondition(LoginRequiredMixin, UpdateView):
     template_name = 'update-terms-condition.html'
     model = TermsAndCondition
     form_class = TermsAndConditionForm
@@ -393,7 +397,7 @@ class UpdateTermsAndCondition(LoginRequiredMixin,UpdateView):
     login_url = "adminpanel:login"
 
 
-class UpdatePrivacyPolicy(LoginRequiredMixin,UpdateView):
+class UpdatePrivacyPolicy(LoginRequiredMixin, UpdateView):
     template_name = 'update-privacy-policy.html'
     model = PrivacyPolicy
     form_class = PrivacyPolicyForm
@@ -401,7 +405,7 @@ class UpdatePrivacyPolicy(LoginRequiredMixin,UpdateView):
     login_url = "adminpanel:login"
 
 
-class NotificationManagementView(LoginRequiredMixin,ListView):
+class NotificationManagementView(LoginRequiredMixin, ListView):
     template_name = 'notification.html'
     model = AdminNotifications
     login_url = "adminpanel:login"
@@ -410,7 +414,7 @@ class NotificationManagementView(LoginRequiredMixin,ListView):
     #     return render(self.request, 'notification.html')
 
 
-class ReadNotificationView(LoginRequiredMixin,View):
+class ReadNotificationView(LoginRequiredMixin, View):
     model = AdminNotifications
     login_url = "adminpanel:login"
 
@@ -422,7 +426,7 @@ class ReadNotificationView(LoginRequiredMixin,View):
         return HttpResponse('Read all notification')
 
 
-class AdminProfileView(LoginRequiredMixin,View):
+class AdminProfileView(LoginRequiredMixin, View):
     template_name = 'myprofile.html'
     login_url = "adminpanel:login"
 
@@ -430,7 +434,7 @@ class AdminProfileView(LoginRequiredMixin,View):
         return render(self.request, 'myprofile.html')
 
 
-class ChangePasswordView(LoginRequiredMixin,View):
+class ChangePasswordView(LoginRequiredMixin, View):
     template_name = 'changePassword.html'
     login_url = "adminpanel:login"
 
@@ -438,10 +442,14 @@ class ChangePasswordView(LoginRequiredMixin,View):
         return render(self.request, 'changePassword.html')
 
 
-class UserDetailView(LoginRequiredMixin,DetailView):
+class UserDetailView(LoginRequiredMixin, DetailView):
     template_name = 'userdetail.html'
     model = User
     login_url = "adminpanel:login"
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, "userdetail.html", {'object': AppUser.objects.get(id=kwargs['pk']),
+                                                        'bookings': Booking.objects.filter(user=kwargs['pk'])})
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -450,7 +458,7 @@ class UserDetailView(LoginRequiredMixin,DetailView):
         return context
 
 
-class ServiceProviderDetailView(LoginRequiredMixin,DetailView):
+class ServiceProviderDetailView(LoginRequiredMixin, DetailView):
     template_name = 'servicedetails.html'
     model = ServiceProvider
     login_url = "adminpanel:login"
@@ -462,16 +470,16 @@ class ServiceProviderDetailView(LoginRequiredMixin,DetailView):
         return context
 
 
-class SubAdminDetail(LoginRequiredMixin,DetailView):
+class SubAdminDetail(LoginRequiredMixin, DetailView):
     template_name = 'view-admin.html'
     model = User
     login_url = "adminpanel:login"
 
-    # def get(self, request, *args, **kwargs):
-    #     return render(self.request, 'view-admin.html')
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'view-admin.html',{'object':User.objects.get(id=kwargs['pk'])})
 
 
-class DeleteSubAdmin(LoginRequiredMixin,View):
+class DeleteSubAdmin(LoginRequiredMixin, View):
     model = User
     login_url = "adminpanel:login"
 
@@ -482,7 +490,7 @@ class DeleteSubAdmin(LoginRequiredMixin,View):
         return redirect("adminpanel:sub-admin-management")
 
 
-class EditSubAdmin(LoginRequiredMixin,View):
+class EditSubAdmin(LoginRequiredMixin, View):
     template_name = 'edit-admin.html'
     login_url = "adminpanel:login"
 
@@ -545,7 +553,7 @@ class EditSubAdmin(LoginRequiredMixin,View):
         return redirect("adminpanel:sub-admin-management")
 
 
-class PasswordResetConfirmView(LoginRequiredMixin,View):
+class PasswordResetConfirmView(LoginRequiredMixin, View):
     template_name = 'password_reset_confirm.html'
     success_url = reverse_lazy('password_reset_complete')
     login_url = "adminpanel:login"
@@ -596,7 +604,7 @@ class PasswordResetConfirmView(LoginRequiredMixin,View):
             return HttpResponseRedirect('/password-reset-complete/')
 
 
-class PasswordResetView(LoginRequiredMixin,View):
+class PasswordResetView(LoginRequiredMixin, View):
     template_name = 'password_reset.html'
     login_url = "adminpanel:login"
 
@@ -671,7 +679,7 @@ class PasswordResetView(LoginRequiredMixin,View):
             return redirect('/password-reset-done/')
 
 
-class PasswordChangeView(LoginRequiredMixin,PasswordContextMixin, FormView):
+class PasswordChangeView(LoginRequiredMixin, PasswordContextMixin, FormView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('adminpanel:dashboard')
     login_url = "adminpanel:login"
@@ -699,7 +707,7 @@ class PasswordChangeView(LoginRequiredMixin,PasswordContextMixin, FormView):
         return super().form_valid(form)
 
 
-class PasswordChangeDoneView(LoginRequiredMixin,PasswordContextMixin, TemplateView):
+class PasswordChangeDoneView(LoginRequiredMixin, PasswordContextMixin, TemplateView):
     # template_name = 'registration/password_change_done.html'
     title = ('Password change successful')
     login_url = "adminpanel:login"
@@ -709,7 +717,7 @@ class PasswordChangeDoneView(LoginRequiredMixin,PasswordContextMixin, TemplateVi
         return super().dispatch(*args, **kwargs)
 
 
-class AddServiceProvider(LoginRequiredMixin,CreateView):
+class AddServiceProvider(LoginRequiredMixin, CreateView):
     template_name = 'Addserviceprovider.html'
     model = User
     form_class = AddServiceProviderForm
@@ -793,7 +801,7 @@ class AddServiceProvider(LoginRequiredMixin,CreateView):
                 return redirect("adminpanel:service-provider-management")
 
 
-class AddSubCategory(LoginRequiredMixin,CreateView):
+class AddSubCategory(LoginRequiredMixin, CreateView):
     template_name = 'Add-SubCategory.html'
     form_class = SubCategoryForm
     login_url = "adminpanel:login"
@@ -812,7 +820,7 @@ class AddSubCategory(LoginRequiredMixin,CreateView):
         return redirect("adminpanel:sub-category-management")
 
 
-class SubCategoryView(LoginRequiredMixin,ListView):
+class SubCategoryView(LoginRequiredMixin, ListView):
     template_name = 'Sub-Category.html'
     model = SubCategory
     login_url = "adminpanel:login"
@@ -821,13 +829,13 @@ class SubCategoryView(LoginRequiredMixin,ListView):
     #     return render(self.request, 'Sub-Category.html')
 
 
-class SubCategoryDetail(LoginRequiredMixin,DetailView):
+class SubCategoryDetail(LoginRequiredMixin, DetailView):
     template_name = 'SubCategoryDetail.html'
     model = SubCategory
     login_url = "adminpanel:login"
 
 
-class SubAdminManagement(LoginRequiredMixin,ListView):
+class SubAdminManagement(LoginRequiredMixin, ListView):
     template_name = 'sub-admin-management.html'
     model = User
     login_url = "adminpanel:login"
@@ -841,7 +849,7 @@ class SubAdminManagement(LoginRequiredMixin,ListView):
                       {'object_list': User.objects.filter(is_sub_admin=True)})
 
 
-class AddSubAdmin(LoginRequiredMixin,CreateView):
+class AddSubAdmin(LoginRequiredMixin, CreateView):
     model = User
     template_name = 'add-admin.html'
     form_class = SubAdminForm
@@ -905,13 +913,13 @@ class AddSubAdmin(LoginRequiredMixin,CreateView):
                 return render(self.request, 'add-admin.html')
 
 
-class ServicesList(LoginRequiredMixin,ListView):
+class ServicesList(LoginRequiredMixin, ListView):
     model = Services
     template_name = 'services-list.html'
     login_url = "adminpanel:login"
 
 
-class AddServices(LoginRequiredMixin,CreateView):
+class AddServices(LoginRequiredMixin, CreateView):
     model = Services
     template_name = 'add-services.html'
     login_url = "adminpanel:login"
@@ -941,7 +949,7 @@ class AddServices(LoginRequiredMixin,CreateView):
         return redirect("adminpanel:services-list")
 
 
-class UpdateService(LoginRequiredMixin,UpdateView):
+class UpdateService(LoginRequiredMixin, UpdateView):
     model = Services
     template_name = 'update-services.html'
     form_class = UpdateServiceForm
@@ -969,7 +977,7 @@ class UpdateService(LoginRequiredMixin,UpdateView):
         return redirect("adminpanel:services-list")
 
 
-class TopServicesList(LoginRequiredMixin,ListView):
+class TopServicesList(LoginRequiredMixin, ListView):
     model = TopServices
     template_name = 'top-services-list.html'
     login_url = "adminpanel:login"
@@ -978,7 +986,7 @@ class TopServicesList(LoginRequiredMixin,ListView):
     #     return render(self.request, "top-services-list.html")
 
 
-class TopServicesView(LoginRequiredMixin,CreateView):
+class TopServicesView(LoginRequiredMixin, CreateView):
     model = TopServices
     template_name = 'top-services.html'
     login_url = "adminpanel:login"
@@ -1011,7 +1019,7 @@ class TopServicesView(LoginRequiredMixin,CreateView):
         return redirect("adminpanel:top-services-list")
 
 
-class DeleteTopService(LoginRequiredMixin,DeleteView):
+class DeleteTopService(LoginRequiredMixin, DeleteView):
     model = TopServices
     template_name = 'delete-top-services.html'
     success_url = reverse_lazy("adminpanel:top-services-list")
@@ -1027,7 +1035,7 @@ class DeleteTopService(LoginRequiredMixin,DeleteView):
 #         return redirect("adminpanel:user-management")
 
 
-class NotificationCount(LoginRequiredMixin,View):
+class NotificationCount(LoginRequiredMixin, View):
     model = AdminNotifications
     login_url = "adminpanel:login"
 
@@ -1036,7 +1044,7 @@ class NotificationCount(LoginRequiredMixin,View):
         return HttpResponse(notification_count)
 
 
-class InquiryView(LoginRequiredMixin,ListView):
+class InquiryView(LoginRequiredMixin, ListView):
     template_name = 'inquiry.html'
     model = GeneralInquiry
     login_url = "adminpanel:login"
@@ -1048,7 +1056,7 @@ class InquiryView(LoginRequiredMixin,ListView):
         return context
 
 
-class UserProviderRegistrations(LoginRequiredMixin,ListView):
+class UserProviderRegistrations(LoginRequiredMixin, ListView):
     template_name = 'user-provider-registration.html'
     model = ProviderRegistration
     login_url = "adminpanel:login"
