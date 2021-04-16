@@ -66,7 +66,7 @@ class UserManagementView(View):
     template_name = 'user-management.html'
 
     def get(self, request, *args, **kwargs):
-        users = AppUser.objects.all()
+        users = AppUser.objects.all().exclude(user__email='admin@email.com')
         # users = User.objects.filter(is_provider=False)
         # print(users)
         # print(User.objects.all())
