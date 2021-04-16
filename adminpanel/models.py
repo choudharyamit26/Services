@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_sub_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
     can_manage_user = models.BooleanField(default=False)
     can_manage_order = models.BooleanField(default=False)
     can_manage_provider = models.BooleanField(default=False)
@@ -97,6 +98,7 @@ class ServiceProvider(models.Model):
     device_token = models.CharField(default='', max_length=3000)
     device_type = models.CharField(default='', max_length=3000)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_blocked = models.BooleanField(default=False)
 
 
 class TopServices(models.Model):

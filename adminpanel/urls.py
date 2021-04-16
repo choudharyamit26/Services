@@ -5,11 +5,11 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     CategoryView, OrderManagementView, VerificationManagementView, WorkerManagementView, OfferManagementView, \
     FinanceManagementView, StaticContentManagementView, NotificationManagementView, AdminProfileView, \
     ChangePasswordView, UserDetailView, ServiceProviderDetailView, SubAdminDetail, EditSubAdmin, AddServiceProvider, \
-    CategoryDetail, AddCategoryView, SubCategoryView, SubCategoryDetail, AddSubCategory, AddSubAdmin, BlockUser, \
+    CategoryDetail, AddCategoryView, SubCategoryView, SubCategoryDetail, AddSubCategory, AddSubAdmin, \
     AddServices, ServicesList, UpdateService, TopServicesView, TopServicesList, DeleteTopService, AssignServiceProvider, \
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
-    UpdateTermsAndCondition,UpdatePrivacyPolicy
+    UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider,UnBlockServiceProvider
 
 app_name = 'adminpanel'
 
@@ -53,7 +53,6 @@ urlpatterns = [
                   path('add-services/', AddServices.as_view(), name='add-services'),
                   path('services-list/', ServicesList.as_view(), name='services-list'),
                   path('update-service/<int:pk>/', UpdateService.as_view(), name='update-service'),
-                  path('block-user/<int:pk>/', BlockUser.as_view(), name='block-user'),
                   path('top-services/', TopServicesView.as_view(), name='top-services'),
                   path('top-services-list/', TopServicesList.as_view(), name='top-services-list'),
                   path('delete-top-service/<int:pk>/', DeleteTopService.as_view(), name='delete-top-service'),
@@ -65,6 +64,10 @@ urlpatterns = [
                   path('update-contact-us/<int:pk>/', UpdateContactUs.as_view(), name='update-contact-us'),
                   path('update-about-us/<int:pk>/', UpdateAboutUs.as_view(), name='update-about-us'),
                   path('update-privacy-policy/<int:pk>/', UpdatePrivacyPolicy.as_view(), name='update-privacy-policy'),
+                  path('unblock-user/<int:pk>/', UnBlockUser.as_view(), name='unblock-user'),
+                  path('block-user/<int:pk>/', BlockUser.as_view(), name='block-user'),
+                  path('block-service-provider/<int:pk>/', BlockServiceProvider.as_view(), name='block-service-provider'),
+                  path('unblock-service-provider/<int:pk>/', UnBlockServiceProvider.as_view(), name='unblock-service-provider'),
                   path('update-terms-and-condition/<int:pk>/', UpdateTermsAndCondition.as_view(),
                        name='update-terms-and-condition'),
                   path('user-provider-registration/', UserProviderRegistrations.as_view(),

@@ -84,25 +84,28 @@ class LoginView(ObtainAuthToken):
             try:
                 user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
                 user_id = AppUser.objects.get(user=user_obj)
-                settings_obj = Settings.objects.get(user=user_id)
-                settings_obj.language = language
-                settings_obj.save()
-                existing_token = Token.objects.get(user=user_obj)
-                existing_token.delete()
-                token = Token.objects.get_or_create(user=user_obj)
-                user_device_token = user_id.device_token
-                print('previous token ', user_device_token)
-                user_id.device_token = device_token
-                user_id.device_type = device_type
-                user_id.lang = lang
-                user_id.lat = lat
-                user_id.save(update_fields=['device_token', 'device_type', 'lang', 'lat'])
-                print('updated device token ', user_id.device_token)
-                token = token[0]
-                return Response({'token': token.key, 'id': user_id.id, 'full_name': user_id.full_name,
-                                 'country_code': user_obj.country_code,
-                                 'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
-                                 'lang': user_id.lang})
+                if user_id.is_blocked:
+                    return Response({"message": 'You are blocked. Contact admin.', 'status': HTTP_200_OK})
+                else:
+                    settings_obj = Settings.objects.get(user=user_id)
+                    settings_obj.language = language
+                    settings_obj.save()
+                    existing_token = Token.objects.get(user=user_obj)
+                    existing_token.delete()
+                    token = Token.objects.get_or_create(user=user_obj)
+                    user_device_token = user_id.device_token
+                    print('previous token ', user_device_token)
+                    user_id.device_token = device_token
+                    user_id.device_type = device_type
+                    user_id.lang = lang
+                    user_id.lat = lat
+                    user_id.save(update_fields=['device_token', 'device_type', 'lang', 'lat'])
+                    print('updated device token ', user_id.device_token)
+                    token = token[0]
+                    return Response({'token': token.key, 'id': user_id.id, 'full_name': user_id.full_name,
+                                     'country_code': user_obj.country_code,
+                                     'phone_number': user_obj.phone_number, 'status': HTTP_200_OK, 'lat': user_id.lat,
+                                     'lang': user_id.lang})
             except Exception as e:
                 print(e)
                 try:
@@ -544,7 +547,7 @@ class GetBookingDetail(APIView):
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
                              'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address,
+                             'default_address': booking.default_address,'base_price':booking.service.base_price,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                              'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
@@ -559,7 +562,7 @@ class GetBookingDetail(APIView):
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
                              'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address,
+                             'default_address': booking.default_address,'base_price':booking.service.base_price,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                              'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
@@ -575,7 +578,7 @@ class GetBookingDetail(APIView):
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_id': '', 'booking_date': booking.date,
                              'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address,
+                             'default_address': booking.default_address,'base_price':booking.service.base_price,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
                              'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
@@ -589,7 +592,7 @@ class GetBookingDetail(APIView):
                             {'id': booking.id, 'service_id': booking.service.id,
                              'service_name': booking.service.service_name, 'quote': booking.quote,
                              'service_provider_id': '', 'booking_date': booking.date,
-                             'booking_time': booking.time, 'address': booking.address,
+                             'booking_time': booking.time, 'address': booking.address,'base_price':booking.service.base_price,
                              'default_address': booking.default_address,
                              'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
                              'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
@@ -1002,27 +1005,33 @@ class ServiceProviderLogin(APIView):
                 check_password = user_obj.check_password(password)
                 if check_password:
                     try:
-                        existing_token = Token.objects.get(user=user_obj)
-                        existing_token.delete()
-                        token = Token.objects.get_or_create(user=user_obj)
-                        service_provider = ServiceProvider.objects.get(email=email)
-                        service_provider.device_token = device_token
-                        service_provider.device_type = device_type
-                        service_provider.save()
-                        return Response(
-                            {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
-                             "full_name": service_provider.full_name,
-                             'status': HTTP_200_OK})
+                        if user_obj.is_blocked:
+                            return Response({'message': 'You are blocked.Contact admin', 'status': HTTP_400_BAD_REQUEST})
+                        else:
+                            existing_token = Token.objects.get(user=user_obj)
+                            existing_token.delete()
+                            token = Token.objects.get_or_create(user=user_obj)
+                            service_provider = ServiceProvider.objects.get(email=email)
+                            service_provider.device_token = device_token
+                            service_provider.device_type = device_type
+                            service_provider.save()
+                            return Response(
+                                {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
+                                 "full_name": service_provider.full_name,
+                                 'status': HTTP_200_OK})
                     except Exception as e:
-                        token = Token.objects.get_or_create(user=user_obj)
-                        service_provider = ServiceProvider.objects.get(email=email)
-                        service_provider.device_token = device_token
-                        service_provider.device_type = device_type
-                        service_provider.save()
-                        return Response(
-                            {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
-                             "full_name": service_provider.full_name,
-                             'status': HTTP_200_OK})
+                        if user_obj.is_blocked:
+                            return Response({'message': 'You are blocked.Contact admin', 'status': HTTP_400_BAD_REQUEST})
+                        else:
+                            token = Token.objects.get_or_create(user=user_obj)
+                            service_provider = ServiceProvider.objects.get(email=email)
+                            service_provider.device_token = device_token
+                            service_provider.device_type = device_type
+                            service_provider.save()
+                            return Response(
+                                {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
+                                 "full_name": service_provider.full_name,
+                                 'status': HTTP_200_OK})
                 else:
                     return Response({'message': 'Incorrect password', 'status': HTTP_400_BAD_REQUEST})
             except Exception as e:

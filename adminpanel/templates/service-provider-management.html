@@ -47,10 +47,17 @@
                         <th class="textCenter flexProp">
                             <a href="{% url 'adminpanel:service-provider-detail' obj.id %}"><i
                                     class="fa fa-eye colorBlue"></i></a>
-                            <label class="switch blockUnblock_btn" data-toggle="modal" data-target="#myModal">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
+                            {% if obj.is_blocked %}
+                            <input type="radio" class="Blue UnBlock" data-target="#UnBlock" data-toggle="modal"
+                                   value="{{obj.id}}"
+                                   style="border:none;box-shadow:none;background:transparent;outline:0;margin-left:10px;">Unblock
+                            </input>
+                            {% else %}
+                            <input type="radio" class="Blue Block" data-target="#Block" data-toggle="modal"
+                                   value="{{obj.id}}"
+                                   style="border:none;box-shadow:none;background:transparent;outline:0;margin-left:10px;">Block
+                            </input>
+                            {% endif %}
                         </th>
                     </tr>
                     {% endfor %}
@@ -62,25 +69,105 @@
     </div>
 </section>
 <!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
+<div id="UnBlock" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
-        <!-- Modal content-->
         <div class="modal-content">
-
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="main">Block/UnBlock User</h2>
-                <p class="head">Are you sure you want to Block/UnBlock this Member ?</p>
-                <ul class="allBtns">
-                    <li><a href="#0" class="btns">Block</a></li>
-                    <li><a href="#0" class="btns">Unblock</a></li>
-                </ul>
+                <div class="Decline">
+                    <a href="JavaScript:Void(0);" class="CloseModal" data-dismiss="modal">×</a>
+                    <h3 class="Title">UnBlock User</h3>
+                    <p>Are you sure you want to Unblock this user?</p>
+                    <div id="object_id_placeholder_div3">
+                        <input hidden="true" id="object_id_placeholder_input3" value="">
+                    </div>
+                    <h4>
+                        <a href="JavaScript:Void(0);" data-dismiss="modal" style="color:blue;">No</a>
+                        <button id="unBlockButton" data-dismiss="modal" style="border:none;box-shadow:none;
+                                                                                background:transparent;outline:0;color:blue;margin-left:10px;">
+                            Yes
+                        </button>
+                    </h4>
+                </div>
             </div>
-
         </div>
-
     </div>
 </div>
+<div id="Block" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="Decline">
+                    <a href="JavaScript:Void(0);" class="CloseModal" data-dismiss="modal">×</a>
+                    <h3 class="Title">Block User</h3>
+                    <p>Are you sure you want to block this user?</p>
+                    <div id="object_id_placeholder_div4">
+                        <input hidden="true" id="object_id_placeholder_input4" value="">
+                    </div>
+                    <h4>
+                        <a href="JavaScript:Void(0);" data-dismiss="modal" style="color:blue;">No</a>
+                        <button id="blockButton" data-dismiss="modal" style="border:none;box-shadow:none;
+                                                                                background:transparent;outline:0;color:blue;margin-left:10px;">
+                            Yes
+                        </button>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    $('.UnBlock').click(function (e) {
+        console.log('clicked UnBlock Button')
+        e.preventDefault();
+//      $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div3").html(`<input hidden="true" id="object_id_placeholder_input3" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#unBlockButton").click(function () {
+        var object_id = $("#object_id_placeholder_input3").val();
+        console.log('Id ',object_id)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/unblock-service-provider" + "/" + object_id + "/"
+        window.location.href = url
+    });
+});
+
+
+ $(document).ready(function () {
+    $('.Block').click(function (e) {
+        console.log('clicked Block Button')
+        e.preventDefault();
+//      $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div4").html(`<input hidden="true" id="object_id_placeholder_input4" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#Block").click(function () {
+        var object_id = $("#object_id_placeholder_input4").val();
+        console.log('Id ',object_id)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/block-service-provider" + "/" + object_id + "/"
+        window.location.href = url
+    });
+});
+</script>
+
 
 {% endblock body %}

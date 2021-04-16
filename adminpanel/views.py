@@ -74,11 +74,63 @@ class UserManagementView(View):
         return render(self.request, 'user-management.html', {'object_list': users})
 
 
+class UnBlockUser(View):
+
+    def get(self, request, *args, **kwargs):
+        print(kwargs['pk'])
+        print(args)
+        user = AppUser.objects.get(id=kwargs['pk'])
+        user.is_blocked = False
+        user.save()
+        messages.success(self.request, "User Unblocked successfully")
+        return redirect("adminpanel:user-management")
+
+
+class BlockUser(View):
+
+    def get(self, request, *args, **kwargs):
+        user = AppUser.objects.get(id=kwargs['pk'])
+        user.is_blocked = True
+        user.save()
+        messages.success(self.request, "User blocked successfully")
+        return redirect("adminpanel:user-management")
+
+
 class ServiceProviderManagementView(View):
     template_name = 'service-provider-management.html'
 
     def get(self, request, *args, **kwargs):
         return render(self.request, 'service-provider-management.html', {'object_list': ServiceProvider.objects.all()})
+
+
+class BlockServiceProvider(View):
+    model = ServiceProvider
+
+    def get(self, request, *args, **kwargs):
+        print(kwargs['pk'])
+        service_provider = ServiceProvider.objects.get(id=kwargs['pk'])
+        service_provider.is_blocked = True
+        service_provider.save()
+        user = User.objects.get(email=service_provider.email)
+        user.is_blocked = True
+        user.save()
+        messages.success(self.request, "Service Provider Blocked Successfully")
+        return redirect("adminpanel:service-provider-management")
+
+
+class UnBlockServiceProvider(View):
+    model = ServiceProvider
+
+    def get(self, request, *args, **kwargs):
+        print(kwargs['pk'])
+        service_provider = ServiceProvider.objects.get(id=kwargs['pk'])
+        service_provider.is_blocked = False
+        service_provider.save()
+        user = User.objects.get(email=service_provider.email)
+        user.is_blocked = False
+        user.save()
+        messages.success(self.request, "Service Provider Unblocked Successfully")
+        return redirect("adminpanel:service-provider-management")
 
 
 # class SubAdminManagementView(View):
@@ -870,13 +922,13 @@ class DeleteTopService(DeleteView):
     success_url = reverse_lazy("adminpanel:top-services-list")
 
 
-class BlockUser(View):
-    model = User
-
-    def get(self, request, *args, **kwargs):
-        print(kwargs['pk'])
-        messages.info(self.request, "User blocked successfully")
-        return redirect("adminpanel:user-management")
+# class BlockUser(View):
+#     model = User
+#
+#     def get(self, request, *args, **kwargs):
+#         print(kwargs['pk'])
+#         messages.info(self.request, "User blocked successfully")
+#         return redirect("adminpanel:user-management")
 
 
 class NotificationCount(View):
