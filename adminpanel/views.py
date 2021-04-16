@@ -39,7 +39,7 @@ class LoginView(View):
         try:
             user_object = User.objects.get(email=email)
             if user_object.check_password(password):
-                if user_object.is_superuser:
+                if user_object.is_superuser or user_object.is_sub_admin:
                     login(self.request, user_object)
                     messages.success(self.request, "Logged in successfully")
                     return redirect("adminpanel:dashboard")
@@ -458,6 +458,7 @@ class EditSubAdmin(View):
         # password = self.request.POST['password']
         # confirm_password = self.request.POST['confirm_password']
         access_rights = self.request.POST.getlist('access_rights')
+        print(access_rights)
         # try:
         #     user_obj = User.objects.get(Q(email=email) | Q(phone_number=phone_number))
         #     messages.error(self.request, 'User with this email/phone already exists')
@@ -489,6 +490,18 @@ class EditSubAdmin(View):
                 user.save()
             if '_'.join(right.lower().split()) == 'can_manage_sub_category':
                 user.can_manage_sub_category = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_services':
+                user.can_manage_services = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_subadmin':
+                user.can_manage_subadmin = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_top_services':
+                user.can_manage_top_services = True
+                user.save()
+            if '_'.join(right.lower().split()) == 'can_manage_coupons':
+                user.can_manage_coupons = True
                 user.save()
         messages.success(self.request, 'Sub Admin edited successfully')
         return redirect("adminpanel:sub-admin-management")
@@ -824,6 +837,18 @@ class AddSubAdmin(CreateView):
                         user.save()
                     if '_'.join(right.lower().split()) == 'can_manage_sub_category':
                         user.can_manage_sub_category = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_services':
+                        user.can_manage_services = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_subadmin':
+                        user.can_manage_subadmin = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_top_services':
+                        user.can_manage_top_services = True
+                        user.save()
+                    if '_'.join(right.lower().split()) == 'can_manage_coupons':
+                        user.can_manage_coupons = True
                         user.save()
                 messages.success(self.request, 'Sub Admin added successfully')
                 return redirect("adminpanel:sub-admin-management")

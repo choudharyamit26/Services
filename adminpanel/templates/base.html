@@ -36,6 +36,16 @@
       .catch(function (error) {
         console.log("Error: " + error);
       });
+
+
+
+
+
+
+
+
+
+
     </script>
 </head>
 
@@ -80,6 +90,7 @@
     </div>
 </header>
 <section class="sideNav boxs scrollbar" id="style-3">
+    {% if user.is_authenticated and user.is_superuser %}
     <ul class="force-overflow">
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:dashboard' %} active {% endif %}">
             <a href="{% url 'adminpanel:dashboard' %}"><span class="icon"><i
@@ -106,7 +117,6 @@
             <a href="{% url 'adminpanel:services-list' %}"><span class="icon"><i
                     class="fa fa-wrench"></i></span><span
                     class="iconContent">Service Management</span></a></li>
-
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:sub-category-management' %}active{% endif %}">
             <a href="{% url 'adminpanel:sub-category-management' %}"><span class="icon"><i
                     class="fa fa-cog"></i></span><span
@@ -166,6 +176,111 @@
                     class="iconContent">Logout
                             </span></a></li>
     </ul>
+    {% else %}
+    <ul class="force-overflow">
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:dashboard' %} active {% endif %}">
+            <a href="{% url 'adminpanel:dashboard' %}"><span class="icon"><i
+                    class="fa fa-tachometer-alt"></i></span><span
+                    class="iconContent">Statistics</span></a></li>
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_user %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:user-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:user-management' %}"><span class="icon"><i class="fa fa-user"></i></span><span
+                    class="iconContent">User
+                        Management</span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_provider %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:service-provider-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:service-provider-management' %}"><span class="icon"><i
+                    class="fa fa-paper-plane"></i></span><span class="iconContent">Service
+                        Provider Management</span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_subadmin %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:sub-admin-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:sub-admin-management'  %}"><span class="icon"><i
+                    class="fa fa-user-cog"></i></span><span class="iconContent">
+                        Sub-admin Management
+                    </span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_category %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:category-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:category-management' %}"><span class="icon"><i
+                    class="fa fa-cogs"></i></span><span
+                    class="iconContent">Category Management</span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_services %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:services-list' %}active{% endif %}">
+            <a href="{% url 'adminpanel:services-list' %}"><span class="icon"><i
+                    class="fa fa-wrench"></i></span><span
+                    class="iconContent">Service Management</span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_sub_category %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:sub-category-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:sub-category-management' %}"><span class="icon"><i
+                    class="fa fa-cog"></i></span><span
+                    class="iconContent">SubCategory Management</span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_top_services %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:top-services-list' %}active{% endif %}">
+            <a href="{% url 'adminpanel:top-services-list' %}"><span class="icon"><i
+                    class="fa fa-list"></i></span><span
+                    class="iconContent">Top Services Management</span></a></li>
+        {% endif %}
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_order %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:order-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:order-management' %}"><span class="icon"><i
+                    class="fa fa-dollar-sign"></i></span><span
+                    class="iconContent">Order Management</span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:rejected-order-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:rejected-order-management' %}"><span class="icon"><i
+                    class="fa fa-ban"></i></span><span
+                    class="iconContent">Rejected Orders</span></a></li>
+        {% endif %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:user-provider-registration' %}active{% endif %}">
+            <a href="{% url 'adminpanel:user-provider-registration' %}"><span class="icon"><i
+                    class="fa fa-check-square"></i></span><span
+                    class="iconContent">User Provider Registration</span></a></li>
+        <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:verification-management' %}active{% endif %}">-->
+        <!--            <a href="{% url 'adminpanel:verification-management' %}"><span class="icon"><i class="fa fa-user-check"></i></span><span-->
+        <!--                    class="iconContent">Verification Management-->
+        <!--                            </span></a></li>-->
+        <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:worker-management' %}active{% endif %}">-->
+        <!--            <a href="{% url 'adminpanel:worker-management' %}"><span class="icon"><i-->
+        <!--                    class="fa fa-users"></i></span><span-->
+        <!--                    class="iconContent">Worker Management</span></a></li>-->
+        {% if user.is_authenticated and user.is_sub_admin and user.can_manage_coupons %}
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:offer-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:offer-management' %}"><span class="icon"><i
+                    class="fa fa-percent"></i></span><span
+                    class="iconContent">Offers & Discounts Management
+                            </span></a></li>
+        {% endif %}
+        <!--        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:finance-management' %}active{% endif %}">-->
+        <!--            <a href="{% url 'adminpanel:finance-management' %}"><span class="icon"><i-->
+        <!--                    class="fa fa-percent"></i></span><span-->
+        <!--                    class="iconContent">Finance Management-->
+        <!--                            </span></a></li>-->
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:static-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:static-management' %}"><span class="icon"><i
+                    class="fa fa-pen-square"></i></span><span
+                    class="iconContent">Static Content Management
+                            </span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:inquiry' %}active{% endif %}">
+            <a href="{% url 'adminpanel:inquiry' %}"><span class="icon"><i
+                    class="fa fa-question-circle"></i></span><span
+                    class="iconContent">Inquiries
+                            </span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:notification-management' %}active{% endif %}">
+            <a href="{% url 'adminpanel:notification-management' %}"><span class="icon"><i
+                    class="fa fa-bell"></i></span><span
+                    class="iconContent">Notification Management
+                            </span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'logout' %}active{% endif %}">
+            <a href="{% url 'logout' %}" data-toggle="modal" data-target="#logout"><span class="icon"><i
+                    class="fa fa-sign-out-alt"></i></span><span
+                    class="iconContent">Logout
+                            </span></a></li>
+    </ul>
+    {% endif %}
 </section>
 {% block body %}
 {% endblock body %}
@@ -195,7 +310,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js'></script>
 <script src="{% static 'js/custom.js' %}"></script>
-    <script>
+<script>
     var protocol = window.location.protocol
     var hostname = window.location.hostname
     var port = window.location.port
@@ -213,7 +328,17 @@
 
 
 
-    </script>
+
+
+
+
+
+
+
+
+
+
+</script>
 </body>
 
 </html>
