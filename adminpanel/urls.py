@@ -9,7 +9,8 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     AddServices, ServicesList, UpdateService, TopServicesView, TopServicesList, DeleteTopService, AssignServiceProvider, \
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
-    UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider,UnBlockServiceProvider
+    UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
+    DeleteSubAdmin
 
 app_name = 'adminpanel'
 
@@ -68,6 +69,7 @@ urlpatterns = [
                   path('block-user/<int:pk>/', BlockUser.as_view(), name='block-user'),
                   path('block-service-provider/<int:pk>/', BlockServiceProvider.as_view(), name='block-service-provider'),
                   path('unblock-service-provider/<int:pk>/', UnBlockServiceProvider.as_view(), name='unblock-service-provider'),
+                  path('delete-sub-admin/<int:pk>/', DeleteSubAdmin.as_view(), name='delete-sub-admin'),
                   path('update-terms-and-condition/<int:pk>/', UpdateTermsAndCondition.as_view(),
                        name='update-terms-and-condition'),
                   path('user-provider-registration/', UserProviderRegistrations.as_view(),

@@ -409,23 +409,40 @@ class UserDetailView(DetailView):
     template_name = 'userdetail.html'
     model = User
 
-    # def get(self, request, *args, **kwargs):
-    #     return render(self.request, 'userdetail.html')
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        bookings = Booking.objects.filter(user=kwargs['object'].id)
+        context['bookings'] = bookings
+        return context
 
 
 class ServiceProviderDetailView(DetailView):
     template_name = 'servicedetails.html'
     model = ServiceProvider
 
-    # def get(self, request, *args, **kwargs):
-    #     return render(self.request, 'servicedetails.html')
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        bookings = Booking.objects.filter(service_provider=kwargs['object'].id)
+        context['bookings'] = bookings
+        return context
 
 
-class SubAdminDetail(View):
+class SubAdminDetail(DetailView):
     template_name = 'view-admin.html'
+    model = User
+
+    # def get(self, request, *args, **kwargs):
+    #     return render(self.request, 'view-admin.html')
+
+
+class DeleteSubAdmin(View):
+    model = User
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'view-admin.html')
+        user = User.objects.get(id=kwargs['pk'])
+        user.delete()
+        messages.success(self.request, "User deleted successfully")
+        return redirect("adminpanel:sub-admin-management")
 
 
 class EditSubAdmin(View):

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
 <section class="demandRight boxs">
-        <div class="content-wrapper">
+    <div class="content-wrapper">
         {% if messages %}
         {% for message in messages %}
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -40,9 +40,10 @@
                         <td>{{obj.email}}</td>
                         <th class="textCenter flexProp">
                             <a href="{% url 'adminpanel:sub-admin-detail' obj.id %}"><i class="fa fa-eye colorBlue"></i></a>
-                            <a href="#0" class="marginLR" data-toggle="modal" data-target="#myModal2"><i
-                                    class="fa fa-trash-alt colorBlue"></i></a>
-                            <a href="{% url 'adminpanel:edit-sub-admin-detail' obj.id %}"><i class="fa fa-edit colorBlue"></i></a>
+                            <button class="marginLR" data-toggle="modal" data-target="#myModal2" value="{{obj.id}}"><i
+                                    class="fa fa-trash-alt colorBlue"></i></button>
+                            <a href="{% url 'adminpanel:edit-sub-admin-detail' obj.id %}"><i
+                                    class="fa fa-edit colorBlue"></i></a>
                         </th>
                     </tr>
                     {% endfor %}
@@ -63,16 +64,46 @@
 
             <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="main">Delete User</h2>
-                <p class="head">Are you sure you want to Delete this Member ?</p>
+                <h2 class="main">Delete Sub-Admin</h2>
+                <div id="object_id_placeholder_div">
+                    <input hidden="true" id="object_id_placeholder_input" value="">
+                </div>
+                <p class="head">Are you sure you want to delete this sub-admin ?</p>
                 <ul class="allBtns">
-                    <li><a href="#0" class="btns">Yes</a></li>
+                    <li>
+                        <button id="modal_delete_button" class="btns">Yes</button>
+                    </li>
                     <li><a href="#0" class="btns">No</a></li>
                 </ul>
             </div>
-
         </div>
-
     </div>
 </div>
+<script>
+ $(document).ready(function () {
+    $('.marginLR').click(function (e) {
+        console.log('clicked Block Button')
+        e.preventDefault();
+//      $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div").html(`<input hidden="true" id="object_id_placeholder_input" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#modal_delete_button").click(function () {
+        var object_id = $("#object_id_placeholder_input").val();
+        console.log('Id ',object_id)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/delete-sub-admin" + "/" + object_id + "/"
+        window.location.href = url
+    });
+});
+
+</script>
 {% endblock body %}
