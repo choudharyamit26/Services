@@ -105,7 +105,7 @@ class RatingReview(models.Model):
     user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     order = models.ForeignKey(Booking, on_delete=models.CASCADE)
     reviews = models.CharField(default='', max_length=256)
-    rating = models.IntegerField()
+    rating = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 

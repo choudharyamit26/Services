@@ -846,14 +846,14 @@ class PastBooking(APIView):
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                          'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price, 'price': obj.total,
-                         'date': obj.date, 'time': obj.time,'service_id':obj.service.id,
+                         'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
                 except Exception as e:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                          'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price, 'price': obj.total,
-                         'date': obj.date, 'time': obj.time,'service_id':obj.service.id,
+                         'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
