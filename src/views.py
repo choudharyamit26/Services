@@ -1125,7 +1125,7 @@ class NewRequestView(APIView):
         new_booking_list = []
         user = self.request.user
         service_provider_obj = ServiceProvider.objects.get(email=user.email)
-        bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Started')
+        bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted')
         return Response({'data': bookings_obj.values(), 'status': HTTP_200_OK})
 
 
