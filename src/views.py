@@ -1162,6 +1162,11 @@ class AcceptOrderServiceProviderView(APIView):
             booking_obj = Booking.objects.get(id=order)
             booking_obj.is_accepted_by_provider = True
             booking_obj.save()
+            AdminNotifications.objects.create(
+                user=User.objects.get(email='admin@email.com'),
+                title='Order Update',
+                body=f'Order with Order Id-{booking_obj.id} has been ACCEPTED by the service provider {booking_obj.service_provider.email}'
+            )
             return Response({'message': 'Order accepted successfully', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
@@ -1177,6 +1182,11 @@ class RejectOrderServiceProviderView(APIView):
             booking_obj = Booking.objects.get(id=order)
             booking_obj.is_accepted_by_provider = False
             booking_obj.save()
+            AdminNotifications.objects.create(
+                user=User.objects.get(email='admin@email.com'),
+                title='Order Update',
+                body=f'Order with Order Id-{booking_obj.id} has been REJECTED by the service provider {booking_obj.service_provider.email}'
+            )
             return Response({'message': 'Order rejected successfully', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
