@@ -233,11 +233,11 @@ class AssignServiceProvider(LoginRequiredMixin, CreateView):
         #     respo = send_to_one(service_provider_device_token, data_message)
         #     print(respo)
         # else:
-        title = "New Message"
+        title = "New Order"
         body = f"You have received a new service request for order with order ID {order_obj.id}"
-        # message_type = "NewMessage"
+        message_type = "NewOrder"
         # sound = 'notifications.mp3'
-        respo = send_another(service_provider_device_token, title, body)
+        respo = send_another(service_provider_device_token, title, body, message_type)
         print(respo)
         messages.success(self.request, 'Service provider assigned successfully')
         return redirect("adminpanel:order-management")
