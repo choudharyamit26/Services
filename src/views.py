@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications, SubCategory
-
+from .fcm_notification import send_to_one,send_another
 
 class CreateUser(APIView):
     serializer_class = UserCreateSerializer
@@ -490,6 +490,19 @@ class BookingView(APIView):
                     )
                     UserNotification.objects.create(user=app_user, title='New Order',
                                                     body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
+                    if booking.user.device_type == 'device_type':
+                        data_message = {
+                            "title": "New Order",
+                            "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                        }
+                        respo = send_to_one(booking.user.device_token, data_message)
+                    else:
+                        title = "New Order"
+                        body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                        message_type = "NewMessage"
+                        # sound = 'notifications.mp3'
+                        respo = send_another(booking.user.device_token, title, body, message_type)
+                        print(respo)
                 else:
                     booking = Booking.objects.create(
                         user=app_user,
@@ -514,6 +527,19 @@ class BookingView(APIView):
                     )
                     UserNotification.objects.create(user=app_user, title='New Order',
                                                     body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
+                    if booking.user.device_type == 'device_type':
+                        data_message = {
+                            "title": "New Order",
+                            "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                        }
+                        respo = send_to_one(booking.user.device_token, data_message)
+                    else:
+                        title = "New Order"
+                        body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                        message_type = "NewMessage"
+                        # sound = 'notifications.mp3'
+                        respo = send_another(booking.user.device_token, title, body, message_type)
+                        print(respo)
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
                     title='New Booking Request',
