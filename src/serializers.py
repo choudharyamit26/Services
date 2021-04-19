@@ -129,7 +129,7 @@ class UpdateOrderStatusSerializer(serializers.ModelSerializer):
 class RatingAndReviewsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     review = serializers.CharField()
-    rating = serializers.IntegerField()
+    rating = serializers.FloatField()
 
     class Meta:
         model = RatingReview
