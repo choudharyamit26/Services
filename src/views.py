@@ -17,7 +17,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications, SubCategory
-from .fcm_notification import send_to_one,send_another
+from .fcm_notification import send_to_one, send_another
+
 
 class CreateUser(APIView):
     serializer_class = UserCreateSerializer
@@ -491,13 +492,13 @@ class BookingView(APIView):
                     UserNotification.objects.create(user=app_user, title='New Order',
                                                     body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
                     try:
-                    # if booking.user.device_type == 'device_type':
-                    #     data_message = {
-                    #         "title": "New Order",
-                    #         "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                    #     }
-                    #     respo = send_to_one(booking.user.device_token, data_message)
-                    # else:
+                        # if booking.user.device_type == 'device_type':
+                        #     data_message = {
+                        #         "title": "New Order",
+                        #         "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                        #     }
+                        #     respo = send_to_one(booking.user.device_token, data_message)
+                        # else:
                         title = "New Order"
                         body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
                         message_type = "NewOrder"
@@ -1132,7 +1133,10 @@ class ServiceProviderDashboard(APIView):
         user = self.request.user
         service_provider_obj = ServiceProvider.objects.get(email=user.email)
         booking_obj = Booking.objects.filter(service_provider=service_provider_obj)
-        active_booking_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Started').count()
+        new_booking_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
+                                                 is_accepted_by_provider=False).count()
+        active_booking_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
+                                                    is_accepted_by_provider=True).count()
         completed_booking_obj = Booking.objects.filter(service_provider=service_provider_obj,
                                                        status='Completed').count()
         earning = 0
@@ -1145,7 +1149,37 @@ class ServiceProviderDashboard(APIView):
                 earning += 0
         return Response(
             {'total_bookings': booking_obj.count(), 'active_booking': active_booking_obj,
-             'completed_booking': completed_booking_obj, 'total_earning': earning})
+             'completed_booking': completed_booking_obj, 'total_earning': earning, 'new_booking_obj': new_booking_obj})
+
+
+class AcceptOrderServiceProviderView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        order = self.request.POST['order']
+        try:
+            booking_obj = Booking.objects.get(id=order)
+            booking_obj.is_accepted_by_provider = True
+            booking_obj.save()
+            return Response({'message': 'Order accepted successfully', 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
+
+
+class RejectOrderServiceProviderView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        order = self.request.POST['order']
+        try:
+            booking_obj = Booking.objects.get(id=order)
+            booking_obj.is_accepted_by_provider = False
+            booking_obj.save()
+            return Response({'message': 'Order rejected successfully', 'status': HTTP_200_OK})
+        except Exception as e:
+            return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
 
 class NewRequestView(APIView):
@@ -1213,7 +1247,7 @@ class UpdateBookingByServiceProvider(APIView):
                     body = f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!"
                     message_type = "orderUpdate"
                     # sound = 'notifications.mp3'
-                    respo = send_another(booking_obj.user.device_token, title, body,message_type)
+                    respo = send_another(booking_obj.user.device_token, title, body, message_type)
                     print(respo)
                 except Exception as e:
                     pass

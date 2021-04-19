@@ -6,7 +6,8 @@ from .views import CreateUser, LoginView, CheckUserExists, UpdateUserProfile, Ge
     GetSubCategory, GetServices, GetServiceDetail, GetUsersBooking, InquiryView, GetServiceName, ServiceProviderLogin, \
     ForgetPassword, ServiceProviderLogoutView, ServiceProviderDashboard, NewRequestView, NewBookingRequestDetail, \
     UpdateBookingByServiceProvider, ServiceProviderCompletedTasks, ServiceProviderOnGoingTasks, ProviderRegisterView, \
-    CouponList, ApplyCoupon, RemoveCoupoun,GuestUserToken
+    CouponList, ApplyCoupon, RemoveCoupoun, GuestUserToken, AcceptOrderServiceProviderView, \
+    RejectOrderServiceProviderView
 from django.urls import path
 from rest_framework.schemas import get_schema_view
 
@@ -62,6 +63,10 @@ urlpatterns = [
     path('service-provider-on-going-tasks/', ServiceProviderOnGoingTasks.as_view(),
          name='service-on-going-completed-tasks'),
     path('provider-register-from-user-app/', ProviderRegisterView.as_view(), name='provider-register-from-user-app'),
+    path('accept-order-service-provider/', AcceptOrderServiceProviderView.as_view(),
+         name='accept-order-service-provider'),
+    path('reject-order-service-provider/', RejectOrderServiceProviderView.as_view(),
+         name='reject-order-service-provider'),
     path('coupon-list/', CouponList.as_view(), name='coupon-list'),
     path('apply-coupon/', ApplyCoupon.as_view(), name='apply-coupon'),
     path('guest-user/', GuestUserToken.as_view(), name='guest-user'),
