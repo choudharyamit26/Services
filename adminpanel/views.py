@@ -225,20 +225,20 @@ class AssignServiceProvider(LoginRequiredMixin, CreateView):
         order_obj.save()
         service_provider_device_type = order_obj.service_provider.device_type
         service_provider_device_token = order_obj.service_provider.device_token
-        if service_provider_device_type == 'android':
-            data_message = {
-                "title": "New Message",
-                "body": f"You have received a new service request for order with order ID {order_obj.id}"
-            }
-            respo = send_to_one(service_provider_device_token, data_message)
-            print(respo)
-        else:
-            title = "New Message"
-            body = f"You have received a new service request for order with order ID {order_obj.id}"
-            # message_type = "NewMessage"
-            # sound = 'notifications.mp3'
-            respo = send_another(service_provider_device_token, title, body)
-            print(respo)
+        # if service_provider_device_type == 'android':
+        #     data_message = {
+        #         "title": "New Message",
+        #         "body": f"You have received a new service request for order with order ID {order_obj.id}"
+        #     }
+        #     respo = send_to_one(service_provider_device_token, data_message)
+        #     print(respo)
+        # else:
+        title = "New Message"
+        body = f"You have received a new service request for order with order ID {order_obj.id}"
+        # message_type = "NewMessage"
+        # sound = 'notifications.mp3'
+        respo = send_another(service_provider_device_token, title, body)
+        print(respo)
         messages.success(self.request, 'Service provider assigned successfully')
         return redirect("adminpanel:order-management")
 
@@ -260,24 +260,24 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         order_obj.save()
         user_device_type = order_obj.user.device_type
         user_device_token = order_obj.user.device_token
-        if user_device_type == 'android':
-            UserNotification.objects.create(user=order_obj.user, title='QUOTE',
-                                            body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it ')
-            data_message = {
-                "title": "New Message",
-                "body": f"You have received a quote for order with order ID {order_obj.id}"
-            }
-            respo = send_to_one(user_device_token, data_message)
-            print(respo)
-        else:
-            UserNotification.objects.create(user=order_obj.user, title='QUOTE',
-                                            body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it.')
-            title = "New Message"
-            body = f"You have received a quote for order with order ID {order_obj.id}"
-            message_type = "NewMessage"
-            # sound = 'notifications.mp3'
-            respo = send_another(user_device_token, title, body, message_type)
-            print(respo)
+        # if user_device_type == 'android':
+        #     UserNotification.objects.create(user=order_obj.user, title='QUOTE',
+        #                                     body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it ')
+        #     data_message = {
+        #         "title": "New Message",
+        #         "body": f"You have received a quote for order with order ID {order_obj.id}"
+        #     }
+        #     respo = send_to_one(user_device_token, data_message)
+        #     print(respo)
+        # else:
+        UserNotification.objects.create(user=order_obj.user, title='QUOTE',
+                                        body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it.')
+        title = "New Message"
+        body = f"You have received a quote for order with order ID {order_obj.id}"
+        message_type = "NewMessage"
+        # sound = 'notifications.mp3'
+        respo = send_another(user_device_token, title, body, message_type)
+        print(respo)
         return redirect("adminpanel:order-management")
 
 

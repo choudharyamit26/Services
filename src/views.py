@@ -490,19 +490,22 @@ class BookingView(APIView):
                     )
                     UserNotification.objects.create(user=app_user, title='New Order',
                                                     body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
-                    if booking.user.device_type == 'device_type':
-                        data_message = {
-                            "title": "New Order",
-                            "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                        }
-                        respo = send_to_one(booking.user.device_token, data_message)
-                    else:
+                    try:
+                    # if booking.user.device_type == 'device_type':
+                    #     data_message = {
+                    #         "title": "New Order",
+                    #         "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                    #     }
+                    #     respo = send_to_one(booking.user.device_token, data_message)
+                    # else:
                         title = "New Order"
                         body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
                         message_type = "NewMessage"
                         # sound = 'notifications.mp3'
                         respo = send_another(booking.user.device_token, title, body, message_type)
                         print(respo)
+                    except Exception as e:
+                        pass
                 else:
                     booking = Booking.objects.create(
                         user=app_user,
@@ -527,19 +530,22 @@ class BookingView(APIView):
                     )
                     UserNotification.objects.create(user=app_user, title='New Order',
                                                     body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
-                    if booking.user.device_type == 'device_type':
-                        data_message = {
-                            "title": "New Order",
-                            "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                        }
-                        respo = send_to_one(booking.user.device_token, data_message)
-                    else:
+                    try:
+                        # if booking.user.device_type == 'device_type':
+                        #     data_message = {
+                        #         "title": "New Order",
+                        #         "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                        #     }
+                        #     respo = send_to_one(booking.user.device_token, data_message)
+                        # else:
                         title = "New Order"
                         body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
                         message_type = "NewMessage"
                         # sound = 'notifications.mp3'
                         respo = send_another(booking.user.device_token, title, body, message_type)
                         print(respo)
+                    except Exception as e:
+                        pass
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
                     title='New Booking Request',
@@ -1201,7 +1207,16 @@ class UpdateBookingByServiceProvider(APIView):
                 booking_obj.image_2 = image_2
                 booking_obj.save()
                 UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
-                                                body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us! ')
+                                                body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!')
+                try:
+                    title = "ORDER STATUS UPDATE"
+                    body = f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!"
+                    # message_type = "NewMessage"
+                    # sound = 'notifications.mp3'
+                    respo = send_another(booking_obj.user.device_token, title, body)
+                    print(respo)
+                except Exception as e:
+                    pass
                 return Response({'message': 'Booking updated successfully', 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
