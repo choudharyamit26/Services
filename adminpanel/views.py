@@ -272,9 +272,9 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         # else:
         UserNotification.objects.create(user=order_obj.user, title='QUOTE',
                                         body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it.')
-        title = "New Message"
+        title = "Quote"
         body = f"You have received a quote for order with order ID {order_obj.id}"
-        message_type = "NewMessage"
+        message_type = "newQuote"
         # sound = 'notifications.mp3'
         respo = send_another(user_device_token, title, body, message_type)
         print(respo)

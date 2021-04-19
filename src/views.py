@@ -500,7 +500,7 @@ class BookingView(APIView):
                     # else:
                         title = "New Order"
                         body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                        message_type = "NewMessage"
+                        message_type = "NewOrder"
                         # sound = 'notifications.mp3'
                         respo = send_another(booking.user.device_token, title, body, message_type)
                         print(respo)
@@ -540,7 +540,7 @@ class BookingView(APIView):
                         # else:
                         title = "New Order"
                         body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                        message_type = "NewMessage"
+                        message_type = "NewOrder"
                         # sound = 'notifications.mp3'
                         respo = send_another(booking.user.device_token, title, body, message_type)
                         print(respo)
@@ -1211,9 +1211,9 @@ class UpdateBookingByServiceProvider(APIView):
                 try:
                     title = "ORDER STATUS UPDATE"
                     body = f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!"
-                    # message_type = "NewMessage"
+                    message_type = "orderUpdate"
                     # sound = 'notifications.mp3'
-                    respo = send_another(booking_obj.user.device_token, title, body)
+                    respo = send_another(booking_obj.user.device_token, title, body,message_type)
                     print(respo)
                 except Exception as e:
                     pass
