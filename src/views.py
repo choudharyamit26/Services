@@ -1239,6 +1239,7 @@ class UpdateBookingByServiceProvider(APIView):
         user = self.request.user
         service_provider = ServiceProvider.objects.get(email=user.email)
         serializer = UpdateBookingByServiceProviderSerializer(data=self.request.data)
+        print(self.request.POST)
         if serializer.is_valid():
             print(serializer.validated_data)
             id = serializer.validated_data['id']
