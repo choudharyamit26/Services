@@ -1240,6 +1240,7 @@ class UpdateBookingByServiceProvider(APIView):
         service_provider = ServiceProvider.objects.get(email=user.email)
         serializer = UpdateBookingByServiceProviderSerializer(data=self.request.data)
         if serializer.is_valid():
+            print(serializer.validated_data)
             id = serializer.validated_data['id']
             status = serializer.validated_data['status']
             image_1 = serializer.validated_data['image_1']
