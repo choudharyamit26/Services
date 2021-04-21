@@ -1530,7 +1530,8 @@ class NewRequestView(APIView):
         new_booking_list = []
         user = self.request.user
         service_provider_obj = ServiceProvider.objects.get(email=user.email)
-        bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted')
+        bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
+                                              is_accepted_by_provider=False)
         return Response({'data': bookings_obj.values(), 'status': HTTP_200_OK})
 
 
@@ -1546,7 +1547,8 @@ class NewBookingRequestDetail(APIView):
             id = serializer.validated_data['id']
             try:
                 booking_obj = Booking.objects.get(id=id)
-                return Response({'id': booking_obj.id, 'date': booking_obj.date,'time':booking_obj.time, 'status': booking_obj.status,
+                return Response({'id': booking_obj.id, 'date': booking_obj.date, 'time': booking_obj.time,
+                                 'status': booking_obj.status,
                                  'total': booking_obj.total, 'service_id': booking_obj.service.id,
                                  'service_name': booking_obj.service.service_name,
                                  'created_at': booking_obj.created_at,
@@ -1653,7 +1655,8 @@ class ServiceProviderOnGoingTasks(APIView):
         user = self.request.user
         service_provider = ServiceProvider.objects.get(email=user.email)
         try:
-            order_obj = Booking.objects.filter(service_provider=service_provider, status='Accepted')
+            order_obj = Booking.objects.filter(service_provider=service_provider, status='Accepted',
+                                               is_accepted_by_provider=True)
             orders = []
             for obj in order_obj:
                 try:
