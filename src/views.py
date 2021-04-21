@@ -1067,7 +1067,7 @@ class UpcomingBooking(APIView):
                 Q(user=app_user, status='Started') | Q(user=app_user, status='started')).order_by('-id')
             orders = []
             orders_arabic = []
-            if Settings.objects.get(user=user).language == 'en':
+            if Settings.objects.get(user=app_user).language == 'en':
                 for obj in order_obj:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
