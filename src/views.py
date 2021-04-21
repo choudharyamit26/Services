@@ -677,7 +677,7 @@ class BookingView(APIView):
                     )
                     if Settings.objects.get(user=app_user).language == 'en':
                         UserNotification.objects.create(user=app_user, title='New Order',
-                                                    body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
+                                                        body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
                     else:
                         UserNotification.objects.create(user=app_user, title='طلب جديد',
                                                         body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
@@ -1468,7 +1468,7 @@ class ServiceProviderDashboard(APIView):
         completed_booking_obj = Booking.objects.filter(service_provider=service_provider_obj,
                                                        status='Completed').count()
         earning = 0
-        for booking in booking_obj:
+        for booking in Booking.objects.filter(service_provider=service_provider_obj, status='Completed'):
             print('ID--->>', booking.id)
             print('Total--->>', booking.total)
             try:
@@ -1546,7 +1546,7 @@ class NewBookingRequestDetail(APIView):
             id = serializer.validated_data['id']
             try:
                 booking_obj = Booking.objects.get(id=id)
-                return Response({'id': booking_obj.id, 'date': booking_obj.date, 'status': booking_obj.status,
+                return Response({'id': booking_obj.id, 'date': booking_obj.date,'time':booking_obj.time, 'status': booking_obj.status,
                                  'total': booking_obj.total, 'service_id': booking_obj.service.id,
                                  'service_name': booking_obj.service.service_name,
                                  'created_at': booking_obj.created_at,
