@@ -26,6 +26,7 @@
                     <tr>
                         <th>S.No</th>
                         <th>Category Name</th>
+                        <th>Category Name Arabic</th>
                         <th>Image</th>
                         <th>Action</th>
 
@@ -36,6 +37,7 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{obj.category_name}}</td>
+                        <td>{{obj.category_name_arabic}}</td>
                         {% if obj.category_image %}
                         <td><img src="{{obj.category_image.url}}" alt="img" class="img-fluid"></td>
                         {% else %}

@@ -169,9 +169,11 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
         print(image)
         print(type(image))
         category_name = self.request.POST['category_name']
+        category_name_arabic = self.request.POST['category_name_arabic']
         Category.objects.create(
             category_image=image,
-            category_name=category_name.lower()
+            category_name=category_name.lower(),
+            category_name_arabic=category_name_arabic
         )
         messages.success(self.request, 'Category added successfully')
         return redirect("adminpanel:category-management")
@@ -270,10 +272,10 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         #     respo = send_to_one(user_device_token, data_message)
         #     print(respo)
         # else:
-        UserNotification.objects.create(user=order_obj.user, title='QUOTE',
-                                        body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it.')
-        title = "Quote"
-        body = f"You have received a quote for order with order ID {order_obj.id}"
+        UserNotification.objects.create(user=order_obj.user, title='OFFERED PRICE',
+                                        body=f'KEHEILAN sent you a offered price for Order Id -{order_obj.id}. Please accept it.')
+        title = "OFFERED PRICE"
+        body = f"You have received a offered price for order with order ID {order_obj.id}"
         message_type = "newQuote"
         # sound = 'notifications.mp3'
         respo = send_another(user_device_token, title, body, message_type)
@@ -476,7 +478,7 @@ class SubAdminDetail(LoginRequiredMixin, DetailView):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        return render(self.request, 'view-admin.html',{'object':User.objects.get(id=kwargs['pk'])})
+        return render(self.request, 'view-admin.html', {'object': User.objects.get(id=kwargs['pk'])})
 
 
 class DeleteSubAdmin(LoginRequiredMixin, View):
@@ -814,6 +816,7 @@ class AddSubCategory(LoginRequiredMixin, CreateView):
         SubCategory.objects.create(
             category=Category.objects.get(id=self.request.POST['category']),
             sub_category_name=self.request.POST['sub_category_name'].lower(),
+            sub_category_name_arabic=self.request.POST['sub_category_name_arabic'],
             sub_category_image=self.request.FILES.get('sub_category_image' or None),
         )
         messages.success(self.request, 'Sub Category added successfully')
@@ -933,6 +936,7 @@ class AddServices(LoginRequiredMixin, CreateView):
         category = self.request.POST['category']
         sub_category = self.request.POST['sub_category']
         service_name = self.request.POST['service_name']
+        service_name_arabic = self.request.POST['service_name_arabic']
         field_1 = self.request.POST['field_1']
         field_2 = self.request.POST['field_2']
         field_3 = self.request.POST['field_3']
@@ -943,6 +947,7 @@ class AddServices(LoginRequiredMixin, CreateView):
         Services.objects.create(category=Category.objects.get(id=category),
                                 sub_category=SubCategory.objects.get(id=sub_category),
                                 service_name=service_name.lower(),
+                                service_name_arabic=service_name_arabic,
                                 image_1=image_1, image_2=image_2, field_1=field_1, field_2=field_2, field_3=field_3,
                                 field_4=field_4, base_price=base_price)
         messages.success(self.request, 'Service added successfully')
@@ -959,7 +964,8 @@ class UpdateService(LoginRequiredMixin, UpdateView):
         service_obj = Services.objects.get(id=kwargs['pk'])
         return render(self.request, 'update-services.html',
                       {'category': Category.objects.all(), 'sub_category': SubCategory.objects.all(),
-                       'service_name': service_obj.service_name})
+                       'service_name': service_obj.service_name,
+                       'service_name_arabic': service_obj.service_name_arabic})
 
     def post(self, request, *args, **kwargs):
         # print(self.form_class.is_valid())
@@ -970,6 +976,7 @@ class UpdateService(LoginRequiredMixin, UpdateView):
         service_obj.category = Category.objects.get(id=self.request.POST['category'])
         service_obj.sub_category = SubCategory.objects.get(id=self.request.POST['sub_category'])
         service_obj.service_name = self.request.POST['service_name']
+        service_obj.service_name_arabic = self.request.POST['service_name_arabic']
         service_obj.image_1 = self.request.FILES['image_1']
         service_obj.image_2 = self.request.FILES['image_2']
         service_obj.save()

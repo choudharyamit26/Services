@@ -62,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Category(models.Model):
     """Category model"""
     category_name = models.CharField(default='', max_length=300)
+    category_name_arabic = models.CharField(default='', max_length=300)
     category_image = models.ImageField(upload_to='media', null=True, blank=True)
 
 
@@ -69,6 +70,7 @@ class SubCategory(models.Model):
     """Sub Category Model"""
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     sub_category_name = models.CharField(default='', max_length=300)
+    sub_category_name_arabic = models.CharField(default='', max_length=300)
     sub_category_image = models.ImageField(upload_to='media', null=True, blank=True)
 
 
@@ -77,6 +79,7 @@ class Services(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='services_category')
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     service_name = models.CharField(default='', max_length=256)
+    service_name_arabic = models.CharField(default='', max_length=256)
     field_1 = models.CharField(default='', max_length=256)
     field_2 = models.CharField(default='', max_length=256)
     field_3 = models.CharField(default='', max_length=256)

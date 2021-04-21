@@ -26,6 +26,7 @@
                     <tr>
                         <th>S.No</th>
                         <th>Sub Category Name</th>
+                        <th>Sub Category Name Arabic</th>
                         <th>Category Name</th>
                         <th>Image</th>
                         <th>Action</th>
@@ -37,6 +38,7 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{obj.sub_category_name}}</td>
+                        <td>{{obj.sub_category_name_arabic}}</td>
                         <td>{{obj.category.category_name}}</td>
                         {% if obj.sub_category_image %}
                         <td><img src="{{obj.sub_category_image.url}}" alt="img" class="img-fluid"></td>

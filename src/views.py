@@ -226,31 +226,58 @@ class HomeView(APIView):
         user = self.request.user
         user_id = AppUser.objects.get(user=user)
         service_list = []
+        service_list_arabic = []
         category_list = []
-        services = Services.objects.all()
-        categories = Category.objects.all()
-        for category in categories:
-            if category.category_image:
-                category_list.append({'id': category.id, 'category_name': category.category_name,
-                                      'category_image': category.category_image.url})
-            else:
-                category_list.append({'id': category.id, 'category_name': category.category_name,
-                                      'category_image': ''})
-        for service in services:
-            service_list.append(
-                {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
-                 'service_name': service.service_name, 'field_1': service.field_1,
-                 'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
-                 'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
+        category_list_arabic = []
         top_services = TopServices.objects.all()
         top_services_list = []
-        for object in top_services:
-            top_services_list.append(
-                {'id': object.service.id, 'service_name': object.service.service_name,
-                 'image_1': object.service.image_1.url,
-                 'image_2': object.service.image_2.url})
-        return Response({'services': service_list, 'top_services': top_services_list,
-                         'categories': category_list, 'status': HTTP_200_OK, 'lat': user_id.lat, 'long': user_id.lang})
+        top_services_list_arabic = []
+        services = Services.objects.all()
+        categories = Category.objects.all()
+        if Settings.objects.get(user=user_id).language == 'English':
+            for category in categories:
+                if category.category_image:
+                    category_list.append({'id': category.id, 'category_name': category.category_name,
+                                          'category_image': category.category_image.url})
+                else:
+                    category_list.append({'id': category.id, 'category_name': category.category_name,
+                                          'category_image': ''})
+            for service in services:
+                service_list.append(
+                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                     'service_name': service.service_name, 'field_1': service.field_1,
+                     'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                     'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
+            for object in top_services:
+                top_services_list.append(
+                    {'id': object.service.id, 'service_name': object.service.service_name,
+                     'image_1': object.service.image_1.url,
+                     'image_2': object.service.image_2.url})
+            return Response({'services': service_list, 'top_services': top_services_list,
+                             'categories': category_list, 'status': HTTP_200_OK, 'lat': user_id.lat,
+                             'long': user_id.lang})
+        else:
+            for category in categories:
+                if category.category_image:
+                    category_list_arabic.append({'id': category.id, 'category_name': category.category_name_arabic,
+                                                 'category_image': category.category_image.url})
+                else:
+                    category_list_arabic.append({'id': category.id, 'category_name': category.category_name_arabic,
+                                                 'category_image': ''})
+            for service in services:
+                service_list_arabic.append(
+                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                     'service_name': service.service_name_arabic, 'field_1': service.field_1,
+                     'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                     'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
+            for object in top_services:
+                top_services_list_arabic.append(
+                    {'id': object.service.id, 'service_name': object.service.service_name_arabic,
+                     'image_1': object.service.image_1.url,
+                     'image_2': object.service.image_2.url})
+            return Response({'services': service_list_arabic, 'top_services': top_services_list_arabic,
+                             'categories': category_list_arabic, 'status': HTTP_200_OK, 'lat': user_id.lat,
+                             'long': user_id.lang})
 
 
 class GetSubCategory(APIView):
@@ -259,21 +286,35 @@ class GetSubCategory(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = Settings.objects.get(user=user)
         category = self.request.query_params.get('category')
         print(category)
         sub_categories = SubCategory.objects.filter(category=category)
         sub_categories_list = []
-        for sub_category in sub_categories:
-            if sub_category.sub_category_image:
-                sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
-                                            'sub_category_name': sub_category.sub_category_name,
-                                            'sub_category_image': sub_category.sub_category_image
-                                           .url})
-            else:
-                sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
-                                            'sub_category_name': sub_category.sub_category_name,
-                                            'sub_category_image': ''})
-        return Response({'data': sub_categories_list, 'status': HTTP_200_OK})
+        sub_categories_list_arabic = []
+        if Settings.objects.get(user=app_user).language == 'English':
+            for sub_category in sub_categories:
+                if sub_category.sub_category_image:
+                    sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
+                                                'sub_category_name': sub_category.sub_category_name,
+                                                'sub_category_image': sub_category.sub_category_image.url})
+                else:
+                    sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
+                                                'sub_category_name': sub_category.sub_category_name,
+                                                'sub_category_image': ''})
+            return Response({'data': sub_categories_list, 'status': HTTP_200_OK})
+        else:
+            for sub_category in sub_categories:
+                if sub_category.sub_category_image:
+                    sub_categories_list_arabic.append({'id': sub_category.id, 'category_id': sub_category.category.id,
+                                                       'sub_category_name': sub_category.sub_category_name_arabic,
+                                                       'sub_category_image': sub_category.sub_category_image.url})
+                else:
+                    sub_categories_list_arabic.append({'id': sub_category.id, 'category_id': sub_category.category.id,
+                                                       'sub_category_name': sub_category.sub_category_name_arabic,
+                                                       'sub_category_image': ''})
+            return Response({'data': sub_categories_list_arabic, 'status': HTTP_200_OK})
 
 
 class GetServices(APIView):
@@ -282,25 +323,46 @@ class GetServices(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
         sub_category = self.request.query_params.get('sub_category')
         services = Services.objects.filter(sub_category=sub_category)
         service_list = []
-        for service in services:
-            ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
-            ratings = 0
-            for obj in RatingReview.objects.filter(order__service=service.id):
-                ratings += obj.rating
-            try:
-                average_ratings = ratings / ratings_obj
-            except Exception as e:
-                average_ratings = 0
-            service_list.append(
-                {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
-                 'service_name': service.service_name, 'field_1': service.field_1,
-                 'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
-                 'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url,
-                 'average_ratings': average_ratings, 'reviews': ratings_obj})
-        return Response({'data': service_list, 'status': HTTP_200_OK})
+        service_list_arabic = []
+        if Settings.objects.get(user=user).language == 'English':
+            for service in services:
+                ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
+                ratings = 0
+                for obj in RatingReview.objects.filter(order__service=service.id):
+                    ratings += obj.rating
+                try:
+                    average_ratings = ratings / ratings_obj
+                except Exception as e:
+                    average_ratings = 0
+                service_list.append(
+                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                     'service_name': service.service_name, 'field_1': service.field_1,
+                     'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                     'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url,
+                     'average_ratings': average_ratings, 'reviews': ratings_obj})
+            return Response({'data': service_list, 'status': HTTP_200_OK})
+        else:
+            for service in services:
+                ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
+                ratings = 0
+                for obj in RatingReview.objects.filter(order__service=service.id):
+                    ratings += obj.rating
+                try:
+                    average_ratings = ratings / ratings_obj
+                except Exception as e:
+                    average_ratings = 0
+                service_list_arabic.append(
+                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                     'service_name': service.service_name_arabic, 'field_1': service.field_1,
+                     'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                     'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url,
+                     'average_ratings': average_ratings, 'reviews': ratings_obj})
+            return Response({'data': service_list, 'status': HTTP_200_OK})
 
 
 class GetServiceDetail(APIView):
@@ -309,6 +371,8 @@ class GetServiceDetail(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
         id = self.request.query_params.get('id')
         try:
             service_obj = Services.objects.get(id=id)
@@ -321,13 +385,22 @@ class GetServiceDetail(APIView):
                 average_ratings = ratings / ratings_obj
             except Exception as e:
                 average_ratings = 0
-            return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
-                             'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
-                             'field_3': service_obj.field_3,
-                             'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
-                             'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
-                             'status': HTTP_200_OK,
-                             'rating_count': ratings_obj, 'average_rating': average_ratings})
+            if Settings.objects.get(user=app_user).language == 'English':
+                return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
+                                 'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
+                                 'field_3': service_obj.field_3,
+                                 'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                                 'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
+                                 'status': HTTP_200_OK,
+                                 'rating_count': ratings_obj, 'average_rating': average_ratings})
+            else:
+                return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name_arabic,
+                                 'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
+                                 'field_3': service_obj.field_3,
+                                 'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                                 'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
+                                 'status': HTTP_200_OK,
+                                 'rating_count': ratings_obj, 'average_rating': average_ratings})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -337,59 +410,113 @@ class SearchingServices(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
         searched_value = self.request.query_params.get('search')
         try:
             services = Services.objects.filter(
-                Q(category__category_name__icontains=searched_value.lower()) | Q(
-                    service_name__icontains=searched_value.lower()))
+                Q(category__category_name__icontains=searched_value.lower()) |
+                Q(service_name__icontains=searched_value.lower()) |
+                Q(category__category_name_arabic__icontains=searched_value) |
+                Q(service_name_arabic__icontains=searched_value)
+            )
             print(services)
             # categories = Category.objects.filter(category_name__icontains=searched_value)
             categories = []
+            categories_list_arabic = []
             service_list = []
-            for service_obj in services:
-                ratings_obj = RatingReview.objects.filter(order__service=service_obj.id).count()
-                ratings = 0
-                for obj in RatingReview.objects.filter(order__service=service_obj.id):
-                    ratings += obj.rating
-                try:
-                    average_ratings = ratings / ratings_obj
-                except Exception as e:
-                    average_ratings = 0
-                service_list.append({'service_id': service_obj.id, 'service_name': service_obj.service_name,
-                                     'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
-                                     'field_3': service_obj.field_3,
-                                     'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
-                                     'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
-                                     'status': HTTP_200_OK,
-                                     'rating_count': ratings_obj, 'average_rating': average_ratings})
-            for service in services:
-                c = service.category.id
-                ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
-                ratings = 0
-                for obj in RatingReview.objects.filter(order__service=service.id):
-                    ratings += obj.rating
-                try:
-                    average_ratings = ratings / ratings_obj
-                except Exception as e:
-                    average_ratings = 0
-                if Category.objects.get(id=c).category_image:
-                    categories.append(
-                        {'id': Category.objects.get(id=c).id,
-                         'category_name': Category.objects.get(id=c).category_name,
-                         'category_image': Category.objects.get(id=c).category_image.url,
-                         'average_ratings': average_ratings, 'service_id': service.id,
-                         'service_name': service.service_name, 'reviews_count': ratings_obj})
-                else:
-                    categories.append(
-                        {'id': Category.objects.get(id=c).id,
-                         'category_name': Category.objects.get(id=c).category_name,
-                         'category_image': '', 'service_id': service.id,
-                         'service_name': service.service_name, 'average_ratings': average_ratings,
-                         'reviews_count': ratings_obj})
-            service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
-            return Response(
-                {'services': service_list, 'service_providers': service_providers.values(),
-                 'categories': categories, 'status': HTTP_200_OK})
+            service_list_arabic = []
+            if Settings.objects.get(user=app_user).language == 'English':
+                for service_obj in services:
+                    ratings_obj = RatingReview.objects.filter(order__service=service_obj.id).count()
+                    ratings = 0
+                    for obj in RatingReview.objects.filter(order__service=service_obj.id):
+                        ratings += obj.rating
+                    try:
+                        average_ratings = ratings / ratings_obj
+                    except Exception as e:
+                        average_ratings = 0
+                    service_list.append({'service_id': service_obj.id, 'service_name': service_obj.service_name,
+                                         'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
+                                         'field_3': service_obj.field_3,
+                                         'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                                         'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
+                                         'status': HTTP_200_OK,
+                                         'rating_count': ratings_obj, 'average_rating': average_ratings})
+                for service in services:
+                    c = service.category.id
+                    ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
+                    ratings = 0
+                    for obj in RatingReview.objects.filter(order__service=service.id):
+                        ratings += obj.rating
+                    try:
+                        average_ratings = ratings / ratings_obj
+                    except Exception as e:
+                        average_ratings = 0
+                    if Category.objects.get(id=c).category_image:
+                        categories.append(
+                            {'id': Category.objects.get(id=c).id,
+                             'category_name': Category.objects.get(id=c).category_name,
+                             'category_image': Category.objects.get(id=c).category_image.url,
+                             'average_ratings': average_ratings, 'service_id': service.id,
+                             'service_name': service.service_name, 'reviews_count': ratings_obj})
+                    else:
+                        categories.append(
+                            {'id': Category.objects.get(id=c).id,
+                             'category_name': Category.objects.get(id=c).category_name,
+                             'category_image': '', 'service_id': service.id,
+                             'service_name': service.service_name, 'average_ratings': average_ratings,
+                             'reviews_count': ratings_obj})
+                service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
+                return Response(
+                    {'services': service_list, 'service_providers': service_providers.values(),
+                     'categories': categories, 'status': HTTP_200_OK})
+            else:
+                for service_obj in services:
+                    ratings_obj = RatingReview.objects.filter(order__service=service_obj.id).count()
+                    ratings = 0
+                    for obj in RatingReview.objects.filter(order__service=service_obj.id):
+                        ratings += obj.rating
+                    try:
+                        average_ratings = ratings / ratings_obj
+                    except Exception as e:
+                        average_ratings = 0
+                    service_list_arabic.append(
+                        {'service_id': service_obj.id, 'service_name': service_obj.service_name_arabic,
+                         'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
+                         'field_3': service_obj.field_3,
+                         'field_4': service_obj.field_4, 'base_price': service_obj.base_price,
+                         'image_1': service_obj.image_1.url, 'image_2': service_obj.image_2.url,
+                         'status': HTTP_200_OK,
+                         'rating_count': ratings_obj, 'average_rating': average_ratings})
+                for service in services:
+                    c = service.category.id
+                    ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
+                    ratings = 0
+                    for obj in RatingReview.objects.filter(order__service=service.id):
+                        ratings += obj.rating
+                    try:
+                        average_ratings = ratings / ratings_obj
+                    except Exception as e:
+                        average_ratings = 0
+                    if Category.objects.get(id=c).category_image:
+                        categories_list_arabic.append(
+                            {'id': Category.objects.get(id=c).id,
+                             'category_name': Category.objects.get(id=c).category_name_arabic,
+                             'category_image': Category.objects.get(id=c).category_image.url,
+                             'average_ratings': average_ratings, 'service_id': service.id,
+                             'service_name': service.service_name_arabic, 'reviews_count': ratings_obj})
+                    else:
+                        categories_list_arabic.append(
+                            {'id': Category.objects.get(id=c).id,
+                             'category_name': Category.objects.get(id=c).category_name_arabic,
+                             'category_image': '', 'service_id': service.id,
+                             'service_name': service.service_name_arabic, 'average_ratings': average_ratings,
+                             'reviews_count': ratings_obj})
+                service_providers = ServiceProvider.objects.filter(services__service_name__icontains=searched_value)
+                return Response(
+                    {'services': service_list_arabic, 'service_providers': service_providers.values(),
+                     'categories': categories_list_arabic, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -577,69 +704,146 @@ class GetBookingDetail(APIView):
             # booking_id = serializer.validated_data.get('id')
             try:
                 booking = Booking.objects.get(user=app_user, id=booking_id)
-                try:
-                    if booking.promocode_applied:
-                        return Response(
-                            {'id': booking.id, 'service_id': booking.service.id,
-                             'service_name': booking.service.service_name, 'quote': booking.quote,
-                             'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
-                             'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address, 'base_price': booking.service.base_price,
-                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                             'booked_at': booking.created_at,
-                             'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
-                             'promocode_name': booking.promocode,
-                             'promocode_status': booking.promocode_applied,
-                             'status': HTTP_200_OK})
-                    else:
-                        return Response(
-                            {'id': booking.id, 'service_id': booking.service.id,
-                             'service_name': booking.service.service_name, 'quote': booking.quote,
-                             'service_provider_name': booking.service_provider.full_name, 'booking_date': booking.date,
-                             'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address, 'base_price': booking.service.base_price,
-                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                             'booked_at': booking.created_at,
-                             'promocode_id': '',
-                             'promocode_name': booking.promocode,
-                             'promocode_status': booking.promocode_applied,
-                             'status': HTTP_200_OK})
-                except Exception as e:
-                    if booking.promocode_applied:
-                        return Response(
-                            {'id': booking.id, 'service_id': booking.service.id,
-                             'service_name': booking.service.service_name, 'quote': booking.quote,
-                             'service_provider_id': '', 'booking_date': booking.date,
-                             'booking_time': booking.time, 'address': booking.address,
-                             'default_address': booking.default_address, 'base_price': booking.service.base_price,
-                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                             'booked_at': booking.created_at,
-                             'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
-                             'promocode_name': booking.promocode,
-                             'promocode_status': booking.promocode_applied,
-                             'status': HTTP_200_OK})
-                    else:
-                        return Response(
-                            {'id': booking.id, 'service_id': booking.service.id,
-                             'service_name': booking.service.service_name, 'quote': booking.quote,
-                             'service_provider_id': '', 'booking_date': booking.date,
-                             'booking_time': booking.time, 'address': booking.address,
-                             'base_price': booking.service.base_price,
-                             'default_address': booking.default_address,
-                             'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                             'discount': booking.discount, 'total': booking.total, 'requirement': booking.requirement,
-                             'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
-                             'booked_at': booking.created_at,
-                             'promocode_id': '',
-                             'promocode_name': booking.promocode,
-                             'promocode_status': booking.promocode_applied,
-                             'status': HTTP_200_OK})
+                if Settings.objects.get(user=app_user).language == 'English':
+                    try:
+                        if booking.promocode_applied:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name, 'quote': booking.quote,
+                                 'service_provider_name': booking.service_provider.full_name,
+                                 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'default_address': booking.default_address, 'base_price': booking.service.base_price,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                        else:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name, 'quote': booking.quote,
+                                 'service_provider_name': booking.service_provider.full_name,
+                                 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'default_address': booking.default_address, 'base_price': booking.service.base_price,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': '',
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                    except Exception as e:
+                        if booking.promocode_applied:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name, 'quote': booking.quote,
+                                 'service_provider_id': '', 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'default_address': booking.default_address, 'base_price': booking.service.base_price,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                        else:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name, 'quote': booking.quote,
+                                 'service_provider_id': '', 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'base_price': booking.service.base_price,
+                                 'default_address': booking.default_address,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': '',
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                else:
+                    try:
+                        if booking.promocode_applied:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name_arabic, 'quote': booking.quote,
+                                 'service_provider_name': booking.service_provider.full_name,
+                                 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'default_address': booking.default_address, 'base_price': booking.service.base_price,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                        else:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name_arabic, 'quote': booking.quote,
+                                 'service_provider_name': booking.service_provider.full_name,
+                                 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'default_address': booking.default_address, 'base_price': booking.service.base_price,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': '',
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                    except Exception as e:
+                        if booking.promocode_applied:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name_arabic, 'quote': booking.quote,
+                                 'service_provider_id': '', 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'default_address': booking.default_address, 'base_price': booking.service.base_price,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': OffersAndDiscount.objects.get(coupon_code=booking.promocode).id,
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
+                        else:
+                            return Response(
+                                {'id': booking.id, 'service_id': booking.service.id,
+                                 'service_name': booking.service.service_name_arabic, 'quote': booking.quote,
+                                 'service_provider_id': '', 'booking_date': booking.date,
+                                 'booking_time': booking.time, 'address': booking.address,
+                                 'base_price': booking.service.base_price,
+                                 'default_address': booking.default_address,
+                                 'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'requirement': booking.requirement,
+                                 'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
+                                 'booked_at': booking.created_at,
+                                 'promocode_id': '',
+                                 'promocode_name': booking.promocode,
+                                 'promocode_status': booking.promocode_applied,
+                                 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_200_OK})
         else:
@@ -652,6 +856,8 @@ class ContactUsView(APIView):
     model = ContactUs
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
         return Response(
             {'phone_number': ContactUs.objects.all().first().phone_number,
              'email': ContactUs.objects.all().first().email, 'status': HTTP_200_OK})
@@ -813,13 +1019,24 @@ class UpcomingBooking(APIView):
             order_obj = Booking.objects.filter(
                 Q(user=app_user, status='Started') | Q(user=app_user, status='started')).order_by('-id')
             orders = []
-            for obj in order_obj:
-                orders.append(
-                    {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                     'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
-                     'date': obj.date, 'time': obj.time,
-                     'address': obj.address, 'booking_status': obj.status})
-            return Response({'data': orders, 'status': HTTP_200_OK})
+            orders_arabic = []
+            if Settings.objects.get(user=user).language == 'English':
+                for obj in order_obj:
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status})
+                return Response({'data': orders, 'status': HTTP_200_OK})
+            else:
+                for obj in order_obj:
+                    orders_arabic.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name_arabic,
+                         'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status})
+                return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -835,27 +1052,54 @@ class PastBooking(APIView):
         try:
             order_obj = Booking.objects.filter(user=app_user, status='Completed').order_by('-id')
             orders = []
+            orders_arabic = []
             # try:
             #     for obj in order_obj:
             #         print(obj)
             # except Exception as e:
             #     print(e)
-            for obj in order_obj:
-                try:
-                    rating = RatingReview.objects.get(order=obj.id)
-                    orders.append(
-                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price, 'price': obj.total,
-                         'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
-                         'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
-                         'review': rating.reviews, 'rating_status': True})
-                except Exception as e:
-                    orders.append(
-                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price, 'price': obj.total,
-                         'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
-                         'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
-            return Response({'data': orders, 'status': HTTP_200_OK})
+            if Settings.objects.get(user=app_user).language == 'English':
+                for obj in order_obj:
+                    try:
+                        rating = RatingReview.objects.get(order=obj.id)
+                        orders.append(
+                            {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'price': obj.total,
+                             'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
+                             'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
+                             'review': rating.reviews, 'rating_status': True})
+                    except Exception as e:
+                        orders.append(
+                            {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'price': obj.total,
+                             'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
+                             'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
+                return Response({'data': orders, 'status': HTTP_200_OK})
+            else:
+                for obj in order_obj:
+                    try:
+                        rating = RatingReview.objects.get(order=obj.id)
+                        orders_arabic.append(
+                            {'id': obj.id, 'service_name': obj.service.service_name_arabic,
+                             'image_1': obj.service.image_1.url,
+                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'price': obj.total,
+                             'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
+                             'service_id': obj.service.id,
+                             'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
+                             'review': rating.reviews, 'rating_status': True})
+                    except Exception as e:
+                        orders_arabic.append(
+                            {'id': obj.id, 'service_name': obj.service.service_name_arabic,
+                             'image_1': obj.service.image_1.url,
+                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'price': obj.total,
+                             'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
+                             'service_id': obj.service.id,
+                             'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
+                return Response({'data': orders_arabic, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -871,13 +1115,24 @@ class OnGoingBooking(APIView):
         try:
             order_obj = Booking.objects.filter(user=app_user, status='Accepted').order_by('-id')
             orders = []
-            for obj in order_obj:
-                orders.append(
-                    {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                     'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
-                     'date': obj.date, 'time': obj.time,
-                     'address': obj.address, 'booking_status': obj.status})
-            return Response({'data': orders, 'status': HTTP_200_OK})
+            orders_arabic = []
+            if Settings.objects.get(user=app_user).language == 'English':
+                for obj in order_obj:
+                    orders.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status})
+                return Response({'data': orders, 'status': HTTP_200_OK})
+            else:
+                for obj in order_obj:
+                    orders_arabic.append(
+                        {'id': obj.id, 'service_name': obj.service.service_name_arabic,
+                         'image_1': obj.service.image_1.url,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
+                         'address': obj.address, 'booking_status': obj.status})
+                return Response({'data': orders_arabic, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -972,7 +1227,7 @@ class NotificationList(APIView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         app_user = AppUser.objects.get(user=user)
-        notifications = UserNotification.objects.filter(user=app_user, read=False)
+        notifications = UserNotification.objects.filter(user=app_user, read=False).order_by('-id')
         notification_list = []
         for notification in notifications:
             notification_list.append(
@@ -1025,8 +1280,29 @@ class GetServiceName(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
         services = Services.objects.all()
-        return Response({'data': services.values(), 'status': HTTP_200_OK})
+        service_list = []
+        service_list_arabic = []
+        if Settings.objects.get(user=app_user).language == 'English':
+            for service in services:
+                service_list.append(
+                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                     'service_name': service.service_name, 'field_1': service.field_1,
+                     'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                     'base_price': service.base_price,
+                     'image_1': service.image_1.url, 'image_2': service.image_2.url})
+            return Response({'data': service_list, 'status': HTTP_200_OK})
+        else:
+            for service in services:
+                service_list_arabic.append(
+                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                     'service_name': service.service_name_arabic, 'field_1': service.field_1,
+                     'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
+                     'base_price': service.base_price,
+                     'image_1': service.image_1.url, 'image_2': service.image_2.url})
+                return Response({'data': service_list_arabic, 'status': HTTP_200_OK})
 
 
 class ServiceProviderLogin(APIView):
@@ -1057,7 +1333,8 @@ class ServiceProviderLogin(APIView):
                             service_provider.device_type = device_type
                             service_provider.save()
                             return Response(
-                                {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
+                                {'message': "Logged in successfully", "token": token[0].key,
+                                 "id": service_provider.id,
                                  "full_name": service_provider.full_name,
                                  'status': HTTP_200_OK})
                     except Exception as e:
@@ -1071,7 +1348,8 @@ class ServiceProviderLogin(APIView):
                             service_provider.device_type = device_type
                             service_provider.save()
                             return Response(
-                                {'message': "Logged in successfully", "token": token[0].key, "id": service_provider.id,
+                                {'message': "Logged in successfully", "token": token[0].key,
+                                 "id": service_provider.id,
                                  "full_name": service_provider.full_name,
                                  'status': HTTP_200_OK})
                 else:
@@ -1149,7 +1427,8 @@ class ServiceProviderDashboard(APIView):
                 earning += 0
         return Response(
             {'total_bookings': booking_obj.count(), 'active_booking': active_booking_obj,
-             'completed_booking': completed_booking_obj, 'total_earning': earning, 'new_booking_obj': new_booking_obj})
+             'completed_booking': completed_booking_obj, 'total_earning': earning,
+             'new_booking_obj': new_booking_obj})
 
 
 class AcceptOrderServiceProviderView(APIView):
@@ -1286,13 +1565,15 @@ class ServiceProviderCompletedTasks(APIView):
                     rating = RatingReview.objects.get(order=obj.id)
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
                 except Exception as e:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
@@ -1315,13 +1596,15 @@ class ServiceProviderOnGoingTasks(APIView):
                     rating = RatingReview.objects.get(order=obj.id)
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
                 except Exception as e:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date, 'time': obj.time,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})
         except Exception as e:
@@ -1348,7 +1631,8 @@ class ProviderRegisterView(APIView):
                 password = serializer.validated_data['password']
                 ProviderRegistration.objects.create(user=app_user, image=image,
                                                     service_provider_name=service_provider_name,
-                                                    country_code=country_code, phone_number=phone_number, email=email,
+                                                    country_code=country_code, phone_number=phone_number,
+                                                    email=email,
                                                     password=password)
                 return Response(
                     {'message': "Provider registration request submitted successfully", 'status': HTTP_200_OK})
