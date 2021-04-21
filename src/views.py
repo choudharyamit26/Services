@@ -675,8 +675,12 @@ class BookingView(APIView):
                         image_1=image_1,
                         image_2=image_2
                     )
-                    UserNotification.objects.create(user=app_user, title='New Order',
+                    if Settings.objects.get(user=app_user).language == 'en':
+                        UserNotification.objects.create(user=app_user, title='New Order',
                                                     body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
+                    else:
+                        UserNotification.objects.create(user=app_user, title='طلب جديد',
+                                                        body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
                     try:
                         # if booking.user.device_type == 'device_type':
                         #     data_message = {
@@ -685,18 +689,20 @@ class BookingView(APIView):
                         #     }
                         #     respo = send_to_one(booking.user.device_token, data_message)
                         # else:
-                        title = "New Order"
-                        body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                        message_type = "NewOrder"
-                        # sound = 'notifications.mp3'
-                        respo = send_another(booking.user.device_token, title, body, message_type)
-                        print(respo)
-                        title = "طلب جديد"
-                        body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
-                        message_type = "NewOrder"
-                        # sound = 'notifications.mp3'
-                        respo = send_another(booking.user.device_token, title, body, message_type)
-                        print(respo)
+                        if Settings.objects.get(user=app_user).language == 'en':
+                            title = "New Order"
+                            body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                            message_type = "NewOrder"
+                            # sound = 'notifications.mp3'
+                            respo = send_another(booking.user.device_token, title, body, message_type)
+                            print(respo)
+                        else:
+                            title = "طلب جديد"
+                            body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
+                            message_type = "NewOrder"
+                            # sound = 'notifications.mp3'
+                            respo = send_another(booking.user.device_token, title, body, message_type)
+                            print(respo)
                     except Exception as e:
                         pass
                 AdminNotifications.objects.create(
@@ -1001,15 +1007,26 @@ class UpdateOrderStatus(APIView):
             order_obj = Booking.objects.get(id=order_id)
             order_obj.status = status
             order_obj.save()
-            UserNotification.objects.create(user=order_obj.user, title='ORDER STATUS UPDATE',
-                                            body=f'Status of service request with Order Id {order_obj.id} has been updated to {order_obj.status}.')
-            AdminNotifications.objects.create(
-                user=User.objects.get(email='admin@email.com'),
-                title='Booking Update',
-                body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
-                                                                                          order_obj.status)
-            )
-            return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
+            if Settings.objects.get(user=order_obj.user).language == 'en':
+                UserNotification.objects.create(user=order_obj.user, title='ORDER STATUS UPDATE',
+                                                body=f'Status of service request with Order Id {order_obj.id} has been updated to {order_obj.status}.')
+                AdminNotifications.objects.create(
+                    user=User.objects.get(email='admin@email.com'),
+                    title='Booking Update',
+                    body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
+                                                                                              order_obj.status)
+                )
+                return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
+            else:
+                UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
+                                                body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
+                AdminNotifications.objects.create(
+                    user=User.objects.get(email='admin@email.com'),
+                    title='Booking Update',
+                    body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
+                                                                                              order_obj.status)
+                )
+                return Response({'message': 'تم تحديث الطلب بنجاح', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -1020,6 +1037,8 @@ class ApplyPromoCodeView(APIView):
     model = Booking
 
     def post(self, request, *args, **kwargs):
+        user = self.request.user
+        app_user = AppUser.objects.get(user=user)
         order_id = self.request.POST['id']
         promocode = self.request.POST['promocode']
         try:
@@ -1027,7 +1046,10 @@ class ApplyPromoCodeView(APIView):
             order_obj.promocode = promocode
             order_obj.promocode_applied = True
             order_obj.save()
-            return Response({'message': 'Promocode applied successfully', 'status': HTTP_200_OK})
+            if Settings.objects.get(user=app_user).language == 'en':
+                return Response({'message': 'Promocode applied successfully', 'status': HTTP_200_OK})
+            else:
+                return Response({'message': 'تم تطبيق Promocode بنجاح', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -1179,7 +1201,10 @@ class RatingAndReviews(APIView):
             rating = serializer.validated_data['rating']
             RatingReview.objects.create(user=app_user, order=Booking.objects.get(id=order), reviews=reviews,
                                         rating=rating)
-            return Response({'message': 'Rating submitted successfully', 'status': HTTP_200_OK})
+            if Settings.objects.get(user=app_user).language == 'en':
+                return Response({'message': 'Rating submitted successfully', 'status': HTTP_200_OK})
+            else:
+                return Response({'message': 'تم إرسال التقييم بنجاح', 'status': HTTP_200_OK})
         else:
             return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
 
@@ -1285,7 +1310,7 @@ class UpdateNotification(APIView):
         for notification in notifications:
             notification.read = True
             notification.save()
-        return Response({'message': 'Notifications updates successfully', 'status': HTTP_200_OK})
+        return Response({'message': 'Notifications updated successfully', 'status': HTTP_200_OK})
 
 
 class GetUsersBooking(APIView):
@@ -1557,17 +1582,30 @@ class UpdateBookingByServiceProvider(APIView):
                 booking_obj.image_1 = image_1
                 booking_obj.image_2 = image_2
                 booking_obj.save()
-                UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
-                                                body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!')
-                try:
-                    title = "ORDER STATUS UPDATE"
-                    body = f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!"
-                    message_type = "orderUpdate"
-                    # sound = 'notifications.mp3'
-                    respo = send_another(booking_obj.user.device_token, title, body, message_type)
-                    print(respo)
-                except Exception as e:
-                    pass
+                if Settings.objects.get(user=booking_obj.user).language == 'en':
+                    UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
+                                                    body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!')
+                    try:
+                        title = "ORDER STATUS UPDATE"
+                        body = f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!"
+                        message_type = "orderUpdate"
+                        # sound = 'notifications.mp3'
+                        respo = send_another(booking_obj.user.device_token, title, body, message_type)
+                        print(respo)
+                    except Exception as e:
+                        pass
+                else:
+                    UserNotification.objects.create(user=booking_obj.user, title='تحديث حالة الطلب',
+                                                    body=f'الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!')
+                    try:
+                        title = "تحديث حالة الطلب"
+                        body = f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!"
+                        message_type = "orderUpdate"
+                        # sound = 'notifications.mp3'
+                        respo = send_another(booking_obj.user.device_token, title, body, message_type)
+                        print(respo)
+                    except Exception as e:
+                        pass
                 return Response({'message': 'Booking updated successfully', 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
@@ -1660,8 +1698,12 @@ class ProviderRegisterView(APIView):
                                                     country_code=country_code, phone_number=phone_number,
                                                     email=email,
                                                     password=password)
-                return Response(
-                    {'message': "Provider registration request submitted successfully", 'status': HTTP_200_OK})
+                if Settings.objects.get(user=app_user).language == 'en':
+                    return Response(
+                        {'message': "Provider registration request submitted successfully", 'status': HTTP_200_OK})
+                else:
+                    return Response(
+                        {'message': "تم إرسال طلب تسجيل الموفر بنجاح", 'status': HTTP_200_OK})
             else:
                 return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
         except Exception as e:
