@@ -167,9 +167,14 @@ class UpdateUserProfile(APIView):
                 print(profile_pic)
                 app_user.profile_pic = profile_pic
                 app_user.save()
-                UserNotification.objects.create(user=app_user, title='Profile pic update',
-                                                body='Your profile pic has been updated successfully')
-                return Response({'message': 'Profile updated successfully', 'status': HTTP_200_OK})
+                if Settings.objects.get(user=app_user).language == 'English':
+                    UserNotification.objects.create(user=app_user, title='Profile pic update',
+                                                    body='Your profile pic has been updated successfully')
+                    return Response({'message': 'Profile updated successfully', 'status': HTTP_200_OK})
+                else:
+                    UserNotification.objects.create(user=app_user, title='تحديث الملف الشخصي الموافقة المسبقة عن علم',
+                                                    body='تم تحديث صورة ملف التعريف الخاص بك بنجاح')
+                    return Response({'message': 'تم تحديث الملف الشخصي بنجاح', 'status': HTTP_200_OK})
             else:
                 return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
         except Exception as e:
@@ -206,7 +211,10 @@ class UpdateUserLanguage(APIView):
                 settings_obj = Settings.objects.get(user=app_user)
                 settings_obj.language = language
                 settings_obj.save()
-                return Response({'message': 'Language updated successfully', 'status': HTTP_200_OK})
+                if Settings.objects.get(user=app_user).language == 'English':
+                    return Response({'message': 'Language updated successfully', 'status': HTTP_200_OK})
+                else:
+                    return Response({'message': 'تم تحديث اللغة بنجاح', 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
         else:
@@ -329,7 +337,7 @@ class GetServices(APIView):
         services = Services.objects.filter(sub_category=sub_category)
         service_list = []
         service_list_arabic = []
-        if Settings.objects.get(user=user).language == 'English':
+        if Settings.objects.get(user=app_user).language == 'English':
             for service in services:
                 ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
                 ratings = 0
