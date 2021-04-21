@@ -167,7 +167,7 @@ class UpdateUserProfile(APIView):
                 print(profile_pic)
                 app_user.profile_pic = profile_pic
                 app_user.save()
-                if Settings.objects.get(user=app_user).language == 'English':
+                if Settings.objects.get(user=app_user).language == 'en':
                     UserNotification.objects.create(user=app_user, title='Profile pic update',
                                                     body='Your profile pic has been updated successfully')
                     return Response({'message': 'Profile updated successfully', 'status': HTTP_200_OK})
@@ -211,7 +211,7 @@ class UpdateUserLanguage(APIView):
                 settings_obj = Settings.objects.get(user=app_user)
                 settings_obj.language = language
                 settings_obj.save()
-                if Settings.objects.get(user=app_user).language == 'English':
+                if Settings.objects.get(user=app_user).language == 'en':
                     return Response({'message': 'Language updated successfully', 'status': HTTP_200_OK})
                 else:
                     return Response({'message': 'تم تحديث اللغة بنجاح', 'status': HTTP_200_OK})
@@ -242,7 +242,7 @@ class HomeView(APIView):
         top_services_list_arabic = []
         services = Services.objects.all()
         categories = Category.objects.all()
-        if Settings.objects.get(user=user_id).language == 'English':
+        if Settings.objects.get(user=user_id).language == 'en':
             for category in categories:
                 if category.category_image:
                     category_list.append({'id': category.id, 'category_name': category.category_name,
@@ -301,7 +301,7 @@ class GetSubCategory(APIView):
         sub_categories = SubCategory.objects.filter(category=category)
         sub_categories_list = []
         sub_categories_list_arabic = []
-        if Settings.objects.get(user=app_user).language == 'English':
+        if Settings.objects.get(user=app_user).language == 'en':
             for sub_category in sub_categories:
                 if sub_category.sub_category_image:
                     sub_categories_list.append({'id': sub_category.id, 'category_id': sub_category.category.id,
@@ -337,7 +337,7 @@ class GetServices(APIView):
         services = Services.objects.filter(sub_category=sub_category)
         service_list = []
         service_list_arabic = []
-        if Settings.objects.get(user=app_user).language == 'English':
+        if Settings.objects.get(user=app_user).language == 'en':
             for service in services:
                 ratings_obj = RatingReview.objects.filter(order__service=service.id).count()
                 ratings = 0
@@ -393,7 +393,7 @@ class GetServiceDetail(APIView):
                 average_ratings = ratings / ratings_obj
             except Exception as e:
                 average_ratings = 0
-            if Settings.objects.get(user=app_user).language == 'English':
+            if Settings.objects.get(user=app_user).language == 'en':
                 return Response({'service_id': service_obj.id, 'service_name': service_obj.service_name,
                                  'field_1': service_obj.field_1, 'field_2': service_obj.field_2,
                                  'field_3': service_obj.field_3,
@@ -434,7 +434,7 @@ class SearchingServices(APIView):
             categories_list_arabic = []
             service_list = []
             service_list_arabic = []
-            if Settings.objects.get(user=app_user).language == 'English':
+            if Settings.objects.get(user=app_user).language == 'en':
                 for service_obj in services:
                     ratings_obj = RatingReview.objects.filter(order__service=service_obj.id).count()
                     ratings = 0
@@ -624,8 +624,12 @@ class BookingView(APIView):
                         image_1=image_1,
                         image_2=image_2
                     )
-                    UserNotification.objects.create(user=app_user, title='New Order',
-                                                    body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
+                    if Settings.objects.get(user=app_user).language == 'en':
+                        UserNotification.objects.create(user=app_user, title='New Order',
+                                                        body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
+                    else:
+                        UserNotification.objects.create(user=app_user, title='طلب جديد',
+                                                        body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
                     try:
                         # if booking.user.device_type == 'device_type':
                         #     data_message = {
@@ -634,11 +638,18 @@ class BookingView(APIView):
                         #     }
                         #     respo = send_to_one(booking.user.device_token, data_message)
                         # else:
-                        title = "New Order"
-                        body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
-                        message_type = "NewOrder"
-                        # sound = 'notifications.mp3'
-                        respo = send_another(booking.user.device_token, title, body, message_type)
+                        if Settings.objects.get(user=app_user).language == 'en':
+                            title = "New Order"
+                            body = f"Your service request has been submitted Successfully!  Order Id -{booking.id}"
+                            message_type = "NewOrder"
+                            # sound = 'notifications.mp3'
+                            respo = send_another(booking.user.device_token, title, body, message_type)
+                        else:
+                            title = "طلب جديد"
+                            body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
+                            message_type = "NewOrder"
+                            # sound = 'notifications.mp3'
+                            respo = send_another(booking.user.device_token, title, body, message_type)
                         print(respo)
                     except Exception as e:
                         pass
@@ -680,6 +691,12 @@ class BookingView(APIView):
                         # sound = 'notifications.mp3'
                         respo = send_another(booking.user.device_token, title, body, message_type)
                         print(respo)
+                        title = "طلب جديد"
+                        body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
+                        message_type = "NewOrder"
+                        # sound = 'notifications.mp3'
+                        respo = send_another(booking.user.device_token, title, body, message_type)
+                        print(respo)
                     except Exception as e:
                         pass
                 AdminNotifications.objects.create(
@@ -712,7 +729,7 @@ class GetBookingDetail(APIView):
             # booking_id = serializer.validated_data.get('id')
             try:
                 booking = Booking.objects.get(user=app_user, id=booking_id)
-                if Settings.objects.get(user=app_user).language == 'English':
+                if Settings.objects.get(user=app_user).language == 'en':
                     try:
                         if booking.promocode_applied:
                             return Response(
@@ -1028,7 +1045,7 @@ class UpcomingBooking(APIView):
                 Q(user=app_user, status='Started') | Q(user=app_user, status='started')).order_by('-id')
             orders = []
             orders_arabic = []
-            if Settings.objects.get(user=user).language == 'English':
+            if Settings.objects.get(user=user).language == 'en':
                 for obj in order_obj:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
@@ -1066,7 +1083,7 @@ class PastBooking(APIView):
             #         print(obj)
             # except Exception as e:
             #     print(e)
-            if Settings.objects.get(user=app_user).language == 'English':
+            if Settings.objects.get(user=app_user).language == 'en':
                 for obj in order_obj:
                     try:
                         rating = RatingReview.objects.get(order=obj.id)
@@ -1124,7 +1141,7 @@ class OnGoingBooking(APIView):
             order_obj = Booking.objects.filter(user=app_user, status='Accepted').order_by('-id')
             orders = []
             orders_arabic = []
-            if Settings.objects.get(user=app_user).language == 'English':
+            if Settings.objects.get(user=app_user).language == 'en':
                 for obj in order_obj:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
@@ -1293,7 +1310,7 @@ class GetServiceName(APIView):
         services = Services.objects.all()
         service_list = []
         service_list_arabic = []
-        if Settings.objects.get(user=app_user).language == 'English':
+        if Settings.objects.get(user=app_user).language == 'en':
             for service in services:
                 service_list.append(
                     {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
@@ -1507,6 +1524,7 @@ class NewBookingRequestDetail(APIView):
                 return Response({'id': booking_obj.id, 'date': booking_obj.date, 'status': booking_obj.status,
                                  'total': booking_obj.total, 'service_id': booking_obj.service.id,
                                  'service_name': booking_obj.service.service_name,
+                                 'created_at': booking_obj.created_at,
                                  'customer_name': booking_obj.user.full_name,
                                  'customer_contact_number': booking_obj.user.user.country_code + booking_obj.user.user.phone_number,
                                  'customer_address': booking_obj.address})
