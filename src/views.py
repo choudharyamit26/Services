@@ -295,7 +295,7 @@ class GetSubCategory(APIView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        app_user = Settings.objects.get(user=user)
+        app_user = AppUser.objects.get(user=user)
         category = self.request.query_params.get('category')
         print(category)
         sub_categories = SubCategory.objects.filter(category=category)
