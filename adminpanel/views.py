@@ -246,11 +246,11 @@ class AssignServiceProvider(LoginRequiredMixin, CreateView):
         service_provider_device_type = order_obj.service_provider.device_type
         service_provider_device_token = order_obj.service_provider.device_token
         # if service_provider_device_type == 'android':
-        #     data_message = {
+        #     data = {
         #         "title": "New Message",
         #         "body": f"You have received a new service request for order with order ID {order_obj.id}"
         #     }
-        #     respo = send_to_one(service_provider_device_token, data_message)
+        #     respo = send_to_one(service_provider_device_token, data)
         #     print(respo)
         # else:
         title = "New Order"
@@ -284,22 +284,22 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
             if Settings.objects.get(user=order_obj.user).language == 'en':
                 UserNotification.objects.create(user=order_obj.user, title='QUOTE',
                                                 body=f'You have received a offered price for order with order ID {order_obj.id}')
-                data_message = {
+                data = {
                     "title": "السعر المعروض",
                     "body": f"You have received a offered price for order with order ID {order_obj.id}",
                     "type": "upcoming_services"
                 }
-                respo = send_to_one(user_device_token, data_message)
+                respo = send_to_one(user_device_token, data)
                 print(respo)
             else:
                 UserNotification.objects.create(user=order_obj.user, title="السعر المعروض",
                                                 body=f'لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id} ')
-                data_message = {
+                data = {
                     "title": "السعر المعروض",
                     "body": f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}",
                     "type": "upcoming_services"
                 }
-                respo = send_to_one(user_device_token, data_message)
+                respo = send_to_one(user_device_token, data)
                 print(respo)
         else:
             if Settings.objects.get(user=order_obj.user).language == 'en':

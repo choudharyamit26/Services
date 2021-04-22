@@ -633,20 +633,20 @@ class BookingView(APIView):
                     try:
                         if booking.user.device_type == 'device_type':
                             if Settings.objects.get(user=app_user).language == 'en':
-                                data_message = {
+                                data = {
                                     "title": "New Order",
                                     "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}",
                                     "type": "upcoming_services"
                                 }
-                                respo = send_to_one(booking.user.device_token, data_message)
+                                respo = send_to_one(booking.user.device_token, data)
                                 print(respo)
                             else:
-                                data_message = {
+                                data = {
                                     "title": "طلب جديد",
                                     "body": f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}",
                                     "type": "upcoming_services"
                                 }
-                                respo = send_to_one(booking.user.device_token, data_message)
+                                respo = send_to_one(booking.user.device_token, data)
                                 print(respo)
                         else:
                             if Settings.objects.get(user=app_user).language == 'en':
@@ -695,20 +695,20 @@ class BookingView(APIView):
                     try:
                         if booking.user.device_type == 'device_type':
                             if Settings.objects.get(user=app_user).language == 'en':
-                                data_message = {
+                                data = {
                                     "title": "New Order",
                                     "body": f"Your service request has been submitted Successfully!  Order Id -{booking.id}",
                                     "type": "upcoming_services"
                                 }
-                                respo = send_to_one(booking.user.device_token, data_message)
+                                respo = send_to_one(booking.user.device_token, data)
                                 print(respo)
                             else:
-                                data_message = {
+                                data = {
                                     "title": "طلب جديد",
                                     "body": f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}",
                                     "type": "upcoming_services"
                                 }
-                                respo = send_to_one(booking.user.device_token, data_message)
+                                respo = send_to_one(booking.user.device_token, data)
                                 print(respo)
                         else:
                             if Settings.objects.get(user=app_user).language == 'en':
@@ -1623,10 +1623,10 @@ class UpdateBookingByServiceProvider(APIView):
                                                     body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!')
                     try:
                         if booking_obj.user.device_type == "android":
-                            data_message = {"title": "ORDER STATUS UPDATE",
+                            data = {"title": "ORDER STATUS UPDATE",
                                             "body": f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!",
                                             "type": "past_services"}
-                            respo = send_to_one(booking_obj.user.device_token, data_message)
+                            respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
                         else:
                             title = "ORDER STATUS UPDATE"
@@ -1642,10 +1642,10 @@ class UpdateBookingByServiceProvider(APIView):
                                                     body=f'الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!')
                     try:
                         if booking_obj.user.device_type == "android":
-                            data_message = {"title": "تحديث حالة الطلب",
+                            data = {"title": "تحديث حالة الطلب",
                                             "body": f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!",
                                             "type": "past_services"}
-                            respo = send_to_one(booking_obj.user.device_token, data_message)
+                            respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
                         else:
                             title = "تحديث حالة الطلب"
