@@ -1083,7 +1083,7 @@ class UpcomingBooking(APIView):
                          'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
                          'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status})
-                return Response({'data': orders, 'status': HTTP_200_OK})
+                return Response({'data': orders_arabic, 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
