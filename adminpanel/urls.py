@@ -10,7 +10,7 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
     UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
-    DeleteSubAdmin
+    DeleteSubAdmin,UpdateCategoryView,UpdateSubCategory
 
 app_name = 'adminpanel'
 
@@ -24,6 +24,7 @@ urlpatterns = [
                   path('add-category/', AddCategoryView.as_view(), name='add-category'),
                   path('category-management/', CategoryView.as_view(), name='category-management'),
                   path('category-detail/<int:pk>/', CategoryDetail.as_view(), name='category-detail'),
+                  path('update-category/<int:pk>/', UpdateCategoryView.as_view(), name='update-category'),
                   path('order-management/', OrderManagementView.as_view(), name='order-management'),
                   path('order-detail/<int:pk>/', OrderDetail.as_view(), name='order-detail'),
                   path('rejected-order-management/', RejectedOrderView.as_view(), name='rejected-order-management'),
@@ -50,6 +51,7 @@ urlpatterns = [
                   path('add-sub-category/', AddSubCategory.as_view(), name='add-sub-category'),
                   path('sub-category-management/', SubCategoryView.as_view(), name='sub-category-management'),
                   path('sub-category-detail/<int:pk>/', SubCategoryDetail.as_view(), name='sub-category-detail'),
+                  path('update-sub-category/<int:pk>/', UpdateSubCategory.as_view(), name='update-sub-category'),
                   path('add-sub-admin/', AddSubAdmin.as_view(), name='add-sub-admin'),
                   path('add-services/', AddServices.as_view(), name='add-services'),
                   path('services-list/', ServicesList.as_view(), name='services-list'),

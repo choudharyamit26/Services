@@ -43,7 +43,9 @@
                         {% else %}
                         <td><img src="" alt="img" class="img-fluid"></td>
                         {% endif %}
-                        <th><a href="{% url 'adminpanel:category-detail' obj.id %}"><i class="fa fa-eye colorBlue"></i></a>
+                        <th>
+                            <a href="{% url 'adminpanel:category-detail' obj.id %}"><i class="fa fa-eye colorBlue"></i></a>
+                            <a href="{% url 'adminpanel:update-category' obj.id %}"><i class="fa fa-edit colorBlue"></i></a>
                         </th>
                     </tr>
                     {% endfor %}

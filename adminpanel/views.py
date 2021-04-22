@@ -185,6 +185,24 @@ class CategoryDetail(LoginRequiredMixin, DetailView):
     login_url = "adminpanel:login"
 
 
+class UpdateCategoryView(LoginRequiredMixin, UpdateView):
+    template_name = 'update-category.html'
+    model = Category
+    form_class = AddCategoryForm
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'update-category.html', {'object': Category.objects.get(id=kwargs['pk'])})
+
+    def post(self, request, *args, **kwargs):
+        category_obj = Category.objects.get(id=kwargs['pk'])
+        category_obj.category_image = self.request.FILES.get('category_image' or None)
+        category_obj.category_name = self.request.POST['category_name']
+        category_obj.category_name_arabic = self.request.POST['category_name_arabic']
+        category_obj.save()
+        messages.success(self.request, "Category updated successfully")
+        return redirect("adminpanel:category-management")
+
+
 class OrderManagementView(LoginRequiredMixin, ListView):
     model = Booking
     template_name = 'order-management.html'
@@ -836,6 +854,27 @@ class SubCategoryDetail(LoginRequiredMixin, DetailView):
     template_name = 'SubCategoryDetail.html'
     model = SubCategory
     login_url = "adminpanel:login"
+
+
+class UpdateSubCategory(LoginRequiredMixin, UpdateView):
+    template_name = 'update-subcategory.html'
+    model = SubCategory
+    form_class = SubCategoryForm
+    login_url = "adminpanel:login"
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'update-subcategory.html',
+                      {'object': SubCategory.objects.get(id=kwargs['pk']), 'category': Category.objects.all()})
+
+    def post(self, request, *args, **kwargs):
+        sub_category_obj = SubCategory.objects.get(id=kwargs['pk'])
+        sub_category_obj.category = Category.objects.get(id=self.request.POST['category'])
+        sub_category_obj.sub_category_name = self.request.POST['sub_category_name'].lower()
+        sub_category_obj.sub_category_name_arabic = self.request.POST['sub_category_name_arabic']
+        sub_category_obj.sub_category_image = self.request.FILES.get('sub_category_image' or None)
+        sub_category_obj.save()
+        messages.success(self.request, "Sub Category updated successfully")
+        return redirect("adminpanel:sub-category-management")
 
 
 class SubAdminManagement(LoginRequiredMixin, ListView):
