@@ -631,7 +631,7 @@ class BookingView(APIView):
                         UserNotification.objects.create(user=app_user, title='طلب جديد',
                                                         body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
                     try:
-                        if booking.user.device_type == 'device_type':
+                        if booking.user.device_type == 'android':
                             if Settings.objects.get(user=app_user).language == 'en':
                                 data = {
                                     "title": "New Order",
@@ -639,7 +639,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print('------',respo)
+                                print('------', respo)
                             else:
                                 data = {
                                     "title": "طلب جديد",
@@ -647,7 +647,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print('--->>>',respo)
+                                print('--->>>', respo)
                         else:
                             if Settings.objects.get(user=app_user).language == 'en':
                                 title = "New Order"
@@ -661,7 +661,7 @@ class BookingView(APIView):
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
-                            print('>>>>>>',respo)
+                            print('>>>>>>', respo)
                     except Exception as e:
                         pass
                 else:
@@ -693,7 +693,7 @@ class BookingView(APIView):
                         UserNotification.objects.create(user=app_user, title='طلب جديد',
                                                         body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
                     try:
-                        if booking.user.device_type == 'device_type':
+                        if booking.user.device_type == 'android':
                             if Settings.objects.get(user=app_user).language == 'en':
                                 data = {
                                     "title": "New Order",
@@ -701,7 +701,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print('<<<<<<',respo)
+                                print('<<<<<<', respo)
                             else:
                                 data = {
                                     "title": "طلب جديد",
@@ -709,7 +709,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print('<<<<-----',respo)
+                                print('<<<<-----', respo)
                         else:
                             if Settings.objects.get(user=app_user).language == 'en':
                                 title = "New Order"
@@ -717,14 +717,14 @@ class BookingView(APIView):
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
-                                print('______________________',respo)
+                                print('______________________', respo)
                             else:
                                 title = "طلب جديد"
                                 body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
-                                print('#############',respo)
+                                print('#############', respo)
                     except Exception as e:
                         pass
                 AdminNotifications.objects.create(
@@ -736,7 +736,7 @@ class BookingView(APIView):
                     return Response(
                         {'message': 'Service booked successfully', 'booking': booking.id, 'status': HTTP_200_OK})
                 else:
-                    return Response({'message':'تم حجز الخدمة بنجاح', 'booking': booking.id, 'status': HTTP_200_OK})
+                    return Response({'message': 'تم حجز الخدمة بنجاح', 'booking': booking.id, 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
         else:
@@ -1627,8 +1627,8 @@ class UpdateBookingByServiceProvider(APIView):
                     try:
                         if booking_obj.user.device_type == "android":
                             data = {"title": "ORDER STATUS UPDATE",
-                                            "body": f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!",
-                                            "type": "past_services"}
+                                    "body": f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!",
+                                    "type": "past_services"}
                             respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
                         else:
@@ -1646,8 +1646,8 @@ class UpdateBookingByServiceProvider(APIView):
                     try:
                         if booking_obj.user.device_type == "android":
                             data = {"title": "تحديث حالة الطلب",
-                                            "body": f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!",
-                                            "type": "past_services"}
+                                    "body": f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!",
+                                    "type": "past_services"}
                             respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
                         else:
