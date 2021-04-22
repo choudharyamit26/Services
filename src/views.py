@@ -639,7 +639,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print(respo)
+                                print('------',respo)
                             else:
                                 data = {
                                     "title": "طلب جديد",
@@ -647,7 +647,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print(respo)
+                                print('--->>>',respo)
                         else:
                             if Settings.objects.get(user=app_user).language == 'en':
                                 title = "New Order"
@@ -661,7 +661,7 @@ class BookingView(APIView):
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
-                            print(respo)
+                            print('>>>>>>',respo)
                     except Exception as e:
                         pass
                 else:
@@ -701,7 +701,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print(respo)
+                                print('<<<<<<',respo)
                             else:
                                 data = {
                                     "title": "طلب جديد",
@@ -709,7 +709,7 @@ class BookingView(APIView):
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
-                                print(respo)
+                                print('<<<<-----',respo)
                         else:
                             if Settings.objects.get(user=app_user).language == 'en':
                                 title = "New Order"
@@ -717,14 +717,14 @@ class BookingView(APIView):
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
-                                print(respo)
+                                print('______________________',respo)
                             else:
                                 title = "طلب جديد"
                                 body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
-                                print(respo)
+                                print('#############',respo)
                     except Exception as e:
                         pass
                 AdminNotifications.objects.create(
@@ -732,8 +732,11 @@ class BookingView(APIView):
                     title='New Booking Request',
                     body='A new service booking request has been placed on the platform'
                 )
-                return Response(
-                    {'message': 'Service booked successfully', 'booking': booking.id, 'status': HTTP_200_OK})
+                if Settings.objects.get(user=booking.user).language == 'en':
+                    return Response(
+                        {'message': 'Service booked successfully', 'booking': booking.id, 'status': HTTP_200_OK})
+                else:
+                    return Response({'message':'تم حجز الخدمة بنجاح', 'booking': booking.id, 'status': HTTP_200_OK})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
         else:
