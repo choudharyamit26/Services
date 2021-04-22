@@ -1556,7 +1556,7 @@ class NewRequestView(APIView):
         user = self.request.user
         service_provider_obj = ServiceProvider.objects.get(email=user.email)
         bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
-                                              is_accepted_by_provider=False)
+                                              is_accepted_by_provider=False).order_by('-id')
         for booking in bookings_obj:
             new_booking_list.append({'id': booking.id, 'user_id': booking.user.id, 'service_id': booking.service.id,
                                      'service_name': booking.service.service_name,
@@ -1675,7 +1675,7 @@ class ServiceProviderCompletedTasks(APIView):
         user = self.request.user
         service_provider = ServiceProvider.objects.get(email=user.email)
         try:
-            order_obj = Booking.objects.filter(service_provider=service_provider, status='Completed')
+            order_obj = Booking.objects.filter(service_provider=service_provider, status='Completed').order_by('-id')
             orders = []
             for obj in order_obj:
                 try:
@@ -1707,7 +1707,7 @@ class ServiceProviderOnGoingTasks(APIView):
         service_provider = ServiceProvider.objects.get(email=user.email)
         try:
             order_obj = Booking.objects.filter(service_provider=service_provider, status='Accepted',
-                                               is_accepted_by_provider=True)
+                                               is_accepted_by_provider=True).order_by('-id')
             orders = []
             for obj in order_obj:
                 try:
