@@ -370,7 +370,7 @@ class GetServices(APIView):
                      'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
                      'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url,
                      'average_ratings': average_ratings, 'reviews': ratings_obj})
-            return Response({'data': service_list, 'status': HTTP_200_OK})
+            return Response({'data': service_list_arabic, 'status': HTTP_200_OK})
 
 
 class GetServiceDetail(APIView):
