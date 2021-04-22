@@ -23,7 +23,7 @@ from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, Sub
     AssignServiceProviderForm, UpdateOfferForm, ContactUsForm, AboutUsForm, TermsAndConditionForm, PrivacyPolicyForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
 from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration, ContactUs, \
-    PrivacyPolicy, TermsAndCondition, AboutUs, UserNotification
+    PrivacyPolicy, TermsAndCondition, AboutUs, UserNotification, Settings
 from src.fcm_notification import send_to_one, send_another
 
 
@@ -280,24 +280,46 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         order_obj.save()
         user_device_type = order_obj.user.device_type
         user_device_token = order_obj.user.device_token
-        # if user_device_type == 'android':
-        #     UserNotification.objects.create(user=order_obj.user, title='QUOTE',
-        #                                     body=f'KEHEILAN sent you a quote for Order Id -{order_obj.id}. Please accept it ')
-        #     data_message = {
-        #         "title": "New Message",
-        #         "body": f"You have received a quote for order with order ID {order_obj.id}"
-        #     }
-        #     respo = send_to_one(user_device_token, data_message)
-        #     print(respo)
-        # else:
-        UserNotification.objects.create(user=order_obj.user, title='OFFERED PRICE',
-                                        body=f'KEHEILAN sent you a offered price for Order Id -{order_obj.id}. Please accept it.')
-        title = "OFFERED PRICE"
-        body = f"You have received a offered price for order with order ID {order_obj.id}"
-        message_type = "newQuote"
-        # sound = 'notifications.mp3'
-        respo = send_another(user_device_token, title, body, message_type)
-        print(respo)
+        if user_device_type == 'android':
+            if Settings.objects.get(user=order_obj.user).language == 'en':
+                UserNotification.objects.create(user=order_obj.user, title='QUOTE',
+                                                body=f'You have received a offered price for order with order ID {order_obj.id}')
+                data_message = {
+                    "title": "السعر المعروض",
+                    "body": f"You have received a offered price for order with order ID {order_obj.id}",
+                    "type": "upcoming_services"
+                }
+                respo = send_to_one(user_device_token, data_message)
+                print(respo)
+            else:
+                UserNotification.objects.create(user=order_obj.user, title="السعر المعروض",
+                                                body=f'لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id} ')
+                data_message = {
+                    "title": "السعر المعروض",
+                    "body": f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}",
+                    "type": "upcoming_services"
+                }
+                respo = send_to_one(user_device_token, data_message)
+                print(respo)
+        else:
+            if Settings.objects.get(user=order_obj.user).language == 'en':
+                UserNotification.objects.create(user=order_obj.user, title='OFFERED PRICE',
+                                                body=f'You have received a offered price for order with order ID {order_obj.id}')
+                title = "OFFERED PRICE"
+                body = f"You have received a offered price for order with order ID {order_obj.id}"
+                message_type = "newQuote"
+                # sound = 'notifications.mp3'
+                respo = send_another(user_device_token, title, body, message_type)
+                print(respo)
+            else:
+                UserNotification.objects.create(user=order_obj.user, title="السعر المعروض",
+                                                body=f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}"),
+                title = "السعر المعروض"
+                body = f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}",
+                message_type = "newQuote"
+                # sound = 'notifications.mp3'
+                respo = send_another(user_device_token, title, body, message_type)
+                print(respo)
         return redirect("adminpanel:order-management")
 
 
