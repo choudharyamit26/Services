@@ -1534,7 +1534,7 @@ class RejectOrderServiceProviderView(APIView):
         order = self.request.POST['order']
         try:
             booking_obj = Booking.objects.get(id=order)
-            booking_obj.is_accepted_by_provider = False
+            booking_obj.is_rejected_by_provider = True
             booking_obj.save()
             AdminNotifications.objects.create(
                 user=User.objects.get(email='admin@email.com'),
@@ -1556,7 +1556,8 @@ class NewRequestView(APIView):
         user = self.request.user
         service_provider_obj = ServiceProvider.objects.get(email=user.email)
         bookings_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
-                                              is_accepted_by_provider=False).order_by('-id')
+                                              is_accepted_by_provider=False, is_rejected_by_provider=False).order_by(
+            '-id')
         for booking in bookings_obj:
             new_booking_list.append({'id': booking.id, 'user_id': booking.user.id, 'service_id': booking.service.id,
                                      'service_name': booking.service.service_name,

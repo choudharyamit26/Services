@@ -10,7 +10,8 @@
                 <li><span class="first">Order Date</span>{{object.date}}</li>
                 <li><span class="first">Order Time</span>{{object.time}}</li>
                 <li><span class="first">User ID</span>{{object.user.id}}</li>
-                <li><span class="first">Order Name</span>{{object.user.full_name}}</li>
+                <li><span class="first">Customer Name</span>{{object.user.full_name}}</li>
+                <li><span class="first">Customer Contact Number</span>{{object.user.user.country_code}}{{object.user.user.phone_number}}</li>
                 <li><span class="first">Order Address</span>{{object.address}}</li>
                 <li><span class="first">Service Name</span>{{object.service.service_name}}</li>
                 <li><span class="first">Requirement</span>{{object.requirement}}</li>
