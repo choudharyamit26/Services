@@ -1485,13 +1485,13 @@ class ServiceProviderDashboard(APIView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         service_provider_obj = ServiceProvider.objects.get(email=user.email)
-        booking_obj = Booking.objects.filter(service_provider=service_provider_obj)
+        booking_obj = Booking.objects.filter(service_provider=service_provider_obj, is_rejected_by_provider=False)
         new_booking_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
-                                                 is_accepted_by_provider=False).count()
+                                                 is_accepted_by_provider=False, is_rejected_by_provider=False).count()
         active_booking_obj = Booking.objects.filter(service_provider=service_provider_obj, status='Accepted',
-                                                    is_accepted_by_provider=True).count()
+                                                    is_accepted_by_provider=True, is_rejected_by_provider=False).count()
         completed_booking_obj = Booking.objects.filter(service_provider=service_provider_obj,
-                                                       status='Completed').count()
+                                                       status='Completed', is_rejected_by_provider=False).count()
         earning = 0
         for booking in Booking.objects.filter(service_provider=service_provider_obj, status='Completed'):
             print('ID--->>', booking.id)
