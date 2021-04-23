@@ -282,10 +282,10 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         user_device_token = order_obj.user.device_token
         if user_device_type == 'android':
             if Settings.objects.get(user=order_obj.user).language == 'en':
-                UserNotification.objects.create(user=order_obj.user, title='QUOTE',
+                UserNotification.objects.create(user=order_obj.user, title='"OFFERED PRICE"',
                                                 body=f'You have received a offered price for order with order ID {order_obj.id}')
                 data = {
-                    "title": "السعر المعروض",
+                    "title": "OFFERED PRICE",
                     "body": f"You have received a offered price for order with order ID {order_obj.id}",
                     "type": "upcoming_services"
                 }
