@@ -211,7 +211,20 @@ class OrderManagementView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         return render(self.request, 'order-management.html',
                       {'object_list': Booking.objects.all().exclude(status='Rejected'),
-                       'service_provider': ServiceProvider.objects.all()})
+                       'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+
+
+class GetCategoryServiceProvider(LoginRequiredMixin, View):
+    model = ServiceProvider
+    login_url = "adminpanel:login"
+    template_name = 'category-provider.html'
+
+    def get(self, request, *args, **kwargs):
+        print(self.request.GET)
+        print(self.request.GET['categoryId'])
+        print(ServiceProvider.objects.filter(category=self.request.GET['categoryId']))
+        return render(self.request, 'category-provider.html',
+                      {'service_provider': ServiceProvider.objects.filter(category=self.request.GET['categoryId'])})
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):

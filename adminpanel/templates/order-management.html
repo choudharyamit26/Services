@@ -95,9 +95,18 @@
                     <div id="object_id_placeholder_div">
                         <input hidden="true" id="object_id_placeholder_input" value="">
                     </div>
+                    <label for="">Categories</label>
+                    <select name="cars" id="categories" required class="form-control formControl"
+                            placeholder="Select Service Provider">
+                        <option>Select Category</option>
+                        {% for obj in categories %}
+                        <option value="{{obj.pk}}" id="categoriesId">{{obj.category_name}}</option>
+                        {% endfor %}
+                    </select>
                     <label for="">Service Providers</label>
                     <select name="cars" id="services" required class="form-control formControl"
                             placeholder="Select Service Provider">
+                        <option value="">Select Provider</option>
                         {% for obj in service_provider %}
                         <option value="{{obj.pk}}" id="serviceProviderId">{{obj.email}}</option>
                         {% endfor %}
@@ -182,6 +191,7 @@ $(document).ready(function () {
 
 
 
+
 </script>
 <script>
 $(document).ready(function () {
@@ -224,9 +234,29 @@ $(document).ready(function () {
 });
 
 
+</script>
+<script>
+    $("#categories").change(function () {
+    var protocol = window.location.protocol
+    var hostname = window.location.hostname
+    var port = window.location.port
+    var url =  protocol + "//" + hostname + ":" + port +"/adminpanel"+ "/service-provider-category" + "/";
+    console.log(url)
+    var categoryId = $(this).val();
+    console.log('category Id---->> ',categoryId)
 
+    $.ajax({
+      url: url,
 
+      data: {
+        'categoryId': categoryId,
+      },
+      success: function (t) {
+      console.log('inside categoryId success',t)
+      $('#services').html(t);
+      }
+    });
+  });
 
 </script>
-
 {% endblock body %}

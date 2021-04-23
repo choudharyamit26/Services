@@ -10,7 +10,7 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
     UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
-    DeleteSubAdmin,UpdateCategoryView,UpdateSubCategory
+    DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider
 
 app_name = 'adminpanel'
 
@@ -50,6 +50,8 @@ urlpatterns = [
                   path('add-service-provider/', AddServiceProvider.as_view(), name='add-service-provider'),
                   path('add-sub-category/', AddSubCategory.as_view(), name='add-sub-category'),
                   path('sub-category-management/', SubCategoryView.as_view(), name='sub-category-management'),
+                  path('service-provider-category/', GetCategoryServiceProvider.as_view(),
+                       name='service-provider-category'),
                   path('sub-category-detail/<int:pk>/', SubCategoryDetail.as_view(), name='sub-category-detail'),
                   path('update-sub-category/<int:pk>/', UpdateSubCategory.as_view(), name='update-sub-category'),
                   path('add-sub-admin/', AddSubAdmin.as_view(), name='add-sub-admin'),
@@ -69,8 +71,10 @@ urlpatterns = [
                   path('update-privacy-policy/<int:pk>/', UpdatePrivacyPolicy.as_view(), name='update-privacy-policy'),
                   path('unblock-user/<int:pk>/', UnBlockUser.as_view(), name='unblock-user'),
                   path('block-user/<int:pk>/', BlockUser.as_view(), name='block-user'),
-                  path('block-service-provider/<int:pk>/', BlockServiceProvider.as_view(), name='block-service-provider'),
-                  path('unblock-service-provider/<int:pk>/', UnBlockServiceProvider.as_view(), name='unblock-service-provider'),
+                  path('block-service-provider/<int:pk>/', BlockServiceProvider.as_view(),
+                       name='block-service-provider'),
+                  path('unblock-service-provider/<int:pk>/', UnBlockServiceProvider.as_view(),
+                       name='unblock-service-provider'),
                   path('delete-sub-admin/<int:pk>/', DeleteSubAdmin.as_view(), name='delete-sub-admin'),
                   path('update-terms-and-condition/<int:pk>/', UpdateTermsAndCondition.as_view(),
                        name='update-terms-and-condition'),
