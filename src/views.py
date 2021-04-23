@@ -1037,7 +1037,7 @@ class UpdateOrderStatus(APIView):
                                                 body=f'Status of service request with Order Id {order_obj.id} has been updated to {order_obj.status}.')
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
-                    title='Booking Update',
+                    title='ORDER STATUS UPDATE',
                     body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
                                                                                               order_obj.status)
                 )
@@ -1047,7 +1047,7 @@ class UpdateOrderStatus(APIView):
                                                 body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
-                    title='Booking Update',
+                    title='ORDER STATUS UPDATE',
                     body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
                                                                                               order_obj.status)
                 )
