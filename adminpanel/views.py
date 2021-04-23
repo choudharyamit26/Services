@@ -214,15 +214,22 @@ class OrderManagementView(LoginRequiredMixin, ListView):
                        'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
 
+class CompletedOrders(LoginRequiredMixin, ListView):
+    model = Booking
+    template_name = 'complete-orders.html'
+    login_url = "adminpanel:login"
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'complete-orders.html',
+                      {'object_list': Booking.objects.filter(status='Completed')})
+
+
 class GetCategoryServiceProvider(LoginRequiredMixin, View):
     model = ServiceProvider
     login_url = "adminpanel:login"
     template_name = 'category-provider.html'
 
     def get(self, request, *args, **kwargs):
-        print(self.request.GET)
-        print(self.request.GET['categoryId'])
-        print(ServiceProvider.objects.filter(category=self.request.GET['categoryId']))
         return render(self.request, 'category-provider.html',
                       {'service_provider': ServiceProvider.objects.filter(category=self.request.GET['categoryId'])})
 

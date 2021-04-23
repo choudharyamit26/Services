@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-message alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="demandInner boxs">
+        <div class="AddService">
+            <h2 class="main">Order Management
+            </h2>
+        </div>
+        <div class="tableList boxs bgWhite">
+            <div class="filterCode">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group formGroup">
+                            <span class="labelel2">From</span>
+                            <input type="date" class="form-control " placeholder="From">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group formGroup">
+                            <span for="" class="labelel2">To</span>
+                            <input type="date" class="form-control " placeholder="To">
+                        </div>
+                    </div>
+                    <div class="col-sm-3" style="padding-top: 20px;">
+                        <button class="btns">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="scrollAll">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Order Id</th>
+                        <th>Order Date</th>
+                        <th>Order Time</th>
+                        <th>Username</th>
+                        <th>User ID</th>
+                        <th>User address</th>
+                        <th>Service</th>
+                        <!--                        <th>Action</th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in object_list %}
+                    <tr>
+                        <th>{{forloop.counter}}</th>
+                        <th>{{obj.id}}</th>
+                        <th>{{obj.date}}</th>
+                        <th>{{obj.time}}</th>
+                        <th>{{obj.user.full_name}}</th>
+                        <th>{{obj.user.id}}</th>
+                        <th>{{obj.address}}</th>
+                        <th>{{obj.service.service_name}}</th>
+                        <!--                        <th>-->
+                        <!--                            <a href="{% url 'adminpanel:order-detail' obj.id %}" class="btns">View Detail </a>-->
+                        <!--                            {% if obj.status == 'Accepted' %}-->
+                        <!--                            <button value="{{obj.id}}" class="btns orderModalButton" data-toggle="modal"-->
+                        <!--                                    data-target="#assign">Assign Providers-->
+                        <!--                            </button>-->
+                        <!--                            {% else %}-->
+                        <!--                            <button value="{{obj.id}}" class="btns orderQuoteButton" data-toggle="modal"-->
+                        <!--                                    data-target="#quote">Send offer price-->
+                        <!--                            </button>-->
+                        <!--                            {% endif %}-->
+                        <!--                        </th>-->
+                    </tr>
+                    {% endfor %}
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}
