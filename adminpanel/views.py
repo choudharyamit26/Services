@@ -212,7 +212,7 @@ class OrderManagementView(LoginRequiredMixin, ListView):
         return render(self.request, 'order-management.html',
                       {'object_list': Booking.objects.filter(
                           Q(status='Started') | Q(status='started') | Q(status='Accepted')),
-                       'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+                          'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
 
 class CompletedOrders(LoginRequiredMixin, ListView):
@@ -473,8 +473,9 @@ class NotificationManagementView(LoginRequiredMixin, ListView):
     model = AdminNotifications
     login_url = "adminpanel:login"
 
-    # def get(self, request, *args, **kwargs):
-    #     return render(self.request, 'notification.html')
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'notification.html',
+                      {'object_list': AdminNotifications.objects.all().order_by('-id')})
 
 
 class ReadNotificationView(LoginRequiredMixin, View):

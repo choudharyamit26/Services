@@ -1518,7 +1518,7 @@ class AcceptOrderServiceProviderView(APIView):
             booking_obj.save()
             AdminNotifications.objects.create(
                 user=User.objects.get(email='admin@email.com'),
-                title='Order Update',
+                title='ORDER STATUS UPDATE',
                 body=f'Order with Order Id-{booking_obj.id} has been ACCEPTED by the service provider {booking_obj.service_provider.email}'
             )
             return Response({'message': 'Order accepted successfully', 'status': HTTP_200_OK})
@@ -1538,7 +1538,7 @@ class RejectOrderServiceProviderView(APIView):
             booking_obj.save()
             AdminNotifications.objects.create(
                 user=User.objects.get(email='admin@email.com'),
-                title='Order Update',
+                title='ORDER STATUS UPDATE',
                 body=f'Order with Order Id-{booking_obj.id} has been REJECTED by the service provider {booking_obj.service_provider.email}'
             )
             return Response({'message': 'Order rejected successfully', 'status': HTTP_200_OK})
