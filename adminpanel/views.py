@@ -210,7 +210,8 @@ class OrderManagementView(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         return render(self.request, 'order-management.html',
-                      {'object_list': Booking.objects.all().exclude(status='Rejected'),
+                      {'object_list': Booking.objects.filter(
+                          Q(status='Started') | Q(status='started') | Q(status='Accepted')),
                        'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
 
