@@ -1626,12 +1626,22 @@ class UpdateBookingByServiceProvider(APIView):
                                                     body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!')
                     try:
                         if booking_obj.user.device_type == "android":
+                            AdminNotifications.objects.create(
+                                user=User.objects.get(email='admin@email.com'),
+                                title='ORDER STATUS UPDATE',
+                                body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
+                            )
                             data = {"title": "ORDER STATUS UPDATE",
                                     "body": f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!",
                                     "type": "past_services"}
                             respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
                         else:
+                            AdminNotifications.objects.create(
+                                user=User.objects.get(email='admin@email.com'),
+                                title='ORDER STATUS UPDATE',
+                                body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
+                            )
                             title = "ORDER STATUS UPDATE"
                             body = f"Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!"
                             message_type = "orderUpdate"
@@ -1645,12 +1655,22 @@ class UpdateBookingByServiceProvider(APIView):
                                                     body=f'الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!')
                     try:
                         if booking_obj.user.device_type == "android":
+                            AdminNotifications.objects.create(
+                                user=User.objects.get(email='admin@email.com'),
+                                title='ORDER STATUS UPDATE',
+                                body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
+                            )
                             data = {"title": "تحديث حالة الطلب",
                                     "body": f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!",
                                     "type": "past_services"}
                             respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
                         else:
+                            AdminNotifications.objects.create(
+                                user=User.objects.get(email='admin@email.com'),
+                                title='ORDER STATUS UPDATE',
+                                body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
+                            )
                             title = "تحديث حالة الطلب"
                             body = f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!"
                             message_type = "orderUpdate"
