@@ -209,8 +209,8 @@ class OrderManagementView(LoginRequiredMixin, ListView):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        # bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected')
-        bookings = Booking.objects.filter(Q(status='Started') | Q(status='started') | Q(status='Accepted'))
+        bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected')
+        # bookings = Booking.objects.filter(Q(status='Started') | Q(status='started') | Q(status='Accepted'))
         print(bookings)
         return render(self.request, 'order-management.html',
                       {'object_list': bookings,
