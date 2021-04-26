@@ -1798,6 +1798,21 @@ class CouponList(APIView):
         return Response({'data': coupon_list, 'status': HTTP_200_OK})
 
 
+class CheckNumberOfBookings(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        date = self.request.POST['date']
+        time = self.request.POST['time']
+        bookings_obj = Booking.objects.filter(date=date, time=time)
+        if len(bookings_obj) < 5:
+            return Response({"message": f"No of bookings are {len(bookings_obj)} for this date and time slot",
+                             'status': HTTP_200_OK})
+        else:
+            return Response({'message': "No slot available", 'status': HTTP_400_BAD_REQUEST})
+
+
 class ApplyCoupon(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
