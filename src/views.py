@@ -1,23 +1,21 @@
+from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications, SubCategory
 from django.db.models import Q
-from django.shortcuts import render
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
+
+from .fcm_notification import send_to_one, send_another
+from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
+    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry, ProviderRegistration
 from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSerializer, UpdateUserProfileSerializer, \
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
     GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer, InquirySerializer, \
     ServiceProviderLoginSerializer, ForgetPasswordSerializer, NewBookingRequestDetailSerializer, \
     UpdateBookingByServiceProviderSerializer, ProviderRegistrationSerializer
-from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry, ProviderRegistration
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
-from adminpanel.models import User, Services, TopServices, ServiceProvider, Category, AdminNotifications, SubCategory
-from .fcm_notification import send_to_one, send_another
 
 
 class CreateUser(APIView):
@@ -40,6 +38,7 @@ class CreateUser(APIView):
             lang = serializer.validated_data['lang']
             try:
                 User.objects.get(phone_number=phone_number)
+                print(User.objects.get(phone_number=phone_number))
                 return Response({'message': 'User with this number already exists', 'status': HTTP_400_BAD_REQUEST})
             except Exception as e:
                 print(e)
