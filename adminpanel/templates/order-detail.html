@@ -17,14 +17,14 @@
                 <li><span class="first">Requirement</span>{{object.requirement}}</li>
                 {% if object.image_1 %}
                 <li><span class="first">Image1</span>
-                    <figure style="200px;"><img src="{{object.image_1.url}}" style="width:100%;"></figure>
+                    <figure style="200px;"><img src="{{object.image_1.url}}" class ="imgWidths" style="width:100%;"></figure>
                 </li>
                 {% else %}
                 <li><span class="first">Image1</span></li>
                 {% endif %}
                 {% if object.image_2 %}
                 <li><span class="first">Image2</span>
-                    <figure style="200px;"><img src="{{object.image_2.url}}" style="width:100%;"></figure>
+                    <figure style="200px;"><img src="{{object.image_2.url}}" class ="imgWidths" style="width:100%;"></figure>
                 </li>
                 {% else %}
                 <li><span class="first">Image2</span></li>

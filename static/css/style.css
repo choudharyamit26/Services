@@ -992,3 +992,14 @@ form .select2-container .select2-selection ul.select2-selection__rendered{
     padding: 0 5px 2px 5px;
 }
 form .select2-container .select2-selection ul.select2-selection__rendered li{margin: 5px 5px 0px 0;}
+
+.imgWidths{
+width:300px !important;
+height:300px !important;
+}
+.tableImg{
+width:100px !important;
+height:100px !important;
+margin: 0 auto;
+display: flex;
+}

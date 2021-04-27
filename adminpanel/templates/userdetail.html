@@ -3,7 +3,7 @@
 <section class="demandRight boxs">
     <div class="demandInner boxs">
         <h2 class="main">User Details</h2>
-        <div class="userDetails bgWhite padding-25">
+        <div class="userDetails bgWhite padding-25 boxs">
             <ul class="detailsUser">
                 <li class="liHead"> Profile Details</li>
             </ul>
@@ -18,35 +18,35 @@
                 {% endif %}
                 <li><span class="first">Country Code</span>{{object.user.country_code}}</li>
                 <li><span class="first">Phone Number</span>{{object.user.phone_number}}</li>
-            </ul>
-            <h4 class="liHead">Order History</h4>
-            <div id="menu1" class="tab-pane fade">
-                <div class="tableList boxs bgWhite">
-                    <table id="example" class="table table-striped table-bordered" style="width:100%">
-                        <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Order Id</th>
-                            <th>User Id</th>
-                            <th>User Name</th>
-                            <th>Date Of Order</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for booking in bookings %}
-                        <tr>
-                            <td>{{forloop.counter}}</td>
-                            <td>{{booking.id}}</td>
-                            <td>{{booking.user.id}}</td>
-                            <td>{{booking.user.full_name}}</td>
-                            <td>{{booking.date}}</td>
-                        </tr>
-                        {% endfor %}
+                <h4 class="liHead" style="padding-top:35px;">Order History</h4>
+                <div>
+                    <div class="tableList boxs bgWhite" style="padding-left:0">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Order Id</th>
+                                <th>User Id</th>
+                                <th>User Name</th>
+                                <th>Date Of Order</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{booking.id}}</td>
+                                <td>{{booking.user.id}}</td>
+                                <td>{{booking.user.full_name}}</td>
+                                <td>{{booking.date}}</td>
+                            </tr>
+                            {% endfor %}
 
-                        </tfoot>
-                    </table>
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </ul>
         </div>
     </div>
 </section>
