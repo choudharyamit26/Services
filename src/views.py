@@ -1137,7 +1137,7 @@ class PastBooking(APIView):
                         orders.append(
                             {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                              'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
-                             'price': obj.total,
+                             'price': obj.total,'additional_fees':obj.additional_fees,
                              'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                              'review': rating.reviews, 'rating_status': True})
@@ -1145,7 +1145,7 @@ class PastBooking(APIView):
                         orders.append(
                             {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                              'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
-                             'price': obj.total,
+                             'price': obj.total,'additional_fees':obj.additional_fees,
                              'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
                 return Response({'data': orders, 'status': HTTP_200_OK})
@@ -1157,7 +1157,7 @@ class PastBooking(APIView):
                             {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                              'image_1': obj.service.image_1.url,
                              'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
-                             'price': obj.total,
+                             'price': obj.total,'additional_fees':obj.additional_fees,
                              'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                              'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
@@ -1167,7 +1167,7 @@ class PastBooking(APIView):
                             {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                              'image_1': obj.service.image_1.url,
                              'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
-                             'price': obj.total,
+                             'price': obj.total,'additional_fees':obj.additional_fees,
                              'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                              'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
@@ -1192,7 +1192,8 @@ class OnGoingBooking(APIView):
                 for obj in order_obj:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
+                         'base_price': obj.service.base_price,
                          'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status})
                 return Response({'data': orders, 'status': HTTP_200_OK})
@@ -1614,6 +1615,7 @@ class UpdateBookingByServiceProvider(APIView):
             print(serializer.validated_data)
             id = serializer.validated_data['id']
             status = serializer.validated_data['status']
+            additional_fees = serializer.validated_data['additional_fees']
             image_1 = serializer.validated_data['image_1']
             image_2 = serializer.validated_data['image_2']
             try:
@@ -1621,6 +1623,8 @@ class UpdateBookingByServiceProvider(APIView):
                 booking_obj.status = status
                 booking_obj.image_1 = image_1
                 booking_obj.image_2 = image_2
+                booking_obj.additional_fees = additional_fees
+                booking_obj.total = booking_obj.total + additional_fees
                 booking_obj.save()
                 if Settings.objects.get(user=booking_obj.user).language == 'en':
                     UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
@@ -1703,14 +1707,16 @@ class ServiceProviderCompletedTasks(APIView):
                     rating = RatingReview.objects.get(order=obj.id)
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
+                         'date': obj.date,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
                 except Exception as e:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
+                         'date': obj.date,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})
@@ -1735,14 +1741,16 @@ class ServiceProviderOnGoingTasks(APIView):
                     rating = RatingReview.objects.get(order=obj.id)
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
+                         'date': obj.date,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
                 except Exception as e:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url, 'price': obj.total, 'date': obj.date,
+                         'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
+                         'date': obj.date,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})

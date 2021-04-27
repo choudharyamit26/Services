@@ -53,6 +53,7 @@ class Booking(models.Model):
     fees = models.FloatField(default=0, null=True, blank=True)
     discount = models.FloatField(default=0, null=True, blank=True)
     total = models.FloatField(default=0, null=True, blank=True)
+    additional_fees = models.FloatField(default=0, null=True, blank=True)
     default_address = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     image_1 = models.ImageField(upload_to='media', null=True, blank=True)

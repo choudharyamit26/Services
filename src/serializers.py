@@ -94,7 +94,7 @@ class BookingSerializer(serializers.ModelSerializer):
         model = Booking
         fields = (
             'service', 'date', 'time', 'requirement', 'address', 'status', 'sub_total', 'fees', 'discount', 'total',
-            'default_address', 'image_1','image_2', 'night_booking')
+            'default_address', 'image_1', 'image_2', 'night_booking')
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):
@@ -110,6 +110,7 @@ class GeneralInquirySerializer(serializers.ModelSerializer):
     subject = serializers.CharField()
     message = serializers.CharField()
     image_1 = serializers.FileField(required=False, allow_null=True)
+
     # image_2 = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
@@ -141,6 +142,7 @@ class InquirySerializer(serializers.ModelSerializer):
     subject = serializers.CharField()
     message = serializers.CharField()
     image_1 = serializers.ImageField(required=False, allow_null=True)
+
     # image_2 = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
@@ -181,12 +183,13 @@ class NewBookingRequestDetailSerializer(serializers.ModelSerializer):
 class UpdateBookingByServiceProviderSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
     status = serializers.CharField()
+    additional_fees = serializers.FloatField()
     image_1 = serializers.ImageField(required=False, allow_null=True)
     image_2 = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Booking
-        fields = ('id', 'status', 'image_1', 'image_2')
+        fields = ('id', 'status', 'additional_fees', 'image_1', 'image_2')
 
 
 class ProviderRegistrationSerializer(serializers.ModelSerializer):
