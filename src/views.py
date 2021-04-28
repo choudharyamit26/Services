@@ -37,7 +37,7 @@ class CreateUser(APIView):
             lat = serializer.validated_data['lat']
             lang = serializer.validated_data['lang']
             try:
-                User.objects.get(phone_number=phone_number)
+                User.objects.get(email=str(phone_number)+ '@email.com')
                 # AppUser.objects.get(phone_number=phone_number)
                 print(AppUser.objects.get(phone_number=phone_number))
                 return Response({'message': 'User with this number already exists', 'status': HTTP_400_BAD_REQUEST})
