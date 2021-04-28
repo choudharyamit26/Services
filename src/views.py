@@ -83,7 +83,9 @@ class LoginView(ObtainAuthToken):
             lat = serializer.validated_data['lat']
             lang = serializer.validated_data['lang']
             try:
-                user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
+                # user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
+                email = str(phone_number) + '@email.com'
+                user_obj = User.objects.get(email=email)
                 user_id = AppUser.objects.get(user=user_obj)
                 if user_id.is_blocked:
                     return Response({"message": 'You are blocked. Contact admin.', 'status': HTTP_200_OK})
@@ -110,7 +112,9 @@ class LoginView(ObtainAuthToken):
             except Exception as e:
                 print(e)
                 try:
-                    user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
+                    # user_obj = User.objects.get(country_code=country_code, phone_number=phone_number)
+                    email = str(phone_number) + '@email.com'
+                    user_obj = User.objects.get(email=email)
                     user_id = AppUser.objects.get(user=user_obj)
                     settings_obj = Settings.objects.get(user=user_id)
                     settings_obj.language = language
