@@ -63,6 +63,8 @@ class Booking(models.Model):
     is_accepted_by_provider = models.BooleanField(default=False)
     is_rejected_by_provider = models.BooleanField(default=False)
     night_booking = models.BooleanField(default=False)
+    booking_lat = models.FloatField(default=0)
+    booking_long = models.FloatField(default=0)
 
 
 class ContactUs(models.Model):

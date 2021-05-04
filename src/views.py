@@ -606,6 +606,8 @@ class BookingView(APIView):
                 night_booking = serializer.validated_data['night_booking']
                 image_2 = serializer.validated_data['image_2']
                 image_1 = serializer.validated_data['image_1']
+                booking_lat = serializer.validated_data['booking_lat']
+                booking_long = serializer.validated_data['booking_long']
                 if night_booking:
                     booking = Booking.objects.create(
                         user=app_user,
@@ -626,7 +628,9 @@ class BookingView(APIView):
                         default_address=default_address,
                         night_booking=night_booking,
                         image_1=image_1,
-                        image_2=image_2
+                        image_2=image_2,
+                        booking_long=booking_long,
+                        booking_lat=booking_lat
                     )
                     if Settings.objects.get(user=app_user).language == 'en':
                         UserNotification.objects.create(user=app_user, title='New Order',
@@ -688,7 +692,9 @@ class BookingView(APIView):
                         default_address=default_address,
                         night_booking=night_booking,
                         image_1=image_1,
-                        image_2=image_2
+                        image_2=image_2,
+                        booking_lat=booking_lat,
+                        booking_long=booking_long
                     )
                     if Settings.objects.get(user=app_user).language == 'en':
                         UserNotification.objects.create(user=app_user, title='New Order',
@@ -793,7 +799,8 @@ class GetBookingDetail(APIView):
                                  'booking_time': booking.time, 'address': booking.address,
                                  'default_address': booking.default_address, 'base_price': booking.service.base_price,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -810,7 +817,8 @@ class GetBookingDetail(APIView):
                                  'booking_time': booking.time, 'address': booking.address,
                                  'default_address': booking.default_address, 'base_price': booking.service.base_price,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -827,7 +835,8 @@ class GetBookingDetail(APIView):
                                  'base_price': booking.service.base_price,
                                  'default_address': booking.default_address,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -846,7 +855,8 @@ class GetBookingDetail(APIView):
                                  'booking_time': booking.time, 'address': booking.address,
                                  'default_address': booking.default_address, 'base_price': booking.service.base_price,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -863,7 +873,8 @@ class GetBookingDetail(APIView):
                                  'booking_time': booking.time, 'address': booking.address,
                                  'default_address': booking.default_address, 'base_price': booking.service.base_price,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -880,7 +891,8 @@ class GetBookingDetail(APIView):
                                  'booking_time': booking.time, 'address': booking.address,
                                  'default_address': booking.default_address, 'base_price': booking.service.base_price,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -897,7 +909,8 @@ class GetBookingDetail(APIView):
                                  'base_price': booking.service.base_price,
                                  'default_address': booking.default_address,
                                  'booking_status': booking.status, 'sub_total': booking.sub_total, 'fees': booking.fees,
-                                 'discount': booking.discount, 'total': booking.total,'additional_fees':booking.additional_fees,
+                                 'discount': booking.discount, 'total': booking.total,
+                                 'additional_fees': booking.additional_fees,
                                  'requirement': booking.requirement,
                                  'image_1': booking.service.image_1.url, 'image_2': booking.service.image_2.url,
                                  'booked_at': booking.created_at,
@@ -1575,7 +1588,8 @@ class NewRequestView(APIView):
                                      'created_at': booking.created_at, 'promocode': booking.promocode,
                                      'promocode_applied': booking.promocode_applied,
                                      'is_accepted_by_provider': booking.is_accepted_by_provider,
-                                     'night_booking': booking.night_booking})
+                                     'night_booking': booking.night_booking, 'booking_long': booking.booking_long,
+                                     'booking_lat': booking.booking_lat})
         return Response({'data': new_booking_list, 'status': HTTP_200_OK})
 
 
@@ -1598,7 +1612,8 @@ class NewBookingRequestDetail(APIView):
                                  'created_at': booking_obj.created_at,
                                  'customer_name': booking_obj.user.full_name,
                                  'customer_contact_number': booking_obj.user.user.country_code + booking_obj.user.user.phone_number,
-                                 'customer_address': booking_obj.address})
+                                 'customer_address': booking_obj.address, 'booking_lat': booking_obj.booking_lat,
+                                 'booking_long': booking_obj.booking_long})
             except Exception as e:
                 return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
         else:
