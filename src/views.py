@@ -1052,7 +1052,7 @@ class UpdateOrderStatus(APIView):
             order_obj.save()
             if Settings.objects.get(user=order_obj.user).language == 'en':
                 UserNotification.objects.create(user=order_obj.user, title='ORDER STATUS UPDATE',
-                                                body=f'Status of service request with Order Id {order_obj.id} has been updated to {order_obj.status}.')
+                                                body=f'Status of service request with Order Id-{order_obj.id} has been updated to {order_obj.status}.')
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
                     title='ORDER STATUS UPDATE',
@@ -1061,8 +1061,12 @@ class UpdateOrderStatus(APIView):
                 )
                 return Response({'message': 'Order updated successfully', 'status': HTTP_200_OK})
             else:
-                UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
-                                                body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
+                if order_obj.status == 'Accepted':
+                    UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
+                                                body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى مقبول.')
+                else:
+                    UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
+                                                    body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
                 AdminNotifications.objects.create(
                     user=User.objects.get(email='admin@email.com'),
                     title='ORDER STATUS UPDATE',
