@@ -950,8 +950,8 @@ class TermsAndConditionView(APIView):
     model = TermsAndCondition
 
     def get(self, request, *args, **kwargs):
-        return Response({'terms': TermsAndCondition.objects.all().first().terms,
-                         'terms_arabic': TermsAndCondition.objects.all().first().terms_arabic,
+        return Response({'terms': strip_tags(TermsAndCondition.objects.all().first().terms),
+                         'terms_arabic': strip_tags(TermsAndCondition.objects.all().first().terms_arabic),
                          'status': HTTP_200_OK})
 
 
@@ -959,8 +959,8 @@ class AboutUsView(APIView):
     model = AboutUs
 
     def get(self, request, *args, **kwargs):
-        return Response({'content': AboutUs.objects.all().first().content,
-                         'content_arabic': AboutUs.objects.all().first().content_arabic, 'status': HTTP_200_OK})
+        return Response({'content': strip_tags(AboutUs.objects.all().first().content),
+                         'content_arabic': strip_tags(AboutUs.objects.all().first().content_arabic), 'status': HTTP_200_OK})
 
 
 class GeneralInquiryView(APIView):
