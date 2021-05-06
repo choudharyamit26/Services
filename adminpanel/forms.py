@@ -1,6 +1,7 @@
 from django import forms
 from .models import User, ServiceProvider, Category, SubCategory, Services
 from src.models import Booking, OffersAndDiscount, ContactUs, AboutUs, TermsAndCondition, PrivacyPolicy
+from ckeditor.widgets import CKEditorWidget
 
 
 class AddServiceProviderForm(forms.ModelForm):
@@ -54,18 +55,27 @@ class ContactUsForm(forms.ModelForm):
 
 
 class AboutUsForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorWidget())
+    content_arabic = forms.CharField(widget=CKEditorWidget())
+
     class Meta:
         model = AboutUs
         fields = ('content', 'content_arabic')
 
 
 class TermsAndConditionForm(forms.ModelForm):
+    terms = forms.CharField(widget=CKEditorWidget())
+    terms_arabic = forms.CharField(widget=CKEditorWidget())
+
     class Meta:
         model = TermsAndCondition
         fields = ('terms', 'terms_arabic')
 
 
 class PrivacyPolicyForm(forms.ModelForm):
+    policy = forms.CharField(widget=CKEditorWidget())
+    policy_arabic = forms.CharField(widget=CKEditorWidget())
+
     class Meta:
         model = PrivacyPolicy
         fields = ('policy', 'policy_arabic')

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block body %}
 <section class="demandRight boxs">
     <div class="demandInner boxs">
@@ -9,23 +10,27 @@
         <div class="formDett padding-25 bgWhite">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group formGroup">
-                            <label for="" class="labelel"></label>
-                            <input type="text" name="policy_arabic" required class="form-control formControl"
-                                   placeholder="Enter content">
-                        </div>
-                        <div class="form-group formGroup">
-                            <label for="" class="labelel"></label>
-                            <input type="text" name="policy_arabic" required class="form-control formControl"
-                                   placeholder="Enter content in arabic">
-                        </div>
-                    </div>
-                    <div class="CommonBtn CommonBtn2 boxs">
-                        <button class="btns" type="submit">Submit</button>
-                    </div>
-                </div>
+                {{ form.media }}
+                {{form|crispy}}
+                <br>
+                <button class="btn btn-primary" type="submit">Update</button>
+                <!--                <div class="row">-->
+                <!--                    <div class="col-sm-6">-->
+                <!--                        <div class="form-group formGroup">-->
+                <!--                            <label for="" class="labelel"></label>-->
+                <!--                            <input type="text" name="policy_arabic" required class="form-control formControl"-->
+                <!--                                   placeholder="Enter content">-->
+                <!--                        </div>-->
+                <!--                        <div class="form-group formGroup">-->
+                <!--                            <label for="" class="labelel"></label>-->
+                <!--                            <input type="text" name="policy_arabic" required class="form-control formControl"-->
+                <!--                                   placeholder="Enter content in arabic">-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <div class="CommonBtn CommonBtn2 boxs">-->
+                <!--                        <button class="btns" type="submit">Submit</button>-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </form>
         </div>
     </div>
