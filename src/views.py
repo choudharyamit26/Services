@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-
+from django.utils.html import strip_tags
 from .fcm_notification import send_to_one, send_another
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
     AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry, ProviderRegistration
@@ -942,8 +942,8 @@ class PrivacyPolicyView(APIView):
     model = PrivacyPolicy
 
     def get(self, request, *args, **kwargs):
-        return Response({'policy': PrivacyPolicy.objects.all().first().policy,
-                         'policy_arabic': PrivacyPolicy.objects.all().first().policy_arabic, 'status': HTTP_200_OK})
+        return Response({'policy': strip_tags(PrivacyPolicy.objects.all().first().policy),
+                         'policy_arabic': strip_tags(PrivacyPolicy.objects.all().first().policy_arabic), 'status': HTTP_200_OK})
 
 
 class TermsAndConditionView(APIView):
