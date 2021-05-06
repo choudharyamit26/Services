@@ -316,10 +316,10 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
                 print(respo)
             else:
                 UserNotification.objects.create(user=order_obj.user, title="السعر المعروض",
-                                                body=f'لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id} ')
+                                                body=f' لقد استلمتم عرض سعر للطلب  الرجاء مراجعته واعلامنا بردك !')
                 data = {
                     "title": "السعر المعروض",
-                    "body": f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}",
+                    "body": f" لقد استلمتم عرض سعر للطلب  الرجاء مراجعته واعلامنا بردك !",
                     "type": "upcoming_services"
                 }
                 respo = send_to_one(user_device_token, data)
@@ -336,9 +336,9 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
                 print(respo)
             else:
                 UserNotification.objects.create(user=order_obj.user, title="السعر المعروض",
-                                                body=f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}"),
+                                                body=f" لقد استلمتم عرض سعر للطلب  الرجاء مراجعته واعلامنا بردك !"),
                 title = "السعر المعروض"
-                body = f"لقد تلقيت السعر المعروض للطلب باستخدام معرّف الطلب {order_obj.id}",
+                body = f" لقد استلمتم عرض سعر للطلب  الرجاء مراجعته واعلامنا بردك !",
                 message_type = "newQuote"
                 # sound = 'notifications.mp3'
                 respo = send_another(user_device_token, title, body, message_type)

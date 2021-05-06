@@ -172,11 +172,11 @@ class UpdateUserProfile(APIView):
                 app_user.profile_pic = profile_pic
                 app_user.save()
                 if Settings.objects.get(user=app_user).language == 'en':
-                    UserNotification.objects.create(user=app_user, title='Profile pic update',
+                    UserNotification.objects.create(user=app_user, title='تحديث الملف الشخصي الموافقة المسبقة عن علم',
                                                     body='Your profile pic has been updated successfully')
                     return Response({'message': 'Profile updated successfully', 'status': HTTP_200_OK})
                 else:
-                    UserNotification.objects.create(user=app_user, title='تحديث الملف الشخصي الموافقة المسبقة عن علم',
+                    UserNotification.objects.create(user=app_user, title='',
                                                     body='تم تحديث صورة ملف التعريف الخاص بك بنجاح')
                     return Response({'message': 'تم تحديث الملف الشخصي بنجاح', 'status': HTTP_200_OK})
             else:
@@ -637,7 +637,7 @@ class BookingView(APIView):
                                                         body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
                     else:
                         UserNotification.objects.create(user=app_user, title='طلب جديد',
-                                                        body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
+                                                        body=f' تم إرسال طلب الخدمة الخاص بك بنجاح ! طلب Id -{booking.id}')
                     try:
                         if booking.user.device_type == 'android':
                             if Settings.objects.get(user=app_user).language == 'en':
@@ -651,7 +651,7 @@ class BookingView(APIView):
                             else:
                                 data = {
                                     "title": "طلب جديد",
-                                    "body": f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}",
+                                    "body": f" تم إرسال طلب الخدمة الخاص بك بنجاح ! طلب Id -{booking.id}",
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
@@ -665,7 +665,7 @@ class BookingView(APIView):
                                 respo = send_another(booking.user.device_token, title, body, message_type)
                             else:
                                 title = "طلب جديد"
-                                body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
+                                body = f" تم إرسال طلب الخدمة الخاص بك بنجاح ! طلب Id -{booking.id}"
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
@@ -701,7 +701,7 @@ class BookingView(APIView):
                                                         body=f'Your service request has been submitted Successfully!  Order Id -{booking.id}')
                     else:
                         UserNotification.objects.create(user=app_user, title='طلب جديد',
-                                                        body=f'تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}')
+                                                        body=f' تم إرسال طلب الخدمة الخاص بك بنجاح ! طلب Id -{booking.id}')
                     try:
                         if booking.user.device_type == 'android':
                             if Settings.objects.get(user=app_user).language == 'en':
@@ -715,7 +715,7 @@ class BookingView(APIView):
                             else:
                                 data = {
                                     "title": "طلب جديد",
-                                    "body": f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}",
+                                    "body": f" تم إرسال طلب الخدمة الخاص بك بنجاح ! طلب Id -{booking.id}",
                                     "type": "upcoming_services"
                                 }
                                 respo = send_to_one(booking.user.device_token, data)
@@ -730,7 +730,7 @@ class BookingView(APIView):
                                 print('______________________', respo)
                             else:
                                 title = "طلب جديد"
-                                body = f"تم تقديم طلب الخدمة الخاص بك بنجاح! معرّف الطلب - {booking.id}"
+                                body = f" تم إرسال طلب الخدمة الخاص بك بنجاح ! طلب Id -{booking.id}"
                                 message_type = "NewOrder"
                                 # sound = 'notifications.mp3'
                                 respo = send_another(booking.user.device_token, title, body, message_type)
@@ -1063,7 +1063,7 @@ class UpdateOrderStatus(APIView):
             else:
                 if order_obj.status == 'Accepted':
                     UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
-                                                body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى مقبول.')
+                                                body=f' حالة طلب الخدمة مع هوية الطلب {order_obj. id} تم تحديثها إلى مقبول.')
                 else:
                     UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
                                                     body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
@@ -1096,7 +1096,7 @@ class ApplyPromoCodeView(APIView):
             if Settings.objects.get(user=app_user).language == 'en':
                 return Response({'message': 'Promocode applied successfully', 'status': HTTP_200_OK})
             else:
-                return Response({'message': 'تم تطبيق Promocode بنجاح', 'status': HTTP_200_OK})
+                return Response({'message':'تم تطبيق الرمز الترويجي بنجاح', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -1252,7 +1252,7 @@ class RatingAndReviews(APIView):
             if Settings.objects.get(user=app_user).language == 'en':
                 return Response({'message': 'Rating submitted successfully', 'status': HTTP_200_OK})
             else:
-                return Response({'message': 'تم إرسال التقييم بنجاح', 'status': HTTP_200_OK})
+                return Response({'message': ' تم إرسال التقييم بنجاح', 'status': HTTP_200_OK})
         else:
             return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
 
@@ -1681,7 +1681,7 @@ class UpdateBookingByServiceProvider(APIView):
                         pass
                 else:
                     UserNotification.objects.create(user=booking_obj.user, title='تحديث حالة الطلب',
-                                                    body=f'الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!')
+                                                    body=f' الطلب مع هوية الطلب  Id -{booking_obj.id} تم الانتهاء منه. الرجاء تصنيفنا ومراجعتنا!')
                     try:
                         if booking_obj.user.device_type == "android":
                             AdminNotifications.objects.create(
@@ -1690,7 +1690,7 @@ class UpdateBookingByServiceProvider(APIView):
                                 body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
                             )
                             data = {"title": "تحديث حالة الطلب",
-                                    "body": f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!",
+                                    "body": f" الطلب مع هوية الطلب  Id -{booking_obj.id} تم الانتهاء منه. الرجاء تصنيفنا ومراجعتنا!",
                                     "type": "past_services"}
                             respo = send_to_one(booking_obj.user.device_token, data)
                             print(respo)
@@ -1701,7 +1701,7 @@ class UpdateBookingByServiceProvider(APIView):
                                 body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
                             )
                             title = "تحديث حالة الطلب"
-                            body = f"الطلب مع معرف الطلب - تم إكمال {booking_obj.id}. يرجى تقييم ومراجعة لنا!"
+                            body = f" الطلب مع هوية الطلب  Id -{booking_obj.id} تم الانتهاء منه. الرجاء تصنيفنا ومراجعتنا!"
                             message_type = "orderUpdate"
                             # sound = 'notifications.mp3'
                             respo = send_another(booking_obj.user.device_token, title, body, message_type)
@@ -1810,7 +1810,7 @@ class ProviderRegisterView(APIView):
                         {'message': "Provider registration request submitted successfully", 'status': HTTP_200_OK})
                 else:
                     return Response(
-                        {'message': "تم إرسال طلب تسجيل الموفر بنجاح", 'status': HTTP_200_OK})
+                        {'message': " تم تقديم طلب تسجيل مقدم الخدمة بنجاح", 'status': HTTP_200_OK})
             else:
                 return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
         except Exception as e:
