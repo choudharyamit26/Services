@@ -10,7 +10,8 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     SendQuoteView, RejectedOrderView, OfferDetailView, DeleteOfferView, UpdateOfferView, AddOffers, NotificationCount, \
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
     UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
-    DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider, CompletedOrders
+    DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider, CompletedOrders, \
+    StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores
 
 app_name = 'adminpanel'
 
@@ -67,6 +68,8 @@ urlpatterns = [
                   path('notification-count/', NotificationCount.as_view(), name='notification-count'),
                   path('read-notification/', ReadNotificationView.as_view(), name='read-notification'),
                   path('inquiry/', InquiryView.as_view(), name='inquiry'),
+                  path('privacy-policy-for-app-stores/', StaticPrivacyPolicyForAppStores.as_view(), name='privacy-policy-for-app-stores'),
+                  path('terms-and-condition-for-app-stores/', TermsAndConditionForAppStores.as_view(), name='terms-and-condition-for-app-stores'),
                   path('update-contact-us/<int:pk>/', UpdateContactUs.as_view(), name='update-contact-us'),
                   path('update-about-us/<int:pk>/', UpdateAboutUs.as_view(), name='update-about-us'),
                   path('update-privacy-policy/<int:pk>/', UpdatePrivacyPolicy.as_view(), name='update-privacy-policy'),

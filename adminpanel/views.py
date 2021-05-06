@@ -214,7 +214,7 @@ class OrderManagementView(LoginRequiredMixin, ListView):
         print(bookings)
         return render(self.request, 'order-management.html',
                       {'object_list': bookings,
-                          'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+                       'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
 
 class CompletedOrders(LoginRequiredMixin, ListView):
@@ -1155,3 +1155,17 @@ class UserProviderRegistrations(LoginRequiredMixin, ListView):
 
     # def get(self, request, *args, **kwargs):
     #     return render(self.request, 'inquiry.html')
+
+
+class StaticPrivacyPolicyForAppStores(View):
+    template_name = 'privacy-policy-for-apps.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'privacy-policy-for-apps.html')
+
+
+class TermsAndConditionForAppStores(View):
+    template_name = 'terms-condition-for-apps.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'privacy-policy-for-apps.html')
