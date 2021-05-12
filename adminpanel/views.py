@@ -1065,10 +1065,10 @@ class UpdateService(LoginRequiredMixin, UpdateView):
         service_obj.service_name_arabic = self.request.POST['service_name_arabic']
         service_obj.image_1 = self.request.FILES['image_1']
         service_obj.image_2 = self.request.FILES['image_2']
-        service_obj.field_1 = self.request.FILES['field_1']
-        service_obj.field_2 = self.request.FILES['field_2']
-        service_obj.field_3 = self.request.FILES['field_3']
-        service_obj.field_4 = self.request.FILES['field_4']
+        service_obj.field_1 = self.request.POST['field_1']
+        service_obj.field_2 = self.request.POST['field_2']
+        service_obj.field_3 = self.request.POST['field_3']
+        service_obj.field_4 = self.request.POST['field_4']
         service_obj.save()
         messages.success(self.request, 'Service updated successfully')
         return redirect("adminpanel:services-list")
