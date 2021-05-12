@@ -1050,7 +1050,8 @@ class UpdateService(LoginRequiredMixin, UpdateView):
         return render(self.request, 'update-services.html',
                       {'category': Category.objects.all(), 'sub_category': SubCategory.objects.all(),
                        'service_name': service_obj.service_name,
-                       'service_name_arabic': service_obj.service_name_arabic})
+                       'service_name_arabic': service_obj.service_name_arabic, 'field1': service_obj.field_1,
+                       'field2': service_obj.field_2, 'field3': service_obj.field_3, 'field4': service_obj.field_4})
 
     def post(self, request, *args, **kwargs):
         # print(self.form_class.is_valid())
@@ -1064,6 +1065,10 @@ class UpdateService(LoginRequiredMixin, UpdateView):
         service_obj.service_name_arabic = self.request.POST['service_name_arabic']
         service_obj.image_1 = self.request.FILES['image_1']
         service_obj.image_2 = self.request.FILES['image_2']
+        service_obj.field_1 = self.request.FILES['field_1']
+        service_obj.field_2 = self.request.FILES['field_2']
+        service_obj.field_3 = self.request.FILES['field_3']
+        service_obj.field_4 = self.request.FILES['field_4']
         service_obj.save()
         messages.success(self.request, 'Service updated successfully')
         return redirect("adminpanel:services-list")
