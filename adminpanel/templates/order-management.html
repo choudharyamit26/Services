@@ -111,6 +111,13 @@
                         <option value="{{obj.pk}}" id="serviceProviderId">{{obj.email}}</option>
                         {% endfor %}
                     </select>
+                    <br>
+                    <div class="form-group formGroup">
+                        <span for="" class="labelel2">Admin Percent</span>
+                        <input type="number" class="form-control " placeholder="Admin Percent" id="admin_percent" name="admin_percent">
+                    </div>
+
+
                     <ul class="allBtns">
                         <li>
                             <button type="button" id="serviceProviderButton" class="btns">Submit</button>
@@ -166,6 +173,7 @@ $(document).ready(function () {
         var object_id = $("#object_id_placeholder_input").val();
         console.log('Id ',object_id)
         var serviceProviderId = $("#services").val();
+        var admin_percent = $("#admin_percent").val();
         console.log('Service Provider id',serviceProviderId)
         var protocol = window.location.protocol
         var hostname = window.location.hostname
@@ -177,7 +185,8 @@ $(document).ready(function () {
             data:{
                 'csrfmiddlewaretoken': "{{ csrf_token }}",
                 'serviceProviderId':serviceProviderId,
-                'orderId':object_id
+                'orderId':object_id,
+                'admin_percent':admin_percent
             },
             success: function (data) {
             console.log('inside publicationId success')
@@ -186,6 +195,10 @@ $(document).ready(function () {
         })
     });
 });
+
+
+
+
 
 
 
@@ -234,6 +247,10 @@ $(document).ready(function () {
 });
 
 
+
+
+
+
 </script>
 <script>
     $("#categories").change(function () {
@@ -257,6 +274,10 @@ $(document).ready(function () {
       }
     });
   });
+
+
+
+
 
 </script>
 {% endblock body %}`

@@ -51,6 +51,7 @@ class Booking(models.Model):
     quote = models.FloatField(default=0, max_length=2560)
     sub_total = models.FloatField(default=0, null=True, blank=True)
     fees = models.FloatField(default=0, null=True, blank=True)
+    admin_percent = models.FloatField(default=0, null=True, blank=True)
     discount = models.FloatField(default=0, null=True, blank=True)
     total = models.FloatField(default=0, null=True, blank=True)
     additional_fees = models.FloatField(default=0, null=True, blank=True)

@@ -943,7 +943,8 @@ class PrivacyPolicyView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({'policy': strip_tags(PrivacyPolicy.objects.all().first().policy),
-                         'policy_arabic': strip_tags(PrivacyPolicy.objects.all().first().policy_arabic), 'status': HTTP_200_OK})
+                         'policy_arabic': strip_tags(PrivacyPolicy.objects.all().first().policy_arabic),
+                         'status': HTTP_200_OK})
 
 
 class TermsAndConditionView(APIView):
@@ -960,7 +961,8 @@ class AboutUsView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({'content': strip_tags(AboutUs.objects.all().first().content),
-                         'content_arabic': strip_tags(AboutUs.objects.all().first().content_arabic), 'status': HTTP_200_OK})
+                         'content_arabic': strip_tags(AboutUs.objects.all().first().content_arabic),
+                         'status': HTTP_200_OK})
 
 
 class GeneralInquiryView(APIView):
@@ -1063,7 +1065,7 @@ class UpdateOrderStatus(APIView):
             else:
                 if order_obj.status == 'Accepted':
                     UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
-                                                body=f' حالة طلب الخدمة مع هوية الطلب {order_obj. id} تم تحديثها إلى مقبول.')
+                                                    body=f' حالة طلب الخدمة مع هوية الطلب {order_obj.id} تم تحديثها إلى مقبول.')
                 else:
                     UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
                                                     body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
@@ -1096,7 +1098,7 @@ class ApplyPromoCodeView(APIView):
             if Settings.objects.get(user=app_user).language == 'en':
                 return Response({'message': 'Promocode applied successfully', 'status': HTTP_200_OK})
             else:
-                return Response({'message':'تم تطبيق الرمز الترويجي بنجاح', 'status': HTTP_200_OK})
+                return Response({'message': 'تم تطبيق الرمز الترويجي بنجاح', 'status': HTTP_200_OK})
         except Exception as e:
             return Response({'message': str(e), 'status': HTTP_400_BAD_REQUEST})
 
@@ -1587,7 +1589,8 @@ class NewRequestView(APIView):
                                      'service_provider_id': booking.service_provider.id,
                                      'date': booking.date, 'time': booking.time, 'requirement': booking.requirement,
                                      'address': booking.address, 'status': booking.status, 'quote': booking.quote,
-                                     'sub_total': booking.sub_total, 'fees': booking.fees, 'discount': booking.discount,
+                                     'sub_total': booking.sub_total, 'admin_percent': booking.admin_percent,
+                                     'fees': booking.fees, 'discount': booking.discount,
                                      'total': booking.total, 'default_address': booking.default_address,
                                      'created_at': booking.created_at, 'promocode': booking.promocode,
                                      'promocode_applied': booking.promocode_applied,
@@ -1610,7 +1613,7 @@ class NewBookingRequestDetail(APIView):
             try:
                 booking_obj = Booking.objects.get(id=id)
                 return Response({'id': booking_obj.id, 'date': booking_obj.date, 'time': booking_obj.time,
-                                 'status': booking_obj.status,
+                                 'status': booking_obj.status, 'admin_percent': booking_obj.admin_percent,
                                  'total': booking_obj.total, 'service_id': booking_obj.service.id,
                                  'service_name': booking_obj.service.service_name,
                                  'created_at': booking_obj.created_at,
@@ -1649,6 +1652,8 @@ class UpdateBookingByServiceProvider(APIView):
                 booking_obj.image_2 = image_2
                 booking_obj.additional_fees = additional_fees
                 booking_obj.total = booking_obj.total + additional_fees
+                booking_obj.save()
+                booking_obj.fees = (booking_obj.admin_percent / 100) * booking_obj.total
                 booking_obj.save()
                 if Settings.objects.get(user=booking_obj.user).language == 'en':
                     UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
@@ -1732,7 +1737,7 @@ class ServiceProviderCompletedTasks(APIView):
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                          'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
-                         'date': obj.date,
+                         'date': obj.date, 'admin_percent': obj.admin_percent,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
@@ -1740,7 +1745,7 @@ class ServiceProviderCompletedTasks(APIView):
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                          'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
-                         'date': obj.date,
+                         'date': obj.date, 'admin_percent': obj.admin_percent,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})
@@ -1766,7 +1771,7 @@ class ServiceProviderOnGoingTasks(APIView):
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                          'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
-                         'date': obj.date,
+                         'date': obj.date, 'admin_percent': obj.admin_percent,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
                          'review': rating.reviews, 'rating_status': True})
@@ -1774,7 +1779,7 @@ class ServiceProviderOnGoingTasks(APIView):
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
                          'image_2': obj.service.image_2.url, 'price': obj.total, 'additional_fees': obj.additional_fees,
-                         'date': obj.date,
+                         'date': obj.date, 'admin_percent': obj.admin_percent,
                          'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
             return Response({'data': orders, 'status': HTTP_200_OK})
