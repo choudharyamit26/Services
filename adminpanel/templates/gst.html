@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block body %}
+<section class="demandRight boxs">
+    <div class="content-wrapper">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <div class="demandInner boxs">
+        <div class="AddService">
+            <h2 class="main"> Gst Management
+            </h2>
+        </div>
+        <div class="tableList boxs bgWhite">
+            <div class="scrollAll">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Gst Amount</th>
+                        <th>Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in object %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{obj.gst}}</td>
+                        <th>
+                            <a href="{% url 'adminpanel:update-gst' obj.id %}"><i class="fa fa-edit colorBlue"></i></a>
+                        </th>
+                    </tr>
+                    {% endfor %}
+
+
+                    </tfoot>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

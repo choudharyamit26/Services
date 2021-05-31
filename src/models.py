@@ -139,6 +139,10 @@ class ProviderRegistration(models.Model):
     password = models.CharField(default='', max_length=400)
 
 
+class Gst(models.Model):
+    gst = models.FloatField(default=0)
+
+
 @receiver(post_save, sender=AppUser)
 def promocode(sender, instance, created, **kwargs):
     if created:

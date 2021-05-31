@@ -23,7 +23,7 @@ from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, Sub
     AssignServiceProviderForm, UpdateOfferForm, ContactUsForm, AboutUsForm, TermsAndConditionForm, PrivacyPolicyForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
 from src.models import Booking, OffersAndDiscount, AppUser, GeneralInquiry, Inquiry, ProviderRegistration, ContactUs, \
-    PrivacyPolicy, TermsAndCondition, AboutUs, UserNotification, Settings
+    PrivacyPolicy, TermsAndCondition, AboutUs, UserNotification, Settings, Gst
 from src.fcm_notification import send_to_one, send_another
 
 
@@ -300,9 +300,9 @@ class SendQuoteView(LoginRequiredMixin, CreateView):
         order_obj.quote = self.request.POST['quote']
         order_obj.sub_total = self.request.POST['quote']
         if order_obj.night_booking:
-            order_obj.total = float(self.request.POST['quote']) + 100
+            order_obj.total = float(self.request.POST['quote']) + 100 + Gst.objects.all()[0].gst
         else:
-            order_obj.total = self.request.POST['quote']
+            order_obj.total = float(self.request.POST['quote']) + Gst.objects.all()[0].gst
         order_obj.save()
         user_device_type = order_obj.user.device_type
         user_device_token = order_obj.user.device_token
@@ -1177,3 +1177,28 @@ class TermsAndConditionForAppStores(View):
 
     def get(self, request, *args, **kwargs):
         return render(self.request, 'privacy-policy-for-apps.html')
+
+
+class GetGstView(View):
+    model = Gst
+    template_name = 'gst.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'gst.html', {'object': Gst.objects.all()})
+
+
+class UpdateGstView(View):
+    model = Gst
+    template_name = 'update-gst.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'update-gst.html', {'gst': Gst.objects.all()[0]})
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        print(kwargs)
+        print(args)
+        obj = Gst.objects.get(id=kwargs['pk'])
+        obj.gst = self.request.POST['gst']
+        obj.save()
+        return redirect("adminpanel:get-gst")

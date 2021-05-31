@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from django.utils.html import strip_tags
 from .fcm_notification import send_to_one, send_another
 from .models import AppUser, Settings, UserSearch, Booking, TermsAndCondition, ContactUs, PrivacyPolicy, GeneralInquiry, \
-    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry, ProviderRegistration
+    AboutUs, RatingReview, OffersAndDiscount, UserNotification, Inquiry, ProviderRegistration, Gst
 from .serializers import UserCreateSerializer, LoginSerializer, CheckUserSerializer, UpdateUserProfileSerializer, \
     UpdateUserLanguageSerializer, UserSearchSerializer, BookingSerializer, BookingDetailSerializer, \
     GeneralInquirySerializer, UpdateOrderStatusSerializer, RatingAndReviewsSerializer, InquirySerializer, \
@@ -608,6 +608,7 @@ class BookingView(APIView):
                 image_1 = serializer.validated_data['image_1']
                 booking_lat = serializer.validated_data['booking_lat']
                 booking_long = serializer.validated_data['booking_long']
+                gst = Gst.objects.all()[0].gst
                 if night_booking:
                     booking = Booking.objects.create(
                         user=app_user,
@@ -624,7 +625,7 @@ class BookingView(APIView):
                         # sub_total=sub_total,
                         fees=100,
                         # discount=discount,
-                        total=Services.objects.get(id=service).base_price,
+                        total=float(Services.objects.get(id=service).base_price) + gst,
                         default_address=default_address,
                         night_booking=night_booking,
                         image_1=image_1,
@@ -688,7 +689,7 @@ class BookingView(APIView):
                         # sub_total=sub_total,
                         # fees=fees,
                         # discount=discount,
-                        total=Services.objects.get(id=service).base_price,
+                        total=float(Services.objects.get(id=service).base_price) + gst,
                         default_address=default_address,
                         night_booking=night_booking,
                         image_1=image_1,
@@ -1907,3 +1908,10 @@ class GuestUserToken(APIView):
         # print(users[0])
         token = Token.objects.get_or_create(user=users[0])
         return Response({'token': token[0].key, 'status': HTTP_200_OK})
+
+
+class GetGstValue(APIView):
+    model = Gst
+
+    def get(self, request, *args, **kwargs):
+        return Response({'data': Gst.objects.all()[0].gst, 'status': HTTP_200_OK})

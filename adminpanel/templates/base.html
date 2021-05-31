@@ -120,6 +120,10 @@
             <a href="{% url 'adminpanel:order-management' %}"><span class="icon"><i
                     class="fa fa-dollar-sign"></i></span><span
                     class="iconContent">Order Management</span></a></li>
+        <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:get-gst' %}active{% endif %}">
+            <a href="{% url 'adminpanel:get-gst' %}"><span class="icon"><i
+                    class="fa fa-dollar-sign"></i></span><span
+                    class="iconContent">Gst Management</span></a></li>
         <li class="nav-item nav-link {% if request.resolver_match.view_name  == 'adminpanel:complete-orders' %}active{% endif %}">
             <a href="{% url 'adminpanel:complete-orders' %}"><span class="icon"><i
                     class="fa fa-bars"></i></span><span

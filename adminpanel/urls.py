@@ -11,7 +11,7 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
     UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
     DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider, CompletedOrders, \
-    StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores
+    StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores, GetGstView, UpdateGstView
 
 app_name = 'adminpanel'
 
@@ -68,8 +68,10 @@ urlpatterns = [
                   path('notification-count/', NotificationCount.as_view(), name='notification-count'),
                   path('read-notification/', ReadNotificationView.as_view(), name='read-notification'),
                   path('inquiry/', InquiryView.as_view(), name='inquiry'),
-                  path('privacy-policy-for-app-stores/', StaticPrivacyPolicyForAppStores.as_view(), name='privacy-policy-for-app-stores'),
-                  path('terms-and-condition-for-app-stores/', TermsAndConditionForAppStores.as_view(), name='terms-and-condition-for-app-stores'),
+                  path('privacy-policy-for-app-stores/', StaticPrivacyPolicyForAppStores.as_view(),
+                       name='privacy-policy-for-app-stores'),
+                  path('terms-and-condition-for-app-stores/', TermsAndConditionForAppStores.as_view(),
+                       name='terms-and-condition-for-app-stores'),
                   path('update-contact-us/<int:pk>/', UpdateContactUs.as_view(), name='update-contact-us'),
                   path('update-about-us/<int:pk>/', UpdateAboutUs.as_view(), name='update-about-us'),
                   path('update-privacy-policy/<int:pk>/', UpdatePrivacyPolicy.as_view(), name='update-privacy-policy'),
@@ -80,8 +82,11 @@ urlpatterns = [
                   path('unblock-service-provider/<int:pk>/', UnBlockServiceProvider.as_view(),
                        name='unblock-service-provider'),
                   path('delete-sub-admin/<int:pk>/', DeleteSubAdmin.as_view(), name='delete-sub-admin'),
+                  path('update-gst/<int:pk>/', UpdateGstView.as_view(), name='update-gst'),
                   path('update-terms-and-condition/<int:pk>/', UpdateTermsAndCondition.as_view(),
                        name='update-terms-and-condition'),
                   path('user-provider-registration/', UserProviderRegistrations.as_view(),
                        name='user-provider-registration'),
+                  path('get-gst/', GetGstView.as_view(), name='get-gst')
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
