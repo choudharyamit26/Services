@@ -1868,7 +1868,7 @@ class ApplyCoupon(APIView):
             # order_obj.sub_total = quote - (float((int(percent) / 100)) * quote)
             print(quote - float((int(percent) / 100)) * quote)
             order_obj.discount = (float((int(percent) / 100))) * quote
-            order_obj.total = quote - (float((int(percent) / 100)) * quote) + order_obj.fees
+            order_obj.total = quote - (float((int(percent) / 100)) * quote) + order_obj.fees + Gst.objects.all()[0].gst
             order_obj.promocode = coupon_obj.coupon_code
             order_obj.promocode_applied = True
             order_obj.save()
@@ -1888,9 +1888,9 @@ class RemoveCoupoun(APIView):
             order_obj = Booking.objects.get(id=order)
             order_obj.discount = 0
             if order_obj.night_booking:
-                order_obj.total = order_obj.quote + 100
+                order_obj.total = order_obj.quote + 100 + Gst.objects.all()[0].gst
             else:
-                order_obj.total = order_obj.quote
+                order_obj.total = order_obj.quote + Gst.objects.all()[0].gst
             order_obj.sub_total = order_obj.quote
             order_obj.promocode = ''
             order_obj.promocode_applied = False
