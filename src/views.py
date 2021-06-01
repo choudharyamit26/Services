@@ -1161,7 +1161,7 @@ class PastBooking(APIView):
                         rating = RatingReview.objects.get(order=obj.id)
                         orders.append(
                             {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
@@ -1169,7 +1169,7 @@ class PastBooking(APIView):
                     except Exception as e:
                         orders.append(
                             {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
@@ -1181,7 +1181,7 @@ class PastBooking(APIView):
                         orders_arabic.append(
                             {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                              'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                              'service_id': obj.service.id,
@@ -1191,7 +1191,7 @@ class PastBooking(APIView):
                         orders_arabic.append(
                             {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                              'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                              'service_id': obj.service.id,
