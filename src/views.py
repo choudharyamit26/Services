@@ -1655,7 +1655,7 @@ class UpdateBookingByServiceProvider(APIView):
                 booking_obj.total = booking_obj.total + additional_fees
                 booking_obj.save()
                 # booking_obj.fees = (booking_obj.admin_percent / 100) * booking_obj.total
-                booking_obj.save()
+                # booking_obj.save()
                 if Settings.objects.get(user=booking_obj.user).language == 'en':
                     UserNotification.objects.create(user=booking_obj.user, title='ORDER STATUS UPDATE',
                                                     body=f'Order with Order Id -{booking_obj.id} has been completed. Please Rate & Review Us!')
