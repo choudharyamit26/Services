@@ -266,7 +266,7 @@ class AssignServiceProvider(LoginRequiredMixin, CreateView):
         admin_percent = self.request.POST['admin_percent']
         order_obj = Booking.objects.get(id=order)
         order_obj.admin_percent = admin_percent
-        order_obj.fees = (float(admin_percent) / 100) * order_obj.quote
+        # order_obj.fees = (float(admin_percent) / 100) * order_obj.quote
         order_obj.service_provider = ServiceProvider.objects.get(id=service_provider_id)
         order_obj.save()
         service_provider_device_type = order_obj.service_provider.device_type
