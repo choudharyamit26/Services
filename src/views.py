@@ -146,6 +146,7 @@ class CheckUserExists(APIView):
         if serializer.is_valid():
             country_code = serializer.validated_data['country_code']
             phone_number = serializer.validated_data['phone_number']
+            print(country_code, phone_number)
             try:
                 User.objects.get(country_code=country_code, phone_number=phone_number)
                 return Response({'message': True, 'status': HTTP_200_OK})
