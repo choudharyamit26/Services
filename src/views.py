@@ -150,6 +150,7 @@ class CheckUserExists(APIView):
                 User.objects.get(country_code=country_code, phone_number=phone_number)
                 return Response({'message': True, 'status': HTTP_200_OK})
             except Exception as e:
+                print('Exception---', e)
                 return Response({'message': False, 'status': HTTP_400_BAD_REQUEST})
         else:
             return Response({'message': serializer.errors, 'status': HTTP_400_BAD_REQUEST})
@@ -1121,7 +1122,8 @@ class UpcomingBooking(APIView):
                 for obj in order_obj:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst, 'price': obj.total,
+                         'base_price': obj.service.base_price,
                          'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status})
                 return Response({'data': orders, 'status': HTTP_200_OK})
@@ -1130,7 +1132,8 @@ class UpcomingBooking(APIView):
                     orders_arabic.append(
                         {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                          'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst, 'price': obj.total,
+                         'base_price': obj.service.base_price,
                          'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status})
                 return Response({'data': orders_arabic, 'status': HTTP_200_OK})
@@ -1161,7 +1164,8 @@ class PastBooking(APIView):
                         rating = RatingReview.objects.get(order=obj.id)
                         orders.append(
                             {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst,
+                             'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating': rating.rating,
@@ -1169,7 +1173,8 @@ class PastBooking(APIView):
                     except Exception as e:
                         orders.append(
                             {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst,
+                             'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'time': obj.time, 'service_id': obj.service.id,
                              'address': obj.address, 'booking_status': obj.status, 'rating_status': False})
@@ -1181,7 +1186,8 @@ class PastBooking(APIView):
                         orders_arabic.append(
                             {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                              'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst,
+                             'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                              'service_id': obj.service.id,
@@ -1191,7 +1197,8 @@ class PastBooking(APIView):
                         orders_arabic.append(
                             {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                              'image_1': obj.service.image_1.url,
-                             'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'base_price': obj.service.base_price,
+                             'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst,
+                             'base_price': obj.service.base_price,
                              'price': obj.total, 'additional_fees': obj.additional_fees,
                              'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                              'service_id': obj.service.id,
@@ -1217,7 +1224,8 @@ class OnGoingBooking(APIView):
                 for obj in order_obj:
                     orders.append(
                         {'id': obj.id, 'service_name': obj.service.service_name, 'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'price': obj.total, 'additional_fees': obj.additional_fees,
+                         'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst, 'price': obj.total,
+                         'additional_fees': obj.additional_fees,
                          'base_price': obj.service.base_price,
                          'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status})
@@ -1227,7 +1235,8 @@ class OnGoingBooking(APIView):
                     orders_arabic.append(
                         {'id': obj.id, 'service_name': obj.service.service_name_arabic,
                          'image_1': obj.service.image_1.url,
-                         'image_2': obj.service.image_2.url,'tax':Gst.objects.all()[0].gst, 'price': obj.total, 'base_price': obj.service.base_price,
+                         'image_2': obj.service.image_2.url, 'tax': Gst.objects.all()[0].gst, 'price': obj.total,
+                         'base_price': obj.service.base_price,
                          'date': obj.date, 'booking_date': obj.created_at, 'time': obj.time,
                          'address': obj.address, 'booking_status': obj.status})
                 return Response({'data': orders_arabic, 'status': HTTP_200_OK})
