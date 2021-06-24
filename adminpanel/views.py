@@ -19,6 +19,7 @@ from django.views.generic import View, DetailView, UpdateView, FormView, Templat
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
+from .filters import OrderFilter
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm, ContactUsForm, AboutUsForm, TermsAndConditionForm, PrivacyPolicyForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
@@ -211,7 +212,12 @@ class OrderManagementView(LoginRequiredMixin, ListView):
     def get(self, request, *args, **kwargs):
         bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected')
         # bookings = Booking.objects.filter(Q(status='Started') | Q(status='started') | Q(status='Accepted'))
-        print(bookings)
+        print('Before filter--', bookings)
+        print('Before filter--', bookings.count())
+        order_filter = OrderFilter(self.request.GET, queryset=bookings)
+        bookings = order_filter.qs
+        print('After filter--', bookings)
+        print('After filter--', bookings.count())
         return render(self.request, 'order-management.html',
                       {'object_list': bookings,
                        'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
