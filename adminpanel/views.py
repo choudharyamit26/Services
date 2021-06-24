@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf.global_settings import DEFAULT_FROM_EMAIL
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -217,19 +219,40 @@ class OrderManagementView(LoginRequiredMixin, ListView):
 
     def post(self, request, *args, **kwargs):
         from_date = self.request.POST.get('from_date' or None)
+        # print(from_date)
+        # for i in Booking.objects.all():
+        #     print(i.created_at)
+        # print(self.request.POST)
+
         to_date = self.request.POST.get('to_date' or None)
         from_date_2 = self.request.POST.get('order_on_from_date' or None)
         order_on_from_date_2 = self.request.POST.get('order_on_to_date' or None)
         if from_date_2:
-            bookings = Booking.objects.filter(created_at__range=(from_date_2, order_on_from_date_2)).order_by('-id')
-            return render(self.request, 'order-management.html',
-                          {'object_list': bookings,
-                           'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+            if from_date_2 == order_on_from_date_2:
+                bookings = Booking.objects.filter(created_at__date=from_date_2)
+                return render(self.request, 'order-management.html',
+                              {'object_list': bookings,
+                               'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+            else:
+                bookings = Booking.objects.filter(created_at__range=(from_date_2, order_on_from_date_2)).order_by('-id')
+                return render(self.request, 'order-management.html',
+                              {'object_list': bookings,
+                               'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
         elif from_date:
-            bookings = Booking.objects.filter(created_at__range=(from_date, to_date)).order_by('-id')
-            return render(self.request, 'order-management.html',
-                          {'object_list': bookings,
-                           'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+            if from_date == to_date:
+                date_split = from_date.split('-')
+                year = int(date_split[0])
+                month = int(date_split[1])
+                day = int(date_split[2])
+                bookings = Booking.objects.filter(date__contains=date(year, month, day))
+                return render(self.request, 'order-management.html',
+                              {'object_list': bookings,
+                               'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+            else:
+                bookings = Booking.objects.filter(created_at__range=(from_date, to_date)).order_by('-id')
+                return render(self.request, 'order-management.html',
+                              {'object_list': bookings,
+                               'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
 
 class CompletedOrders(LoginRequiredMixin, ListView):
@@ -239,11 +262,7 @@ class CompletedOrders(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         bookings = Booking.objects.filter(status='Completed').order_by('-id')
-        print('Before filter--->>', bookings)
-        print('Before filter--->>', bookings.count())
         order_filter = OrderFilter(self.request.GET, queryset=bookings)
-        print('After filter--->>', bookings)
-        print('After filter--->>', bookings.count())
         bookings = order_filter.qs
         return render(self.request, 'complete-orders.html',
                       {'object_list': bookings})
