@@ -19,7 +19,7 @@ from django.views.generic import View, DetailView, UpdateView, FormView, Templat
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 
-from .filters import OrderFilter
+from .filters import OrderFilter, OrderFilter2
 from .forms import AddServiceProviderForm, AddCategoryForm, SubCategoryForm, SubAdminForm, UpdateServiceForm, \
     AssignServiceProviderForm, UpdateOfferForm, ContactUsForm, AboutUsForm, TermsAndConditionForm, PrivacyPolicyForm
 from .models import User, Category, ServiceProvider, SubCategory, Services, TopServices, AdminNotifications
@@ -211,16 +211,25 @@ class OrderManagementView(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected')
-        # bookings = Booking.objects.filter(Q(status='Started') | Q(status='started') | Q(status='Accepted'))
-        print('Before filter--', bookings)
-        print('Before filter--', bookings.count())
-        order_filter = OrderFilter(self.request.GET, queryset=bookings)
-        bookings = order_filter.qs
-        print('After filter--', bookings)
-        print('After filter--', bookings.count())
         return render(self.request, 'order-management.html',
                       {'object_list': bookings,
                        'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+
+    def post(self, request, *args, **kwargs):
+        from_date = self.request.POST.get('from_date' or None)
+        to_date = self.request.POST.get('to_date' or None)
+        from_date_2 = self.request.POST.get('order_on_from_date' or None)
+        order_on_from_date_2 = self.request.POST.get('order_on_to_date' or None)
+        if from_date_2:
+            bookings = Booking.objects.filter(created_at__range=(from_date_2, order_on_from_date_2))
+            return render(self.request, 'order-management.html',
+                          {'object_list': bookings,
+                           'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+        elif from_date:
+            bookings = Booking.objects.filter(created_at__range=(from_date, to_date))
+            return render(self.request, 'order-management.html',
+                          {'object_list': bookings,
+                           'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
 
 class CompletedOrders(LoginRequiredMixin, ListView):
