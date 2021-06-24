@@ -45,9 +45,10 @@
                     <thead>
                     <tr>
                         <th>S.No</th>
-                        <th>Order Id</th>
-                        <th>Ordered For Date</th>
-                        <th>Ordered For Time</th>
+                        <th>Booking Id</th>
+                        <th>Service on Date</th>
+                        <th>Service Time Slot</th>
+                        <th>Booked On Date</th>
                         <th>Admin Percent</th>
                         <th>Username</th>
                         <th>User ID</th>
@@ -63,6 +64,7 @@
                         <th>{{obj.id}}</th>
                         <th>{{obj.date}}</th>
                         <th>{{obj.time}}</th>
+                        <th>{{obj.created_at|date}}</th>
                         <th>{{obj.admin_percent}}</th>
                         <th>{{obj.user.full_name}}</th>
                         <th>{{obj.user.id}}</th>

@@ -45,9 +45,10 @@
                     <thead>
                     <tr>
                         <th>S.No</th>
-                        <th>Order Id</th>
-                        <th>Ordered For Date</th>
-                        <th>Ordered For Time</th>
+                        <th>Booking Id</th>
+                        <th>Service on Date</th>
+                        <th>Service Time Slot</th>
+                        <th>Booked On Date</th>
                         <th>Offered Price</th>
                         <th>Order Total</th>
                         <th>Extra Fees</th>
@@ -67,6 +68,7 @@
                         <th>{{obj.id}}</th>
                         <th>{{obj.date}}</th>
                         <th>{{obj.time}}</th>
+                        <th>{{obj.created_at|date}}</th>
                         <th>{{obj.quote}}</th>
                         <th>{{obj.total}}</th>
                         <th>{{obj.fees}}</th>
