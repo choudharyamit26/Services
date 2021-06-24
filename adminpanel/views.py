@@ -229,8 +229,15 @@ class CompletedOrders(LoginRequiredMixin, ListView):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
+        bookings = Booking.objects.filter(status='Completed')
+        print('Before filter--->>', bookings)
+        print('Before filter--->>', bookings.count())
+        order_filter = OrderFilter(self.request.GET, queryset=bookings)
+        print('After filter--->>', bookings)
+        print('After filter--->>', bookings.count())
+        bookings = order_filter.qs
         return render(self.request, 'complete-orders.html',
-                      {'object_list': Booking.objects.filter(status='Completed')})
+                      {'object_list': bookings})
 
 
 class GetCategoryServiceProvider(LoginRequiredMixin, View):
