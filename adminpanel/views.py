@@ -210,7 +210,7 @@ class OrderManagementView(LoginRequiredMixin, ListView):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected')
+        bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected').order_by('-id')
         return render(self.request, 'order-management.html',
                       {'object_list': bookings,
                        'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
@@ -221,12 +221,12 @@ class OrderManagementView(LoginRequiredMixin, ListView):
         from_date_2 = self.request.POST.get('order_on_from_date' or None)
         order_on_from_date_2 = self.request.POST.get('order_on_to_date' or None)
         if from_date_2:
-            bookings = Booking.objects.filter(created_at__range=(from_date_2, order_on_from_date_2))
+            bookings = Booking.objects.filter(created_at__range=(from_date_2, order_on_from_date_2)).order_by('-id')
             return render(self.request, 'order-management.html',
                           {'object_list': bookings,
                            'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
         elif from_date:
-            bookings = Booking.objects.filter(created_at__range=(from_date, to_date))
+            bookings = Booking.objects.filter(created_at__range=(from_date, to_date)).order_by('-id')
             return render(self.request, 'order-management.html',
                           {'object_list': bookings,
                            'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
@@ -238,7 +238,7 @@ class CompletedOrders(LoginRequiredMixin, ListView):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        bookings = Booking.objects.filter(status='Completed')
+        bookings = Booking.objects.filter(status='Completed').order_by('-id')
         print('Before filter--->>', bookings)
         print('Before filter--->>', bookings.count())
         order_filter = OrderFilter(self.request.GET, queryset=bookings)
