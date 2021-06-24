@@ -68,7 +68,7 @@ class UserManagementView(LoginRequiredMixin, View):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        users = AppUser.objects.all().exclude(user__email='admin@email.com')
+        users = AppUser.objects.all().exclude(user__email='roo3a8025@gmail.com')
         # users = User.objects.filter(is_provider=False)
         # print(users)
         # print(User.objects.all())
