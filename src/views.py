@@ -55,7 +55,7 @@ class CreateUser(APIView):
                 app_user_settings.save()
                 token = Token.objects.get_or_create(user=user)
                 AdminNotifications.objects.create(
-                    user=User.objects.get(email='roo3a8025@email.com'),
+                    user=User.objects.get(email='roo3a8025@gmail.com'),
                     title='New User Registration',
                     body='A new user has registered on the platform'
                 )
