@@ -741,7 +741,7 @@ class BookingView(APIView):
                     except Exception as e:
                         pass
                 AdminNotifications.objects.create(
-                    user=User.objects.get(email='admin@email.com'),
+                    user=User.objects.get(email='roo3a8025@gmail.com'),
                     title='New Booking Request',
                     body='A new service booking request has been placed on the platform'
                 )
@@ -1059,7 +1059,7 @@ class UpdateOrderStatus(APIView):
                 UserNotification.objects.create(user=order_obj.user, title='ORDER STATUS UPDATE',
                                                 body=f'Status of service request with Order Id-{order_obj.id} has been updated to {order_obj.status}.')
                 AdminNotifications.objects.create(
-                    user=User.objects.get(email='admin@email.com'),
+                    user=User.objects.get(email='roo3a8025@gmail.com'),
                     title='ORDER STATUS UPDATE',
                     body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
                                                                                               order_obj.status)
@@ -1073,7 +1073,7 @@ class UpdateOrderStatus(APIView):
                     UserNotification.objects.create(user=order_obj.user, title='تحديث حالة الطلب',
                                                     body=f'تم تحديث حالة طلب الخدمة مع معرف الطلب {order_obj.id} إلى {order_obj.status}.')
                 AdminNotifications.objects.create(
-                    user=User.objects.get(email='admin@email.com'),
+                    user=User.objects.get(email='roo3a8025@gmail.com'),
                     title='ORDER STATUS UPDATE',
                     body='Status of service request with id {} has been updated to {}'.format(order_obj.id,
                                                                                               order_obj.status)
@@ -1553,7 +1553,7 @@ class AcceptOrderServiceProviderView(APIView):
             booking_obj.is_accepted_by_provider = True
             booking_obj.save()
             AdminNotifications.objects.create(
-                user=User.objects.get(email='admin@email.com'),
+                user=User.objects.get(email='roo3a8025@gmail.com'),
                 title='ORDER STATUS UPDATE',
                 body=f'Order with Order Id-{booking_obj.id} has been ACCEPTED by the service provider {booking_obj.service_provider.email}'
             )
@@ -1573,7 +1573,7 @@ class RejectOrderServiceProviderView(APIView):
             booking_obj.is_rejected_by_provider = True
             booking_obj.save()
             AdminNotifications.objects.create(
-                user=User.objects.get(email='admin@email.com'),
+                user=User.objects.get(email='roo3a8025@gmail.com'),
                 title='ORDER STATUS UPDATE',
                 body=f'Order with Order Id-{booking_obj.id} has been REJECTED by the service provider {booking_obj.service_provider.email}'
             )
@@ -1672,7 +1672,7 @@ class UpdateBookingByServiceProvider(APIView):
                     try:
                         if booking_obj.user.device_type == "android":
                             AdminNotifications.objects.create(
-                                user=User.objects.get(email='admin@email.com'),
+                                user=User.objects.get(email='roo3a8025@gmail.com'),
                                 title='ORDER STATUS UPDATE',
                                 body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
                             )
@@ -1683,7 +1683,7 @@ class UpdateBookingByServiceProvider(APIView):
                             print(respo)
                         else:
                             AdminNotifications.objects.create(
-                                user=User.objects.get(email='admin@email.com'),
+                                user=User.objects.get(email='roo3a8025@gmail.com'),
                                 title='ORDER STATUS UPDATE',
                                 body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
                             )
@@ -1701,7 +1701,7 @@ class UpdateBookingByServiceProvider(APIView):
                     try:
                         if booking_obj.user.device_type == "android":
                             AdminNotifications.objects.create(
-                                user=User.objects.get(email='admin@email.com'),
+                                user=User.objects.get(email='roo3a8025@gmail.com'),
                                 title='ORDER STATUS UPDATE',
                                 body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
                             )
@@ -1712,7 +1712,7 @@ class UpdateBookingByServiceProvider(APIView):
                             print(respo)
                         else:
                             AdminNotifications.objects.create(
-                                user=User.objects.get(email='admin@email.com'),
+                                user=User.objects.get(email='roo3a8025@gmail.com'),
                                 title='ORDER STATUS UPDATE',
                                 body=f'Order with Order Id-{booking_obj.id} has been completed by the service provider {booking_obj.service_provider.email}'
                             )
