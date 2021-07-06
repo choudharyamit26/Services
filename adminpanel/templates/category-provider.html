@@ -20,7 +20,7 @@
 <div>
 <option value="">Select Provider</option>
 {% for ad in service_provider %}
-<option value="{{ ad.pk }}">{{ ad.email }}</option>
+<option value="{{ ad.pk }}">{{ ad.email }} | {{ad.full_name}}</option>
 {% endfor %}
 </div>
 </body>

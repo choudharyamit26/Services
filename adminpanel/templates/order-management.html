@@ -14,9 +14,14 @@
         {% endif %}
     </div>
     <div class="demandInner boxs">
-        <div class="AddService">
-            <h2 class="main">Order Management
-            </h2>
+        <!--        <div class="AddService">-->
+        <!--            <h2 class="main">Order Management-->
+        <!--            </h2>-->
+        <!--        </div>-->
+        <div style="display:flex;justify-content: space-between;
+    align-items: center;">
+            <h2 class="main">Order Management </h2>
+            <a href='{% url "adminpanel:bookings-csv" %}' class="btns">Export CSV</a>
         </div>
         <div class="tableList boxs bgWhite">
             <div class="row">
@@ -29,13 +34,15 @@
                                 <div class="col-sm-3">
                                     <div class="form-group formGroup">
                                         <span class="labelel2">From</span>
-                                        <input type="date" class="form-control " name="from_date" placeholder="From" id="from_date">
+                                        <input type="date" class="form-control " name="from_date" placeholder="From"
+                                               id="from_date">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group formGroup">
                                         <span for="" class="labelel2">To</span>
-                                        <input type="date" class="form-control " name="to_date" placeholder="To" id="to_date">
+                                        <input type="date" class="form-control " name="to_date" placeholder="To"
+                                               id="to_date">
                                     </div>
                                 </div>
                                 <div class="col-sm-3" style="padding-top: 20px;">
@@ -54,13 +61,15 @@
                                 <div class="col-sm-3">
                                     <div class="form-group formGroup">
                                         <span class="labelel2">From</span>
-                                        <input type="date" class="form-control " name="order_on_from_date" placeholder="From">
+                                        <input type="date" class="form-control " name="order_on_from_date"
+                                               placeholder="From">
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group formGroup">
                                         <span for="" class="labelel2">To</span>
-                                        <input type="date" class="form-control " name="order_on_to_date" placeholder="To">
+                                        <input type="date" class="form-control " name="order_on_to_date"
+                                               placeholder="To">
                                     </div>
                                 </div>
                                 <div class="col-sm-3" style="padding-top: 20px;">
@@ -145,7 +154,7 @@
                             placeholder="Select Service Provider">
                         <option value="">Select Provider</option>
                         {% for obj in service_provider %}
-                        <option value="{{obj.pk}}" id="serviceProviderId">{{obj.email}}</option>
+                        <option value="{{obj.pk}}" id="serviceProviderId">{{obj.email}} | {{obj.full_name}}</option>
                         {% endfor %}
                     </select>
                     <br>
@@ -246,6 +255,10 @@ $(document).ready(function () {
 
 
 
+
+
+
+
 </script>
 <script>
 $(document).ready(function () {
@@ -295,6 +308,10 @@ $(document).ready(function () {
 
 
 
+
+
+
+
 </script>
 <script>
     $("#categories").change(function () {
@@ -326,6 +343,10 @@ $(document).ready(function () {
 
 
 
+
+
+
+
 </script>
 <script>
 <!--    console.log(document.getElementById('from_date').value())-->
@@ -333,5 +354,9 @@ $(document).ready(function () {
 <!--    var x = document.getElementById('from_date').reset()-->
 <!--    var y = document.getElementById('to_date').reset()-->
 <!--    console.log(x,y)-->
+
+
+
+
 </script>
 {% endblock body %}`

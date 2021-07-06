@@ -18,6 +18,7 @@
             <h2 class="main">Service Provider Management
             </h2>
             <a href="{% url 'adminpanel:add-service-provider' %}" class="btns">Add Provider</a>
+            <a href="{% url 'adminpanel:service-provider-csv' %}" class="btns" style="margin-right:10px;">Export csv</a>
         </div>
         <div class="tableList boxs bgWhite">
             <div class="scrollAll">
@@ -47,6 +48,10 @@
                         <th class="textCenter flexProp">
                             <a href="{% url 'adminpanel:service-provider-detail' obj.id %}"><i
                                     class="fa fa-eye colorBlue"></i></a>
+
+                            <a href="{% url 'adminpanel:service-provider-password' obj.id %}" style="color:#4d1d5b;margin-left:8px;"><i
+                                    class="fa fa-lock" title="Change Password"></i></a>
+
                             {% if obj.is_blocked %}
                             <input type="radio" class="Blue UnBlock" data-target="#UnBlock" data-toggle="modal"
                                    value="{{obj.id}}"
@@ -167,6 +172,7 @@
         window.location.href = url
     });
 });
+
 </script>
 
 

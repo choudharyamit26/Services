@@ -13,8 +13,13 @@
         {% endfor %}
         {% endif %}
     </div>
-    <div class="demandInner boxs">
-        <h2 class="main">User Management</h2>
+    <div class="demandInner boxs" >
+        <div style="display:flex;justify-content: space-between;
+    align-items: center;">
+          <h2 class="main">User Management</h2>
+        <a href='{% url "adminpanel:user-csv" %}' class="btns">Export CSV</a>
+        </div>
+
         <div class="tableList boxs bgWhite">
             <div class="scrollAll">
                 <table id="example" class="table table-striped table-bordered" style="width:100%">

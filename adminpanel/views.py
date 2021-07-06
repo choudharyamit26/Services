@@ -1,3 +1,4 @@
+import csv
 from datetime import date
 
 from django.conf.global_settings import DEFAULT_FROM_EMAIL
@@ -71,12 +72,69 @@ class UserManagementView(LoginRequiredMixin, View):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        users = AppUser.objects.all().exclude(user__email='roo3a8025@gmail.com')
-        # users = User.objects.filter(is_provider=False)
-        # print(users)
-        # print(User.objects.all())
-        # print(User.objects.filter(is_provider=False))
+        users = AppUser.objects.all().exclude(user__email='roo3a8025@gmail.com').order_by('-id')
         return render(self.request, 'user-management.html', {'object_list': users})
+
+
+class UserCsvView(LoginRequiredMixin, View):
+    model = AppUser
+    login_url = 'adminpanel:login'
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="users.csv"'
+        writer = csv.writer(response)
+        writer.writerow(
+            ['User Id', 'Name', 'Phone Number', 'Registration Date'])
+        users = AppUser.objects.all().values_list('id', 'full_name', 'user__phone_number', 'created_at')
+        for user in users:
+            writer.writerow(user)
+        return response
+
+
+class OrderCsvView(LoginRequiredMixin, View):
+    model = Booking
+    login_url = 'adminpanel:login'
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="bookings.csv"'
+        writer = csv.writer(response)
+        writer.writerow(
+            ['Booking Id', 'User Name', 'User Phone Number', 'Ordered At', 'Ordered For', 'Ordered Time',
+             'Ordered Amount'])
+        bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected').values_list('id',
+                                                                                                            'user__full_name',
+                                                                                                            'user__user__phone_number',
+                                                                                                            'created_at__date',
+                                                                                                            'date',
+                                                                                                            'time',
+                                                                                                            'total')
+        for booking in bookings:
+            writer.writerow(booking)
+        return response
+
+
+class ServiceProviderCsvView(LoginRequiredMixin, View):
+    model = ServiceProvider
+    login_url = 'adminpanel:login'
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="service-provider.csv"'
+        writer = csv.writer(response)
+        writer.writerow(
+            ['Id', 'User Name', 'User Email', 'Category', 'Sub Category', 'Services',
+             'Address'])
+        serviceproviders = ServiceProvider.objects.all().values_list('id',
+                                                                     'full_name',
+                                                                     'email',
+                                                                     'category__category_name',
+                                                                     'sub_category__sub_category_name',
+                                                                     'services__service_name', 'address')
+        for serviceprovider in serviceproviders:
+            writer.writerow(serviceprovider)
+        return response
 
 
 class UnBlockUser(LoginRequiredMixin, View):
@@ -109,6 +167,31 @@ class ServiceProviderManagementView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         return render(self.request, 'service-provider-management.html', {'object_list': ServiceProvider.objects.all()})
+
+
+class ServiceProviderPasswordView(LoginRequiredMixin, View):
+    template_name = 'password-management.html'
+    login_url = "adminpanel:login"
+
+    def get(self, request, *args, **kwargs):
+        print(kwargs)
+        service_provider = ServiceProvider.objects.get(id=kwargs['pk'])
+        return render(self.request, 'password-management.html',
+                      {'provider_name': service_provider.full_name})
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        print(kwargs)
+        service_provider = ServiceProvider.objects.get(id=kwargs['pk'])
+        user = User.objects.get(email=service_provider.email)
+        if self.request.POST.get('new_password1') == self.request.POST.get('new_password2'):
+            user.set_password(self.request.POST.get('new_password1'))
+            user.save()
+            messages.success(self.request, 'Password changed successfully')
+            return redirect("adminpanel:service-provider-management")
+        else:
+            messages.error(self.request, 'New Password and Confirm Password did not match')
+            return redirect(self.request.path_info)
 
 
 class BlockServiceProvider(LoginRequiredMixin, View):

@@ -11,7 +11,8 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     ReadNotificationView, InquiryView, UserProviderRegistrations, OrderDetail, UpdateContactUs, UpdateAboutUs, \
     UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
     DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider, CompletedOrders, \
-    StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores, GetGstView, UpdateGstView
+    StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores, GetGstView, UpdateGstView, \
+    ServiceProviderPasswordView, UserCsvView, OrderCsvView, ServiceProviderCsvView
 
 app_name = 'adminpanel'
 
@@ -87,6 +88,10 @@ urlpatterns = [
                        name='update-terms-and-condition'),
                   path('user-provider-registration/', UserProviderRegistrations.as_view(),
                        name='user-provider-registration'),
-                  path('get-gst/', GetGstView.as_view(), name='get-gst')
-
+                  path('get-gst/', GetGstView.as_view(), name='get-gst'),
+                  path('service-provider-password/<int:pk>/', ServiceProviderPasswordView.as_view(),
+                       name='service-provider-password'),
+                  path('user-csv/', UserCsvView.as_view(), name='user-csv'),
+                  path('bookings-csv/', OrderCsvView.as_view(), name='bookings-csv'),
+                  path('service-provider-csv/', ServiceProviderCsvView.as_view(), name='service-provider-csv'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
