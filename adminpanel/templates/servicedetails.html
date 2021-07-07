@@ -32,16 +32,14 @@
                                 <td>{{object.phone_number}}</td>
                                 <td><img src="{{object.profile_pic.url}}" alt="profile" class="img-fluid imgWidths"></td>
                                 <td>{{object.created_at}}</td>
-
                             </tr>
-
-
                             </tfoot>
                         </table>
                     </div>
                 </div>
                 <div id="menu1" class="tab-pane fade">
                     <div class="tableList boxs bgWhite">
+                        <h5 style="float:right;margin-bottom:20px;"><b>Total Bookings Amount: </b><span> {{bookings_amount}}</span></h5>
                         <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
@@ -50,6 +48,7 @@
                                 <th>User Id</th>
                                 <th>User Name</th>
                                 <th>Date Of Order</th>
+                                <th>Booking amount</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -60,6 +59,7 @@
                                 <td>{{booking.user.id}}</td>
                                 <td>{{booking.user.full_name}}</td>
                                 <td>{{booking.date}}</td>
+                                <td>{{booking.total}}</td>
                             </tr>
                             {% endfor %}
 

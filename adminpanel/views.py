@@ -1,6 +1,6 @@
 import csv
 from datetime import date
-
+from django.db.models import Sum
 from django.conf.global_settings import DEFAULT_FROM_EMAIL
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -659,7 +659,10 @@ class ServiceProviderDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, *args, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         bookings = Booking.objects.filter(service_provider=kwargs['object'].id)
+        bookings_amount = Booking.objects.filter(service_provider=kwargs['object'].id).aggregate(Sum('total'))
+        print(bookings_amount)
         context['bookings'] = bookings
+        context['bookings_amount'] = bookings_amount['total__sum']
         return context
 
 
