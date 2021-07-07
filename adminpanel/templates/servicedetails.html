@@ -40,11 +40,11 @@
                 </div>
                 <div id="menu1" class="tab-pane fade">
                     <div class="tableList boxs bgWhite">
-                        {% if {{bookings_amount}} > 0 %}
+                        {% if bookings_amount > 0 %}
                         <h5 style="float:right;margin-bottom:20px;"><b>Total Bookings Amount: </b><span> {{bookings_amount}}</span>
                         </h5>
                         {% else %}
-                        <h5 style="float:right;margin-bottom:20px;"><b>Total Bookings Amount: </b><span> </span>
+                        <h5 style="float:right;margin-bottom:20px;"><b>Total Bookings Amount: </b><span> 0</span>
                         </h5>
                         {% endif %}
 
