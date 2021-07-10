@@ -295,10 +295,17 @@ class OrderManagementView(LoginRequiredMixin, ListView):
     login_url = "adminpanel:login"
 
     def get(self, request, *args, **kwargs):
-        bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected').order_by('-id')
-        return render(self.request, 'order-management.html',
-                      {'object_list': bookings,
-                       'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+        if self.request.GET.get('status'):
+            bookings = Booking.objects.filter(status=self.request.GET.get('status')).order_by('-id')
+            print(bookings)
+            return render(self.request, 'order-management.html',
+                          {'object_list': bookings,
+                           'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+        else:
+            bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected').order_by('-id')
+            return render(self.request, 'order-management.html',
+                          {'object_list': bookings,
+                           'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
 
     def post(self, request, *args, **kwargs):
         from_date = self.request.POST.get('from_date' or None)
