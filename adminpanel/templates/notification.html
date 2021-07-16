@@ -40,20 +40,20 @@
                     <li>
                         {% if obj.title == 'New User Registration' %}
                         <div class="iconLeft">
-                            <span><i class="fa  fa-shopping-cart fa-2x"></i></span>
+                            <span><i class="fa  fa-user fa-2x"></i></span>
                         </div>
                         {% elif obj.title == 'New Booking Request' %}
                         <div class="iconLeft">
-                            <span><i class="fa fa-dollar-sign fa-2x"></i></span>
+                            <span><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></span>
                         </div>
-                        {% elif obj.title == 'ORDER STATUS UPDATE' %}
+                        {% elif obj.title == 'Booking Update' %}
                         <div class="iconLeft">
                             <span><i class="fa fa-wrench fa-2x"></i></span>
                         </div>
                         {% endif %}
                         <div class="iconContent2">
                             <h2>{{obj.title}}</h2>
-                            <p class="time">{{obj.created_at}}</p>
+                            <p class="time">{{obj.created_at|date}}</p>
                             <p class="para1">{{obj.body}}</p>
                         </div>
                     </li>
