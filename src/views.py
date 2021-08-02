@@ -247,7 +247,7 @@ class HomeView(APIView):
         top_services_list = []
         top_services_list_arabic = []
         services = Services.objects.all()
-        categories = Category.objects.all()
+        categories = Category.objects.filter(hidden=False)
         if Settings.objects.get(user=user_id).language == 'en':
             for category in categories:
                 if category.category_image:
