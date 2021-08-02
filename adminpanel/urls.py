@@ -12,7 +12,8 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     UpdateTermsAndCondition, UpdatePrivacyPolicy, UnBlockUser, BlockUser, BlockServiceProvider, UnBlockServiceProvider, \
     DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider, CompletedOrders, \
     StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores, GetGstView, UpdateGstView, \
-    ServiceProviderPasswordView, UserCsvView, OrderCsvView, ServiceProviderCsvView
+    ServiceProviderPasswordView, UserCsvView, OrderCsvView, ServiceProviderCsvView, CancelOrderView, HideCategory, \
+    UnHideCategory
 
 app_name = 'adminpanel'
 
@@ -26,6 +27,8 @@ urlpatterns = [
                   path('add-category/', AddCategoryView.as_view(), name='add-category'),
                   path('category-management/', CategoryView.as_view(), name='category-management'),
                   path('category-detail/<int:pk>/', CategoryDetail.as_view(), name='category-detail'),
+                  path('hide-category/<int:pk>/', HideCategory.as_view(), name='hide-category'),
+                  path('unhide-category/<int:pk>/', UnHideCategory.as_view(), name='unhide-category'),
                   path('update-category/<int:pk>/', UpdateCategoryView.as_view(), name='update-category'),
                   path('order-management/', OrderManagementView.as_view(), name='order-management'),
                   path('complete-orders/', CompletedOrders.as_view(), name='complete-orders'),
@@ -66,6 +69,7 @@ urlpatterns = [
                   path('delete-top-service/<int:pk>/', DeleteTopService.as_view(), name='delete-top-service'),
                   path('assign-service-provider/', AssignServiceProvider.as_view(), name='assign-service-provider'),
                   path('send-quote/', SendQuoteView.as_view(), name='send-quote'),
+                  path('cancel-order/', CancelOrderView.as_view(), name='cancel-order'),
                   path('notification-count/', NotificationCount.as_view(), name='notification-count'),
                   path('read-notification/', ReadNotificationView.as_view(), name='read-notification'),
                   path('inquiry/', InquiryView.as_view(), name='inquiry'),

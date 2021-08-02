@@ -585,8 +585,11 @@ class BookingView(APIView):
     serializer_class = BookingSerializer
 
     def post(self, request, *args, **kwargs):
+        print(self.request.POST)
         user = self.request.user
+        # print(user)
         app_user = AppUser.objects.get(user=user)
+        # print(app_user)
         serializer = BookingSerializer(data=self.request.data)
         if serializer.is_valid():
             try:
@@ -606,8 +609,8 @@ class BookingView(APIView):
                 # discount = serializer.validated_data['discount']
                 # total = serializer.validated_data['total']
                 night_booking = serializer.validated_data['night_booking']
-                image_2 = serializer.validated_data['image_2']
-                image_1 = serializer.validated_data['image_1']
+                image_2 = serializer.validated_data.get('image_2')
+                image_1 = serializer.validated_data.get('image_1')
                 booking_lat = serializer.validated_data['booking_lat']
                 booking_long = serializer.validated_data['booking_long']
                 gst = Gst.objects.all()[0].gst

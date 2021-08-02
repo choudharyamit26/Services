@@ -89,7 +89,7 @@ class BookingSerializer(serializers.ModelSerializer):
     total = serializers.FloatField(required=False)
     default_address = serializers.BooleanField()
     night_booking = serializers.BooleanField(required=True)
-    image_1 = serializers.ImageField()
+    image_1 = serializers.ImageField(required=False, allow_null=True)
     image_2 = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:

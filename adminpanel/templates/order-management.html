@@ -83,8 +83,8 @@
                     <label>Filter By Order Status</label>
                     <select name="bookings" id="orderstatus" required class="form-control formControl">
                         <option>Select Status</option>
-                        <option value="started" >Started</option>
-                        <option value="Accepted" >Accepted</option>
+                        <option value="started">Started</option>
+                        <option value="Accepted">Accepted</option>
                     </select>
                 </div>
             </div>
@@ -129,6 +129,9 @@
                             {% else %}
                             <button value="{{obj.id}}" class="btns orderQuoteButton" data-toggle="modal"
                                     data-target="#quote">Send offer price
+                            </button>
+                            <button value="{{obj.id}}" class="btns orderCancelButton" data-toggle="modal"
+                                    data-target="#cancel">Cancel Order
                             </button>
                             {% endif %}
                         </th>
@@ -211,6 +214,31 @@
 
     </div>
 </div>
+<div class="modal fade" id="cancel" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="form-group">
+                    <div id="object_id_placeholder_div3">
+                        <input hidden="true" id="object_id_placeholder_input3" value="">
+                    </div>
+                    <label for="">Reason</label>
+                    <textarea name="cancel" id="cancelInput" required class="form-control formControl"
+                              placeholder="Reason" rows="4" cols="10"></textarea>
+                    <ul class="allBtns">
+                        <li>
+                            <button type="button" id="cancelButton" class="btns">Cancel Order</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 <script>
 $(document).ready(function () {
     $('.orderModalButton').click(function (e) {
@@ -252,6 +280,7 @@ $(document).ready(function () {
         })
     });
 });
+
 
 
 
@@ -314,6 +343,46 @@ $(document).ready(function () {
 
 
 
+$(document).ready(function () {
+    $('.orderCancelButton').click(function (e) {
+        console.log('clicked orderModalButton')
+        e.preventDefault();
+//        $('.modal').addClass('show');
+        var value = $(this).val();
+        console.log("value",value)
+        $("#object_id_placeholder_div3").html(`<input hidden="true" id="object_id_placeholder_input3" value="` + value + `">`)
+    });
+    $('.CloseModal').click(function (e) {
+        e.preventDefault();
+//        $('.modal').removeClass('show');
+    });
+
+    $("#cancelButton").click(function () {
+        var object_id = $("#object_id_placeholder_input3").val();
+        console.log('Id ',object_id)
+        var quote = $("#cancelInput").val();
+        console.log('Service Provider id',quote)
+        var protocol = window.location.protocol
+        var hostname = window.location.hostname
+        var port = window.location.port
+        var url = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/cancel-order" + "/"
+        $.ajax({
+            url:url,
+            method:'POST',
+            data:{
+                'csrfmiddlewaretoken': "{{ csrf_token }}",
+                'quote':quote,
+                'orderId':object_id
+            },
+            success: function (data) {
+            console.log('inside publicationId success')
+            window.location.href = protocol + "//" + hostname + ":" + port + "/adminpanel" + "/order-management/"
+      }
+        })
+    });
+});
+
+
 
 
 
@@ -349,6 +418,7 @@ $(document).ready(function () {
       }
     });
   });
+
 </script>
 <script>
     $("#orderstatus").change(function(){
@@ -372,5 +442,6 @@ $(document).ready(function () {
             }
         })
     });
+
 </script>
 {% endblock body %}`

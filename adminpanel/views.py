@@ -242,6 +242,32 @@ class CategoryView(LoginRequiredMixin, ListView):
     #     return render(self.request, 'Category.html')
 
 
+class HideCategory(LoginRequiredMixin, View):
+    model = Category
+    login_url = "adminpanel:login"
+
+    def get(self, request, *args, **kwargs):
+        print('>>>>>>>>', kwargs)
+        category_obj = Category.objects.get(id=kwargs['pk'])
+        category_obj.hidden = True
+        category_obj.save()
+        messages.success(self.request, 'Category made hidden successfully')
+        return redirect("adminpanel:category-management")
+
+
+class UnHideCategory(LoginRequiredMixin, View):
+    model = Category
+    login_url = "adminpanel:login"
+
+    def get(self, request, *args, **kwargs):
+        print('>>>>>>>>', kwargs)
+        category_obj = Category.objects.get(id=kwargs['pk'])
+        category_obj.hidden = False
+        category_obj.save()
+        messages.success(self.request, 'Category made unhidden successfully')
+        return redirect("adminpanel:category-management")
+
+
 class AddCategoryView(LoginRequiredMixin, CreateView):
     template_name = 'addCategory.html'
     model = Category
@@ -343,6 +369,63 @@ class OrderManagementView(LoginRequiredMixin, ListView):
                 return render(self.request, 'order-management.html',
                               {'object_list': bookings,
                                'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
+
+
+class CancelOrderView(LoginRequiredMixin, View):
+    model = Booking
+    login_url = "adminpanel:login"
+
+    def post(self, request, *args, **kwargs):
+        print('From cancel order-->>', self.request.POST)
+        reason = self.request.POST['quote']
+        order_obj = Booking.objects.get(id=self.request.POST['orderId'])
+        order_obj.is_canceled_by_admin = True
+        order_obj.cancellation_reason_by_admin = reason
+        order_obj.save()
+        user_device_type = order_obj.user.device_type
+        user_device_token = order_obj.user.device_token
+        if user_device_type == 'android':
+            if Settings.objects.get(user=order_obj.user).language == 'en':
+                UserNotification.objects.create(user=order_obj.user, title='ORDER CANCELED BY ADMIN',
+                                                body=f'Your order with order ID {order_obj.id} has been rejected by admin. {reason}')
+                data = {
+                    "title": "ORDER CANCELED BY ADMIN",
+                    "body": f"Your order with order ID {order_obj.id} has been rejected by admin. {reason}",
+                    "type": "canceled_services"
+                }
+                respo = send_to_one(user_device_token, data)
+                print(respo)
+            else:
+                UserNotification.objects.create(user=order_obj.user, title="تم إلغاء الطلب من قبل المسؤول",
+                                                body=f'رفض المشرف طلبك الذي يحتوي على معرّف الطلب {order_obj.id}. {reason}')
+                data = {
+                    "title": "تم إلغاء الطلب من قبل المسؤول",
+                    "body": f"رفض المشرف طلبك الذي يحتوي على معرّف الطلب {order_obj.id}. {reason}",
+                    "type": "upcoming_services"
+                }
+                respo = send_to_one(user_device_token, data)
+                print(respo)
+        else:
+            if Settings.objects.get(user=order_obj.user).language == 'en':
+                UserNotification.objects.create(user=order_obj.user, title='ORDER CANCELED BY ADMIN',
+                                                body=f'Your order with order ID {order_obj.id} has been rejected by admin. {reason}')
+                title = "ORDER CANCELED BY ADMIN"
+                body = f"Your order with order ID {order_obj.id} has been rejected by admin. {reason}"
+                message_type = "newQuote"
+                # sound = 'notifications.mp3'
+                respo = send_another(user_device_token, title, body, message_type)
+                print(respo)
+            else:
+                UserNotification.objects.create(user=order_obj.user, title="تم إلغاء الطلب من قبل المسؤول",
+                                                body=f"رفض المشرف طلبك الذي يحتوي على معرّف الطلب {order_obj.id}. {reason}"),
+                title = "تم إلغاء الطلب من قبل المسؤول"
+                body = f"رفض المشرف طلبك الذي يحتوي على معرّف الطلب {order_obj.id}. {reason}",
+                message_type = "newQuote"
+                # sound = 'notifications.mp3'
+                respo = send_another(user_device_token, title, body, message_type)
+                print(respo)
+        messages.success(self.request, 'Order canceled successfully')
+        return redirect("adminpanel:order-management")
 
 
 class CompletedOrders(LoginRequiredMixin, ListView):

@@ -15,7 +15,7 @@
     </div>
     <div class="demandInner boxs">
         <div class="AddService">
-            <h2 class="main"> Category Managementbgffbfg
+            <h2 class="main"> Category Management
             </h2>
             <a href="{% url 'adminpanel:add-category' %}" class="btns">Add Category</a>
         </div>
@@ -39,13 +39,21 @@
                         <td>{{obj.category_name}}</td>
                         <td>{{obj.category_name_arabic}}</td>
                         {% if obj.category_image %}
-                        <td><img src="{{obj.category_image.url}}"  alt="img" class="img-fluid tableImg"></td>
+                        <td><img src="{{obj.category_image.url}}" alt="img" class="img-fluid tableImg"></td>
                         {% else %}
                         <td><img src="" alt="img" class="img-fluid"></td>
                         {% endif %}
                         <th>
                             <a href="{% url 'adminpanel:category-detail' obj.id %}"><i class="fa fa-eye colorBlue"></i></a>
                             <a href="{% url 'adminpanel:update-category' obj.id %}"><i class="fa fa-edit colorBlue"></i></a>
+                            {% if obj.hidden %}
+                            <a href="{% url 'adminpanel:unhide-category' obj.id %}"><i class="fa fa-check colorBlue"
+                                                                                       aria-hidden="true"></i></a>
+
+                            {% else %}
+                            <a href="{% url 'adminpanel:hide-category' obj.id %}"><i class="fa fa-ban colorBlue"
+                                                                                       aria-hidden="true"></i></a>
+                            {% endif %}
                         </th>
                     </tr>
                     {% endfor %}

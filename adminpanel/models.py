@@ -64,6 +64,7 @@ class Category(models.Model):
     category_name = models.CharField(default='', max_length=300)
     category_name_arabic = models.CharField(default='', max_length=300)
     category_image = models.ImageField(upload_to='media', null=True, blank=True)
+    hidden = models.BooleanField(default=False)
 
 
 class SubCategory(models.Model):

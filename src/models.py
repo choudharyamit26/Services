@@ -66,6 +66,8 @@ class Booking(models.Model):
     night_booking = models.BooleanField(default=False)
     booking_lat = models.FloatField(default=0)
     booking_long = models.FloatField(default=0)
+    is_canceled_by_admin = models.BooleanField(default=False)
+    cancellation_reason_by_admin = models.CharField(default='', max_length=1000)
 
 
 class ContactUs(models.Model):
