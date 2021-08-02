@@ -246,7 +246,7 @@ class HomeView(APIView):
         top_services = TopServices.objects.all()
         top_services_list = []
         top_services_list_arabic = []
-        services = Services.objects.all()
+        services = Services.objects.filter(category__hidden=False)
         categories = Category.objects.filter(hidden=False)
         if Settings.objects.get(user=user_id).language == 'en':
             for category in categories:
