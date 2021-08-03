@@ -13,7 +13,7 @@ from .views import LoginView, Dashboard, UserManagementView, ServiceProviderMana
     DeleteSubAdmin, UpdateCategoryView, UpdateSubCategory, GetCategoryServiceProvider, CompletedOrders, \
     StaticPrivacyPolicyForAppStores, TermsAndConditionForAppStores, GetGstView, UpdateGstView, \
     ServiceProviderPasswordView, UserCsvView, OrderCsvView, ServiceProviderCsvView, CancelOrderView, HideCategory, \
-    UnHideCategory
+    UnHideCategory, UpdateOrder, OrderCanceledByAdmin
 
 app_name = 'adminpanel'
 
@@ -34,6 +34,7 @@ urlpatterns = [
                   path('complete-orders/', CompletedOrders.as_view(), name='complete-orders'),
                   path('order-detail/<int:pk>/', OrderDetail.as_view(), name='order-detail'),
                   path('rejected-order-management/', RejectedOrderView.as_view(), name='rejected-order-management'),
+                  path('canceled-orders/', OrderCanceledByAdmin.as_view(), name='canceled-orders'),
                   path('verification-management/', VerificationManagementView.as_view(),
                        name='verification-management'),
                   path('worker-management/', WorkerManagementView.as_view(), name='worker-management'),
@@ -98,4 +99,5 @@ urlpatterns = [
                   path('user-csv/', UserCsvView.as_view(), name='user-csv'),
                   path('bookings-csv/', OrderCsvView.as_view(), name='bookings-csv'),
                   path('service-provider-csv/', ServiceProviderCsvView.as_view(), name='service-provider-csv'),
+                  path('edit-order/<int:pk>/', UpdateOrder.as_view(), name='edit-order'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

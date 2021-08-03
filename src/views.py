@@ -242,11 +242,12 @@ class HomeView(APIView):
         service_list = []
         service_list_arabic = []
         category_list = []
-        category_list_arabic = []
+        # category_list_arabic = []
         top_services = TopServices.objects.all()
         top_services_list = []
         top_services_list_arabic = []
         services = Services.objects.filter(category__hidden=False)
+        # services = Services.objects.filter(category__hidden=False).order_by('category__category_name')
         categories = Category.objects.filter(hidden=False)
         if Settings.objects.get(user=user_id).language == 'en':
             for category in categories:
@@ -1928,3 +1929,4 @@ class GetGstValue(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({'data': Gst.objects.all()[0].gst, 'status': HTTP_200_OK})
+

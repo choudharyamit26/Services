@@ -328,7 +328,8 @@ class OrderManagementView(LoginRequiredMixin, ListView):
                           {'object_list': bookings,
                            'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
         else:
-            bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected').order_by('-id')
+            bookings = Booking.objects.all().exclude(status='Completed').exclude(status='Rejected').exclude(
+                is_canceled_by_admin=True).order_by('-id')
             return render(self.request, 'order-management.html',
                           {'object_list': bookings,
                            'service_provider': ServiceProvider.objects.all(), 'categories': Category.objects.all()})
@@ -1419,3 +1420,42 @@ class UpdateGstView(View):
         obj.gst = self.request.POST['gst']
         obj.save()
         return redirect("adminpanel:get-gst")
+
+
+class UpdateOrder(LoginRequiredMixin, View):
+    model = Booking
+    template_name = "update-order.html"
+
+    def get(self, request, *args, **kwargs):
+        print(kwargs)
+        booking_obj = Booking.objects.get(id=kwargs['pk'])
+        return render(self.request, 'update-order.html', {'object': booking_obj, 'services': Services.objects.all()})
+
+    def post(self, request, *args, **kwargs):
+        print(self.request.POST)
+        booking_obj = Booking.objects.get(id=kwargs['pk'])
+        service_obj = Services.objects.get(id=self.request.POST['service'])
+        booking_obj.service = service_obj
+        booking_obj.time = self.request.POST['time']
+        booking_obj.admin_percent = self.request.POST['admin_percent']
+        booking_obj.sub_total = self.request.POST['sub_total']
+        booking_obj.total = self.request.POST['total']
+        booking_obj.additional_fees = self.request.POST['additional_fees']
+        booking_obj.requirement = self.request.POST['requirement']
+        booking_obj.address = self.request.POST['address']
+        from datetime import datetime
+        x = datetime.strptime(self.request.POST['date'], "%B %d, %Y")
+        print('-----', x)
+        booking_obj.date = x.strftime("%Y-%m-%d")
+        booking_obj.save()
+        messages.success(self.request, 'Order updated successfully')
+        return redirect("adminpanel:order-management")
+
+
+class OrderCanceledByAdmin(View):
+    model = Booking
+    template_name = 'canceled-order.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'canceled-order.html',
+                      {'object': Booking.objects.filter(is_canceled_by_admin=True).order_by('-id')})

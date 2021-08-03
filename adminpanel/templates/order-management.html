@@ -4,7 +4,7 @@
     <div class="content-wrapper">
         {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-message alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ message }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -126,6 +126,8 @@
                             <button value="{{obj.id}}" class="btns orderModalButton" data-toggle="modal"
                                     data-target="#assign">Assign Providers
                             </button>
+                            <a class="btns orderUpdateButton">Update Order</a>
+
                             {% else %}
                             <button value="{{obj.id}}" class="btns orderQuoteButton" data-toggle="modal"
                                     data-target="#quote">Send offer price
@@ -133,6 +135,8 @@
                             <button value="{{obj.id}}" class="btns orderCancelButton" data-toggle="modal"
                                     data-target="#cancel">Cancel Order
                             </button>
+
+                            <a href="{% url 'adminpanel:edit-order' obj.id %}" class="btns orderUpdateButton">Update Order</a>
                             {% endif %}
                         </th>
                     </tr>
@@ -300,6 +304,7 @@ $(document).ready(function () {
 
 
 
+
 </script>
 <script>
 $(document).ready(function () {
@@ -395,6 +400,7 @@ $(document).ready(function () {
 
 
 
+
 </script>
 <script>
     $("#categories").change(function () {
@@ -419,6 +425,7 @@ $(document).ready(function () {
     });
   });
 
+
 </script>
 <script>
     $("#orderstatus").change(function(){
@@ -442,6 +449,7 @@ $(document).ready(function () {
             }
         })
     });
+
 
 </script>
 {% endblock body %}`
