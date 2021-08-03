@@ -65,6 +65,7 @@ class Category(models.Model):
     category_name_arabic = models.CharField(default='', max_length=300)
     category_image = models.ImageField(upload_to='media', null=True, blank=True)
     hidden = models.BooleanField(default=False)
+    category_order = models.IntegerField(default=0)
 
 
 class SubCategory(models.Model):

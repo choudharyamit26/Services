@@ -282,13 +282,31 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
         print(type(image))
         category_name = self.request.POST['category_name']
         category_name_arabic = self.request.POST['category_name_arabic']
-        Category.objects.create(
-            category_image=image,
-            category_name=category_name.lower(),
-            category_name_arabic=category_name_arabic
-        )
-        messages.success(self.request, 'Category added successfully')
-        return redirect("adminpanel:category-management")
+        category_order = self.request.POST['category_order']
+        try:
+            category_order = Category.objects.get(category_order=self.request.POST['category_order'])
+            if category_order:
+                messages.success(self.request, 'Category with this order number already exists')
+                return redirect("adminpanel:add-category")
+            else:
+                Category.objects.create(
+                    category_image=image,
+                    category_name=category_name.lower(),
+                    category_name_arabic=category_name_arabic,
+                    category_order=category_order
+                )
+                messages.success(self.request, 'Category added successfully')
+                return redirect("adminpanel:category-management")
+        except Exception as e:
+            print('---', e)
+            Category.objects.create(
+                category_image=image,
+                category_name=category_name.lower(),
+                category_name_arabic=category_name_arabic,
+                category_order=category_order,
+            )
+            messages.success(self.request, 'Category added successfully')
+            return redirect("adminpanel:category-management")
 
 
 class CategoryDetail(LoginRequiredMixin, DetailView):
@@ -310,9 +328,23 @@ class UpdateCategoryView(LoginRequiredMixin, UpdateView):
         category_obj.category_image = self.request.FILES.get('category_image' or None)
         category_obj.category_name = self.request.POST['category_name']
         category_obj.category_name_arabic = self.request.POST['category_name_arabic']
-        category_obj.save()
-        messages.success(self.request, "Category updated successfully")
-        return redirect("adminpanel:category-management")
+        category_order = self.request.POST['category_order']
+        try:
+            category_object = Category.objects.get(category_order=category_order)
+            if category_object:
+                messages.success(self.request, "Category with this order number already exists")
+                return redirect(self.request.path_info)
+            else:
+                category_obj.category_order = category_order
+                category_obj.save()
+                messages.success(self.request, "Category updated successfully")
+                return redirect("adminpanel:category-management")
+        except Exception as e:
+            print(e)
+            category_obj.category_order = category_order
+            category_obj.save()
+            messages.success(self.request, "Category updated successfully")
+            return redirect("adminpanel:category-management")
 
 
 class OrderManagementView(LoginRequiredMixin, ListView):

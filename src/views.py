@@ -242,24 +242,26 @@ class HomeView(APIView):
         service_list = []
         service_list_arabic = []
         category_list = []
-        # category_list_arabic = []
+        category_list_arabic = []
         top_services = TopServices.objects.all()
         top_services_list = []
         top_services_list_arabic = []
-        services = Services.objects.filter(category__hidden=False)
+        services = Services.objects.filter(category__hidden=False).order_by('category__category_order')
         # services = Services.objects.filter(category__hidden=False).order_by('category__category_name')
         categories = Category.objects.filter(hidden=False)
         if Settings.objects.get(user=user_id).language == 'en':
             for category in categories:
                 if category.category_image:
                     category_list.append({'id': category.id, 'category_name': category.category_name,
-                                          'category_image': category.category_image.url})
+                                          'category_image': category.category_image.url,
+                                          'category_order': category.category_order})
                 else:
                     category_list.append({'id': category.id, 'category_name': category.category_name,
-                                          'category_image': ''})
+                                          'category_image': '', 'category_order': category.category_order})
             for service in services:
                 service_list.append(
-                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                    {'id': service.id, 'category_id': service.category.id,
+                     'category_order': service.category.category_order, 'sub_category_id': service.sub_category.id,
                      'service_name': service.service_name, 'field_1': service.field_1,
                      'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
                      'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
@@ -267,7 +269,7 @@ class HomeView(APIView):
                 top_services_list.append(
                     {'id': object.service.id, 'service_name': object.service.service_name,
                      'image_1': object.service.image_1.url,
-                     'image_2': object.service.image_2.url})
+                     'image_2': object.service.image_2.url, 'category_order': object.service.category.category_order})
             return Response({'services': service_list, 'top_services': top_services_list,
                              'categories': category_list, 'status': HTTP_200_OK, 'lat': user_id.lat,
                              'long': user_id.lang})
@@ -275,13 +277,15 @@ class HomeView(APIView):
             for category in categories:
                 if category.category_image:
                     category_list_arabic.append({'id': category.id, 'category_name': category.category_name_arabic,
-                                                 'category_image': category.category_image.url})
+                                                 'category_image': category.category_image.url,
+                                                 'category_order': category.category_order})
                 else:
                     category_list_arabic.append({'id': category.id, 'category_name': category.category_name_arabic,
-                                                 'category_image': ''})
+                                                 'category_image': '', 'category_order': category.category_order})
             for service in services:
                 service_list_arabic.append(
-                    {'id': service.id, 'category_id': service.category.id, 'sub_category_id': service.sub_category.id,
+                    {'id': service.id, 'category_id': service.category.id, 'category_order': service.category.category_order,
+                     'sub_category_id': service.sub_category.id,
                      'service_name': service.service_name_arabic, 'field_1': service.field_1,
                      'field_2': service.field_2, 'field_3': service.field_3, 'field_4': service.field_4,
                      'base_price': service.base_price, 'image_1': service.image_1.url, 'image_2': service.image_2.url})
@@ -1929,4 +1933,3 @@ class GetGstValue(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response({'data': Gst.objects.all()[0].gst, 'status': HTTP_200_OK})
-

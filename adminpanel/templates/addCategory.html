@@ -2,7 +2,18 @@
 {% block body %}
 <section class="demandRight boxs">
     <div class="demandInner boxs">
-
+        <div class="content-wrapper">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
         <h2 class="main">Add Category
         </h2>
 
@@ -25,18 +36,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="form-group formGroup">
                             <label for="" class="labelel"></label>
                             <input type="text" name="category_name" required class="form-control formControl"
                                    placeholder="Enter the Category name.">
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="form-group formGroup">
                             <label for="" class="labelel"></label>
                             <input type="text" name="category_name_arabic" required class="form-control formControl"
-                                   placeholder="Enter the Category name in arabic.">
+                                   placeholder="Category name in arabic.">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group formGroup">
+                            <label for="" class="labelel"></label>
+                            <input type="text" name="category_order" required class="form-control formControl"
+                                   placeholder="Enter the Category order.">
                         </div>
                     </div>
                     <div class="CommonBtn CommonBtn2 boxs">
